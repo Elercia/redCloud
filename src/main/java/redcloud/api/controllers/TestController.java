@@ -14,18 +14,22 @@ import redcloud.business.services.TestService;
 @RestController
 public class TestController {
 
-    @Autowired
-    private TestService testService;
+    private final TestService testService;
 
-    @ApiOperation(value = "Realise a ping on the redcloud.api", response = String.class)
+    @Autowired
+    public TestController(TestService testService) {
+        this.testService = testService;
+    }
+
+    @ApiOperation(value = "Realise a ping on the redcloud.api")
     @GetMapping(Route.PING)
-    public ResponseEntity<String> ping() {
-        return new ResponseEntity<>("pong", HttpStatus.OK);
+    public String ping() {
+        return "pong";
     }
 
     @ApiOperation(value = "Realise a ping on the redcloud.api")
     @GetMapping(Route.TEST_SERVICE)
     public String useService() {
-        return testService.getInfo();
+        return testService.doSomething();
     }
 }
