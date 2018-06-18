@@ -1,4 +1,4 @@
-package redcloud.business.entity;
+package redcloud.entity;
 
 import redcloud.dao.schema.TableName;
 import redcloud.dao.schema.UserPrivilegeColumn;

@@ -5,10 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import redcloud.api.route.Route;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import redcloud.business.services.TestService;
+import redcloud.services.TestService;
 
 @Api(value="Test operations", description="Contains all server test")
 @RestController

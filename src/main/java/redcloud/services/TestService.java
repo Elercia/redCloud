@@ -1,4 +1,4 @@
-package redcloud.business.services;
+package redcloud.services;
 
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package redcloud.business.entity;
+package redcloud.entity;
 
 import redcloud.dao.schema.AbstractTableColumn;
 import redcloud.dao.schema.TableName;

@@ -1,13 +1,11 @@
-package redcloud.business.services;
+package redcloud.services;
 
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import redcloud.business.entity.User;
+import redcloud.entity.User;
 import redcloud.dao.repositories.UserRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service

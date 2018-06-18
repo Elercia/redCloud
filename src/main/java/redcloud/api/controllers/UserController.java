@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import redcloud.api.route.Route;
-import redcloud.business.entity.User;
-import redcloud.business.services.UserService;
+import redcloud.entity.User;
+import redcloud.services.UserService;
 
 import java.util.List;
 
