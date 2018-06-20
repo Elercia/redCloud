@@ -6,7 +6,7 @@ import redcloud.api.route.Route;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.RestController;
-import redcloud.services.TestService;
+import redcloud.business.service.TestService;
 
 @Api(value="Test operations", description="Contains all server test")
 @RestController
