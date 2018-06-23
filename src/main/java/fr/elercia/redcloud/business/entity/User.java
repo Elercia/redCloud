@@ -3,23 +3,32 @@ package fr.elercia.redcloud.business.entity;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class User {
 
-    private Long id;
+    private int id;
     private String name;
     private UUID resourceId;
     private String password;
-    private List<Privilege> privileges;
+    private List<PrivilegeType> privileges;
     private Date createdDate;
     private Directory rootDirectory;
 
-    public Long getId() {
+    public User(int id, String name, UUID resourceId, String password, List<PrivilegeType> privileges, Date createdDate, Directory rootDirectory) {
+        this.id = id;
+        this.name = name;
+        this.resourceId = resourceId;
+        this.password = password;
+        this.privileges = privileges;
+        this.createdDate = createdDate;
+        this.rootDirectory = rootDirectory;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -31,15 +40,11 @@ public class User {
         this.name = name;
     }
 
-    public List<Privilege> getPrivileges() {
+    public List<PrivilegeType> getPrivilegesTypes() {
         return privileges;
     }
 
-    public List<PrivilegeType> getPrivilegesTypes() {
-        return privileges.stream().map(Privilege::getPrivilegeType).collect(Collectors.toList());
-    }
-
-    public void setPrivileges(List<Privilege> privileges) {
+    public void setPrivileges(List<PrivilegeType> privileges) {
         this.privileges = privileges;
     }
 
@@ -84,6 +89,6 @@ public class User {
 
         User other = (User) obj;
 
-        return this.id.equals((other.id));
+        return this.id == other.id;
     }
 }

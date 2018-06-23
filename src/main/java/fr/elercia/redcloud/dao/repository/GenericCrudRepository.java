@@ -1,10 +1,11 @@
 package fr.elercia.redcloud.dao.repository;
 
-import fr.elercia.redcloud.dao.entity.DBEntity;
+
+import org.jooq.Record;
 
 import java.util.List;
 
-public interface GenericCrudRepository<T extends DBEntity> {
+public interface GenericCrudRepository<T extends Record> {
 
     T add(T entity);
 

@@ -19,7 +19,7 @@ public class SwaggerConfig{
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("redcloud.api.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("fr.elercia.redcloud.api.controllers"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(metaData());
@@ -30,9 +30,9 @@ public class SwaggerConfig{
                 .title("RedCloud REST API")
                 .description("\"RedCloud REST API for personal cloud management\"")
                 .version("0.1")
-                .license("Currently not under licence")
-                .licenseUrl("none")
-                .contact(new Contact("Vincent Rabier", "--", "rabierv@hotmail.fr"))
+                .license("GNU General Public License v3.0")
+                .licenseUrl("https://github.com/Elercia/redCloud/blob/master/LICENSE.md")
+                .contact(new Contact("Vincent Rabier", "https://github.com/Elercia", "rabierv@hotmail.fr"))
                 .build();
     }
 }
