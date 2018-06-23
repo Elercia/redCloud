@@ -1,0 +1,50 @@
+package fr.elercia.redcloud.api.interceptor;
+
+import com.google.common.collect.Lists;
+import fr.elercia.redcloud.business.entity.PrivilegeType;
+import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.service.AuthorizationService;
+import fr.elercia.redcloud.exceptions.UnauthorizedRestCall;
+import fr.elercia.redcloud.logging.LoggerWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@Service
+public class RequirePrivilegeInterceptor extends GenericAnnotationInterceptor<RequirePrivilege> {
+
+    private static final LoggerWrapper LOG = new LoggerWrapper(RequirePrivilegeInterceptor.class);
+
+    private AuthorizationService authorizationService;
+
+    @Autowired
+    public RequirePrivilegeInterceptor(AuthorizationService authorizationService) {
+        super(RequirePrivilege.class);
+        this.authorizationService = authorizationService;
+    }
+
+    @Override
+    public void doPreHandle(HttpServletRequest request, HttpServletResponse response, Object handler, RequirePrivilege annotation) throws Exception {
+
+        String token = request.getHeader("token");
+        LOG.info("Handle RequirePrivilege annotation", "token", token);
+
+        if(token == null) {
+            throw new UnauthorizedRestCall();
+        }
+
+        User user = authorizationService.getUserToken(token);
+
+        if(user == null) {
+            throw new UnauthorizedRestCall();
+        }
+
+        PrivilegeType[] requiredPrivileges = annotation.value();
+
+        if(!user.getPrivilegesTypes().containsAll(Lists.newArrayList(requiredPrivileges))) {
+            throw new UnauthorizedRestCall();
+        }
+    }
+}
