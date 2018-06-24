@@ -1,21 +1,19 @@
-package fr.elercia.redcloud.business.entity;
+package fr.elercia.redcloud.dao.entity;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class Directory {
+public class DirectoryBase {
 
     private int id;
     private String name;
-    private Directory parentDirectory;
-    private UUID resourceId;
+    private UUID resourceID;
     private Date creationDate;
 
-    public Directory(int id, String name, Directory parentDirectory, UUID resourceId, Date creationDate) {
+    public DirectoryBase(int id, String name, UUID resourceID, Date creationDate) {
         this.id = id;
         this.name = name;
-        this.parentDirectory = parentDirectory;
-        this.resourceId = resourceId;
+        this.resourceID = resourceID;
         this.creationDate = creationDate;
     }
 
@@ -35,20 +33,12 @@ public class Directory {
         this.name = name;
     }
 
-    public Directory getDirectory() {
-        return parentDirectory;
-    }
-
-    public void setDirectory(Directory directory) {
-        this.parentDirectory = directory;
-    }
-
     public UUID getResourceId() {
-        return resourceId;
+        return resourceID;
     }
 
-    public void setResourceId(UUID resourceId) {
-        this.resourceId = resourceId;
+    public void setResourceID(UUID resourceID) {
+        this.resourceID = resourceID;
     }
 
     public Date getCreationDate() {

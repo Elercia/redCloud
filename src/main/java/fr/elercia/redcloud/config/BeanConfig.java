@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.config;
 
 import fr.elercia.redcloud.api.dto.DtoMapper;
-import fr.elercia.redcloud.business.entity.Mapper;
+import fr.elercia.redcloud.business.entity.BusinessMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfig {
 
     @Bean
-    public Mapper getBusinessMapper() {
-        return new Mapper();
+    public BusinessMapper getBusinessMapper() {
+        return new BusinessMapper();
     }
 
     @Bean

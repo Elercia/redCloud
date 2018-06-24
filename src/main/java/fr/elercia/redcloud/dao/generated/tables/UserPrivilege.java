@@ -30,7 +30,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserPrivilege extends TableImpl<UserPrivilegeRecord> {
 
-    private static final long serialVersionUID = 310666852;
+    private static final long serialVersionUID = 465782701;
 
     /**
      * The reference instance of <code>redcloud.user_privilege</code>
@@ -56,9 +56,9 @@ public class UserPrivilege extends TableImpl<UserPrivilegeRecord> {
     public final TableField<UserPrivilegeRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>redcloud.user_privilege.type</code>.
+     * The column <code>redcloud.user_privilege.SUPER_ADMIN</code>.
      */
-    public final TableField<UserPrivilegeRecord, String> TYPE = createField("type", org.jooq.impl.SQLDataType.VARCHAR(500).nullable(false), this, "");
+    public final TableField<UserPrivilegeRecord, Byte> SUPER_ADMIN = createField("SUPER_ADMIN", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
 
     /**
      * Create a <code>redcloud.user_privilege</code> table reference

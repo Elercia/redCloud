@@ -1,11 +1,9 @@
 package fr.elercia.redcloud.dao.repository;
 
 
-import org.jooq.Record;
-
 import java.util.List;
 
-public interface GenericCrudRepository<T extends Record> {
+public interface GenericCrudRepository<T> {
 
     T add(T entity);
 
@@ -15,5 +13,5 @@ public interface GenericCrudRepository<T extends Record> {
 
     List<T> findAll();
 
-    T findById(Long id);
+    T findById(int id);
 }
