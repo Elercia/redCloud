@@ -83,10 +83,10 @@ public class AuthorizationService {
     }
 
     /**
-     * Get the token of a user if this user is present in the session token map. Otherwise return null.
+     * Get the token of a user if this user is present in the session token mapToBase. Otherwise return null.
      *
-     * @param user The user to search in the map.
-     * @return The token or null if the user is not in the map
+     * @param user The user to search in the mapToBase.
+     * @return The token or null if the user is not in the mapToBase
      */
     private String getToken(User user) {
 

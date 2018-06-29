@@ -6,11 +6,11 @@ import fr.elercia.redcloud.dao.entity.UserBase;
 public class BusinessMapper {
 
     public static UserBase mapToBase(User user) {
-        return null;
+        throw new RuntimeException();
     }
 
-    public static User mapToUser(UserBase userBase) {
-        return new User(userBase.getId(), userBase.getName(), userBase.getResourceId(), userBase.getPassword(), userBase.getPrivileges(), userBase.getCreationDate(), mapToDirectory(userBase.getRootDirectoryBase()));
+    public static User mapToUser(UserBase userBase, DirectoryBase directoryBase) {
+        return new User(userBase.getId(), userBase.getName(), userBase.getResourceId(), userBase.getPassword(), userBase.getPrivileges(), userBase.getCreationDate(), mapToDirectory(directoryBase));
 
     }
 
@@ -19,6 +19,7 @@ public class BusinessMapper {
     }
 
     public static Directory mapToDirectory(DirectoryBase directoryBase, DirectoryBase parentDirectoryBase) {
+
         Directory parentDirectory = null;
 
         if (parentDirectoryBase != null) {

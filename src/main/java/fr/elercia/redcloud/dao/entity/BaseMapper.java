@@ -11,13 +11,12 @@ import java.util.UUID;
 
 public class BaseMapper {
 
-    public static UserBase recordToBase(UserRecord userRecord, DirectoryRecord directoryRecord, UserPrivilegeRecord userPrivilegeRecord) {
+    public static UserBase recordToBase(UserRecord userRecord, UserPrivilegeRecord userPrivilegeRecord) {
         UserBase userBase = new UserBase(userRecord.getId(),
                 userRecord.getName(),
                 userRecord.getCreationDate(),
                 UUID.fromString(userRecord.getResourceId()),
                 userRecord.getPassword(),
-                recordToBase(directoryRecord),
                 recordToPrivilegeList(userPrivilegeRecord));
 
         return userBase;

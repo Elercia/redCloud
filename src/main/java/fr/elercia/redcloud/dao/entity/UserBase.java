@@ -13,16 +13,14 @@ public class UserBase {
     private Date creationDate;
     private UUID resourceId;
     private String password;
-    private DirectoryBase rootDirectoryBase;
     private List<PrivilegeType> privileges;
 
-    public UserBase(int id, String name, Date creationDate, UUID resourceId, String password, DirectoryBase rootDirectoryBase, List<PrivilegeType> privileges) {
+    public UserBase(int id, String name, Date creationDate, UUID resourceId, String password, List<PrivilegeType> privileges) {
         this.id = id;
         this.name = name;
         this.creationDate = creationDate;
         this.resourceId = resourceId;
         this.password = password;
-        this.rootDirectoryBase = rootDirectoryBase;
         this.privileges = privileges;
     }
 
@@ -64,14 +62,6 @@ public class UserBase {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public DirectoryBase getRootDirectoryBase() {
-        return rootDirectoryBase;
-    }
-
-    public void setRootDirectoryBase(DirectoryBase rootDirectoryBase) {
-        this.rootDirectoryBase = rootDirectoryBase;
     }
 
     public List<PrivilegeType> getPrivileges() {

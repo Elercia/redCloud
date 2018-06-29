@@ -2,7 +2,6 @@ package fr.elercia.redcloud.dao.repository.impl;
 
 import fr.elercia.redcloud.dao.entity.BaseMapper;
 import fr.elercia.redcloud.dao.entity.UserBase;
-import fr.elercia.redcloud.dao.generated.tables.records.DirectoryRecord;
 import fr.elercia.redcloud.dao.generated.tables.records.UserPrivilegeRecord;
 import fr.elercia.redcloud.dao.generated.tables.records.UserRecord;
 import fr.elercia.redcloud.dao.repository.UserRepository;
@@ -14,30 +13,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
-import static fr.elercia.redcloud.dao.generated.Tables.DIRECTORY;
 import static fr.elercia.redcloud.dao.generated.tables.User.USER;
 import static fr.elercia.redcloud.dao.generated.tables.UserPrivilege.USER_PRIVILEGE;
 
 @Repository
-public class JOOQUserRepository extends JooqUtilityRepository<UserBase> implements UserRepository {
+public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBase> implements UserRepository {
 
     @Autowired
-    public JOOQUserRepository(@Qualifier("dsl") DSLContext jooq) {
+    public JOOQUserRepository(@Qualifier("getDSLContext") DSLContext jooq) {
         super(jooq, USER);
     }
 
     @Override
     public UserBase add(UserBase entity) {
 
-        return null;
+        UserRecord userRecord = mapToRecord(entity);
+
+        try {
+            userRecord.store();
+        } catch (Throwable t) {
+            throw new DatabaseRuntimeException("User insert failed", t);
+        }
+
+        return entity;
     }
 
     @Override
     public void update(UserBase entity) {
 
+        UserRecord userRecord = mapToRecord(entity);
+
+        try {
+            userRecord.store();
+        } catch (Throwable t) {
+            throw new DatabaseRuntimeException("User update failed", t);
+        }
     }
 
     @Override
@@ -51,19 +65,19 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserBase> implemen
 
     @Override
     public List<UserBase> findAll() {
-        return createSelectQuery().fetch().map(this::map);
+        return createSelectQuery().fetch().map(this::mapToBase);
     }
 
     @Override
     public UserBase findById(int id) {
-        return map(createSelectQuery()
+        return mapToBase(createSelectQuery()
                 .where(USER.ID.eq(id))
                 .fetchOne());
     }
 
     @Override
     public UserBase findByResourceId(UUID id) {
-        return map(createSelectQuery()
+        return mapToBase(createSelectQuery()
                 .where(USER.RESOURCE_ID.eq(id.toString()))
                 .fetchOne());
     }
@@ -72,25 +86,36 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserBase> implemen
     public List<UserBase> findByName(String name) {
         return createSelectQuery()
                 .where(USER.NAME.eq(name))
-                .fetch().map(this::map);
+                .fetch().map(this::mapToBase);
     }
 
     @Override
-    protected UserBase map(Record record) {
+    protected UserBase mapToBase(Record record) {
 
         UserRecord userRecord = record.into(USER);
         UserPrivilegeRecord userPrivilegeRecord = record.into(USER_PRIVILEGE);
-        DirectoryRecord directoryRecord = record.into(DIRECTORY);
 
-        return BaseMapper.recordToBase(userRecord, directoryRecord, userPrivilegeRecord);
+        return BaseMapper.recordToBase(userRecord, userPrivilegeRecord);
+    }
+
+    @Override
+    protected UserRecord mapToRecord(UserBase base) {
+
+        UserRecord userRecord = createRecord();
+
+        userRecord.setId(base.getId());
+        userRecord.setName(base.getName());
+        userRecord.setPassword(base.getPassword());
+        userRecord.setResourceId(base.getResourceId().toString());
+        userRecord.setCreationDate(new Timestamp(base.getCreationDate().getTime()));
+
+        return null;
     }
 
     @Override
     protected SelectJoinStep<Record> createSelectQuery() {
         return jooq.select().from(USER)
                 .innerJoin(USER_PRIVILEGE)
-                .on(USER.ID.eq(USER_PRIVILEGE.USER_ID))
-                .innerJoin(DIRECTORY)
-                .on(USER.ROOT_DIRECTORY_ID.eq(DIRECTORY.ID));
+                .on(USER.ID.eq(USER_PRIVILEGE.USER_ID));
     }
 }

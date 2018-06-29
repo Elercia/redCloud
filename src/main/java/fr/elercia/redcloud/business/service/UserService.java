@@ -32,7 +32,7 @@ public class UserService {
             throw new UserNotFoundException();
         }
 
-        return BusinessMapper.mapToUser(userBase);
+        return BusinessMapper.mapToUser(userBase, null);
     }
 
     public User findByName(String name) throws UserNotFoundException {
@@ -45,13 +45,13 @@ public class UserService {
 
         UserBase userBase = userBases.get(0);
 
-        return BusinessMapper.mapToUser(userBase);
+        return BusinessMapper.mapToUser(userBase, null);
     }
 
     public List<User> getAllUsers() {
         return Lists.newArrayList(userRepository.findAll())
                 .stream()
-                .map(BusinessMapper::mapToUser)
+                .map(e -> BusinessMapper.mapToUser(e, null))
                 .collect(Collectors.toList());
     }
 

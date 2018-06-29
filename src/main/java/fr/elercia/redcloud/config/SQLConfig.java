@@ -79,7 +79,7 @@ public class SQLConfig {
     }
 
     @Bean
-    public DefaultDSLContext dsl() {
+    public DefaultDSLContext getDSLContext() {
         return new DefaultDSLContext(configuration());
     }
 }

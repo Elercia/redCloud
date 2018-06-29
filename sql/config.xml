@@ -2,20 +2,20 @@
 <configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.11.0.xsd">
     <!-- Configure the database connection here -->
     <jdbc>
-        <driver>com.mysql.jdbc.Driver</driver>
-        <url>jdbc:mysql://localhost:3306/REDCLOUD?serverTimezone=UTC</url>
-        <user>redcloud</user>
-        <password>root</password>
+        <driver>com.mysql.cj.jdbc.Driver</driver>
+        <url>jdbc:mysql://localhost:3306/redcloud?serverTimezone=UTC</url>
+        <user>root</user>
+        <password>password</password>
 
         <!-- You can also pass user/password and other JDBC properties in the optional properties tag: -->
         <properties>
             <property>
                 <key>user</key>
-                <value>redcloud</value>
+                <value>root</value>
             </property>
             <property>
                 <key>password</key>
-                <value>root</value>
+                <value>password</value>
             </property>
         </properties>
     </jdbc>
