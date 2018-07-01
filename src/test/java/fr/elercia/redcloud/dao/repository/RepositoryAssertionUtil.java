@@ -8,11 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RepositoryAssertionUtil {
 
-    public void assertUserBaseEquals(UserBase one, UserBase two) {
+    public static void assertUserBaseEquals(UserBase one, UserBase two) {
         assertUserBaseEquals(one, two, null);
     }
 
-    public void assertUserBaseEquals(UserBase one, UserBase two, String message) {
+    public static void assertUserBaseEquals(UserBase one, UserBase two, String message) {
         assertEquals(one.getId(), two.getId(), message);
         assertEquals(one.getCreationDate(), two.getCreationDate(), message);
         assertEquals(one.getName(), two.getName(), message);

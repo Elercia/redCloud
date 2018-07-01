@@ -8,14 +8,25 @@ import fr.elercia.redcloud.dao.generated.Indexes;
 import fr.elercia.redcloud.dao.generated.Keys;
 import fr.elercia.redcloud.dao.generated.Redcloud;
 import fr.elercia.redcloud.dao.generated.tables.records.UserRecord;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.TableImpl;
 
-import javax.annotation.Generated;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -31,7 +42,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = 740923357;
+    private static final long serialVersionUID = -725258211;
 
     /**
      * The reference instance of <code>redcloud.user</code>
@@ -54,7 +65,12 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>redcloud.user.name</code>.
      */
-    public final TableField<UserRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR(500).nullable(false), this, "");
+    public final TableField<UserRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
+
+    /**
+     * The column <code>redcloud.user.password</code>.
+     */
+    public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
 
     /**
      * The column <code>redcloud.user.creation_date</code>.
@@ -64,17 +80,7 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>redcloud.user.resource_id</code>.
      */
-    public final TableField<UserRecord, String> RESOURCE_ID = createField("resource_id", org.jooq.impl.SQLDataType.CHAR(36), this, "");
-
-    /**
-     * The column <code>redcloud.user.password</code>.
-     */
-    public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR(500).nullable(false).defaultValue(org.jooq.impl.DSL.inline("", org.jooq.impl.SQLDataType.VARCHAR)), this, "");
-
-    /**
-     * The column <code>redcloud.user.root_directory_id</code>.
-     */
-    public final TableField<UserRecord, Integer> ROOT_DIRECTORY_ID = createField("root_directory_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<UserRecord, String> RESOURCE_ID = createField("resource_id", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
 
     /**
      * Create a <code>redcloud.user</code> table reference
@@ -105,6 +111,10 @@ public class User extends TableImpl<UserRecord> {
         super(alias, null, aliased, parameters, DSL.comment(""));
     }
 
+    public <O extends Record> User(Table<O> child, ForeignKey<O, UserRecord> key) {
+        super(child, key, USER);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -118,7 +128,7 @@ public class User extends TableImpl<UserRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.USER_PRIMARY, Indexes.USER_USER_DIRECTORY_ID_FK, Indexes.USER_USER_ID_UINDEX, Indexes.USER_USER_RESOURCE_ID_UINDEX);
+        return Arrays.<Index>asList(Indexes.USER_PRIMARY, Indexes.USER_USER_ID_UINDEX, Indexes.USER_USER_NAME_UINDEX, Indexes.USER_USER_RESOURCE_ID_UINDEX);
     }
 
     /**
@@ -142,7 +152,7 @@ public class User extends TableImpl<UserRecord> {
      */
     @Override
     public List<UniqueKey<UserRecord>> getKeys() {
-        return Arrays.<UniqueKey<UserRecord>>asList(Keys.KEY_USER_PRIMARY, Keys.KEY_USER_USER_ID_UINDEX, Keys.KEY_USER_USER_RESOURCE_ID_UINDEX);
+        return Arrays.<UniqueKey<UserRecord>>asList(Keys.KEY_USER_PRIMARY, Keys.KEY_USER_USER_ID_UINDEX, Keys.KEY_USER_USER_NAME_UINDEX, Keys.KEY_USER_USER_RESOURCE_ID_UINDEX);
     }
 
     /**

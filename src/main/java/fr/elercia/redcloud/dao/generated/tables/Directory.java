@@ -8,14 +8,25 @@ import fr.elercia.redcloud.dao.generated.Indexes;
 import fr.elercia.redcloud.dao.generated.Keys;
 import fr.elercia.redcloud.dao.generated.Redcloud;
 import fr.elercia.redcloud.dao.generated.tables.records.DirectoryRecord;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.TableImpl;
 
-import javax.annotation.Generated;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -31,7 +42,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Directory extends TableImpl<DirectoryRecord> {
 
-    private static final long serialVersionUID = -523921418;
+    private static final long serialVersionUID = -1428760798;
 
     /**
      * The reference instance of <code>redcloud.directory</code>
@@ -52,24 +63,24 @@ public class Directory extends TableImpl<DirectoryRecord> {
     public final TableField<DirectoryRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
+     * The column <code>redcloud.directory.name</code>.
+     */
+    public final TableField<DirectoryRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
+
+    /**
+     * The column <code>redcloud.directory.resource_id</code>.
+     */
+    public final TableField<DirectoryRecord, String> RESOURCE_ID = createField("resource_id", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
+
+    /**
      * The column <code>redcloud.directory.user_id</code>.
      */
     public final TableField<DirectoryRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>redcloud.directory.name</code>.
+     * The column <code>redcloud.directory.parent_id</code>.
      */
-    public final TableField<DirectoryRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR(500).nullable(false), this, "");
-
-    /**
-     * The column <code>redcloud.directory.parent_dir</code>.
-     */
-    public final TableField<DirectoryRecord, Integer> PARENT_DIR = createField("parent_dir", org.jooq.impl.SQLDataType.INTEGER, this, "");
-
-    /**
-     * The column <code>redcloud.directory.resources_id</code>.
-     */
-    public final TableField<DirectoryRecord, String> RESOURCES_ID = createField("resources_id", org.jooq.impl.SQLDataType.VARCHAR(36).nullable(false), this, "");
+    public final TableField<DirectoryRecord, Integer> PARENT_ID = createField("parent_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>redcloud.directory.creation_date</code>.
@@ -105,6 +116,10 @@ public class Directory extends TableImpl<DirectoryRecord> {
         super(alias, null, aliased, parameters, DSL.comment(""));
     }
 
+    public <O extends Record> Directory(Table<O> child, ForeignKey<O, DirectoryRecord> key) {
+        super(child, key, DIRECTORY);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -118,7 +133,7 @@ public class Directory extends TableImpl<DirectoryRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.DIRECTORY_DIRECTORY_DIRECTORY_ID_FK, Indexes.DIRECTORY_DIRECTORY_ID_UINDEX, Indexes.DIRECTORY_DIRECTORY_RESOURCES_ID_UINDEX, Indexes.DIRECTORY_PRIMARY);
+        return Arrays.<Index>asList(Indexes.DIRECTORY_DIRECTORY_DIRECTORY_ID_FK, Indexes.DIRECTORY_DIRECTORY_ID_UINDEX, Indexes.DIRECTORY_DIRECTORY_USER_ID_FK, Indexes.DIRECTORY_PRIMARY);
     }
 
     /**
@@ -142,7 +157,23 @@ public class Directory extends TableImpl<DirectoryRecord> {
      */
     @Override
     public List<UniqueKey<DirectoryRecord>> getKeys() {
-        return Arrays.<UniqueKey<DirectoryRecord>>asList(Keys.KEY_DIRECTORY_PRIMARY, Keys.KEY_DIRECTORY_DIRECTORY_ID_UINDEX, Keys.KEY_DIRECTORY_DIRECTORY_RESOURCES_ID_UINDEX);
+        return Arrays.<UniqueKey<DirectoryRecord>>asList(Keys.KEY_DIRECTORY_PRIMARY, Keys.KEY_DIRECTORY_DIRECTORY_ID_UINDEX);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<DirectoryRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<DirectoryRecord, ?>>asList(Keys.DIRECTORY_USER_ID_FK, Keys.DIRECTORY_DIRECTORY_ID_FK);
+    }
+
+    public User user() {
+        return new User(this, Keys.DIRECTORY_USER_ID_FK);
+    }
+
+    public fr.elercia.redcloud.dao.generated.tables.Directory directory() {
+        return new fr.elercia.redcloud.dao.generated.tables.Directory(this, Keys.DIRECTORY_DIRECTORY_ID_FK);
     }
 
     /**

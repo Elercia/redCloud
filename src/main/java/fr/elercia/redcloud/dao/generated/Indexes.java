@@ -7,11 +7,12 @@ package fr.elercia.redcloud.dao.generated;
 import fr.elercia.redcloud.dao.generated.tables.Directory;
 import fr.elercia.redcloud.dao.generated.tables.User;
 import fr.elercia.redcloud.dao.generated.tables.UserPrivilege;
+
+import javax.annotation.Generated;
+
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.Internal;
-
-import javax.annotation.Generated;
 
 
 /**
@@ -33,31 +34,31 @@ public class Indexes {
 
     public static final Index DIRECTORY_DIRECTORY_DIRECTORY_ID_FK = Indexes0.DIRECTORY_DIRECTORY_DIRECTORY_ID_FK;
     public static final Index DIRECTORY_DIRECTORY_ID_UINDEX = Indexes0.DIRECTORY_DIRECTORY_ID_UINDEX;
-    public static final Index DIRECTORY_DIRECTORY_RESOURCES_ID_UINDEX = Indexes0.DIRECTORY_DIRECTORY_RESOURCES_ID_UINDEX;
+    public static final Index DIRECTORY_DIRECTORY_USER_ID_FK = Indexes0.DIRECTORY_DIRECTORY_USER_ID_FK;
     public static final Index DIRECTORY_PRIMARY = Indexes0.DIRECTORY_PRIMARY;
     public static final Index USER_PRIMARY = Indexes0.USER_PRIMARY;
-    public static final Index USER_USER_DIRECTORY_ID_FK = Indexes0.USER_USER_DIRECTORY_ID_FK;
     public static final Index USER_USER_ID_UINDEX = Indexes0.USER_USER_ID_UINDEX;
+    public static final Index USER_USER_NAME_UINDEX = Indexes0.USER_USER_NAME_UINDEX;
     public static final Index USER_USER_RESOURCE_ID_UINDEX = Indexes0.USER_USER_RESOURCE_ID_UINDEX;
     public static final Index USER_PRIVILEGE_PRIMARY = Indexes0.USER_PRIVILEGE_PRIMARY;
-    public static final Index USER_PRIVILEGE_PRIVILEGE_ID_UINDEX = Indexes0.USER_PRIVILEGE_PRIVILEGE_ID_UINDEX;
-    public static final Index USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_FK = Indexes0.USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_FK;
+    public static final Index USER_PRIVILEGE_USER_PRIVILEGE_ID_UINDEX = Indexes0.USER_PRIVILEGE_USER_PRIVILEGE_ID_UINDEX;
+    public static final Index USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_UINDEX = Indexes0.USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_UINDEX;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class Indexes0 {
-        public static Index DIRECTORY_DIRECTORY_DIRECTORY_ID_FK = Internal.createIndex("directory_directory_id_fk", Directory.DIRECTORY, new OrderField[] { Directory.DIRECTORY.PARENT_DIR }, false);
+        public static Index DIRECTORY_DIRECTORY_DIRECTORY_ID_FK = Internal.createIndex("directory_directory_id_fk", Directory.DIRECTORY, new OrderField[] { Directory.DIRECTORY.PARENT_ID }, false);
         public static Index DIRECTORY_DIRECTORY_ID_UINDEX = Internal.createIndex("directory_id_uindex", Directory.DIRECTORY, new OrderField[] { Directory.DIRECTORY.ID }, true);
-        public static Index DIRECTORY_DIRECTORY_RESOURCES_ID_UINDEX = Internal.createIndex("directory_resources_id_uindex", Directory.DIRECTORY, new OrderField[] { Directory.DIRECTORY.RESOURCES_ID }, true);
+        public static Index DIRECTORY_DIRECTORY_USER_ID_FK = Internal.createIndex("directory_user_id_fk", Directory.DIRECTORY, new OrderField[] { Directory.DIRECTORY.USER_ID }, false);
         public static Index DIRECTORY_PRIMARY = Internal.createIndex("PRIMARY", Directory.DIRECTORY, new OrderField[] { Directory.DIRECTORY.ID }, true);
         public static Index USER_PRIMARY = Internal.createIndex("PRIMARY", User.USER, new OrderField[] { User.USER.ID }, true);
-        public static Index USER_USER_DIRECTORY_ID_FK = Internal.createIndex("user_directory_id_fk", User.USER, new OrderField[] { User.USER.ROOT_DIRECTORY_ID }, false);
-        public static Index USER_USER_ID_UINDEX = Internal.createIndex("USER_id_uindex", User.USER, new OrderField[] { User.USER.ID }, true);
+        public static Index USER_USER_ID_UINDEX = Internal.createIndex("user_id_uindex", User.USER, new OrderField[] { User.USER.ID }, true);
+        public static Index USER_USER_NAME_UINDEX = Internal.createIndex("user_name_uindex", User.USER, new OrderField[] { User.USER.NAME }, true);
         public static Index USER_USER_RESOURCE_ID_UINDEX = Internal.createIndex("user_resource_id_uindex", User.USER, new OrderField[] { User.USER.RESOURCE_ID }, true);
         public static Index USER_PRIVILEGE_PRIMARY = Internal.createIndex("PRIMARY", UserPrivilege.USER_PRIVILEGE, new OrderField[] { UserPrivilege.USER_PRIVILEGE.ID }, true);
-        public static Index USER_PRIVILEGE_PRIVILEGE_ID_UINDEX = Internal.createIndex("PRIVILEGE_id_uindex", UserPrivilege.USER_PRIVILEGE, new OrderField[] { UserPrivilege.USER_PRIVILEGE.ID }, true);
-        public static Index USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_FK = Internal.createIndex("user_privilege_user_id_fk", UserPrivilege.USER_PRIVILEGE, new OrderField[] { UserPrivilege.USER_PRIVILEGE.USER_ID }, false);
+        public static Index USER_PRIVILEGE_USER_PRIVILEGE_ID_UINDEX = Internal.createIndex("user_privilege_id_uindex", UserPrivilege.USER_PRIVILEGE, new OrderField[] { UserPrivilege.USER_PRIVILEGE.ID }, true);
+        public static Index USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_UINDEX = Internal.createIndex("user_privilege_user_id_uindex", UserPrivilege.USER_PRIVILEGE, new OrderField[] { UserPrivilege.USER_PRIVILEGE.USER_ID }, true);
     }
 }

@@ -5,13 +5,14 @@ package fr.elercia.redcloud.dao.generated.tables.records;
 
 
 import fr.elercia.redcloud.dao.generated.tables.UserPrivilege;
+
+import javax.annotation.Generated;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record3;
 import org.jooq.Row3;
 import org.jooq.impl.UpdatableRecordImpl;
-
-import javax.annotation.Generated;
 
 
 /**
@@ -58,14 +59,10 @@ public class UserPrivilegeRecord extends UpdatableRecordImpl<UserPrivilegeRecord
     }
 
     /**
-     * Create a detached, initialised UserPrivilegeRecord
+     * Setter for <code>redcloud.user_privilege.SUPER_ADMIN</code>.
      */
-    public UserPrivilegeRecord(Integer id, Integer userId, Byte superAdmin) {
-        super(UserPrivilege.USER_PRIVILEGE);
-
-        set(0, id);
-        set(1, userId);
-        set(2, superAdmin);
+    public void setSuperAdmin(Byte value) {
+        set(2, value);
     }
 
     /**
@@ -92,18 +89,19 @@ public class UserPrivilegeRecord extends UpdatableRecordImpl<UserPrivilegeRecord
     // -------------------------------------------------------------------------
 
     /**
-     * Setter for <code>redcloud.user_privilege.SUPER_ADMIN</code>.
+     * {@inheritDoc}
      */
-    public void setSuperAdmin(Byte value) {
-        set(2, value);
+    @Override
+    public Row3<Integer, Integer, Byte> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Row3<Integer, Integer, Byte> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row3<Integer, Integer, Byte> valuesRow() {
+        return (Row3) super.valuesRow();
     }
 
     /**
@@ -126,8 +124,8 @@ public class UserPrivilegeRecord extends UpdatableRecordImpl<UserPrivilegeRecord
      * {@inheritDoc}
      */
     @Override
-    public Row3<Integer, Integer, Byte> valuesRow() {
-        return (Row3) super.valuesRow();
+    public Field<Byte> field3() {
+        return UserPrivilege.USER_PRIVILEGE.SUPER_ADMIN;
     }
 
     /**
@@ -150,8 +148,8 @@ public class UserPrivilegeRecord extends UpdatableRecordImpl<UserPrivilegeRecord
      * {@inheritDoc}
      */
     @Override
-    public Field<Byte> field3() {
-        return UserPrivilege.USER_PRIVILEGE.SUPER_ADMIN;
+    public Byte component3() {
+        return getSuperAdmin();
     }
 
     /**
@@ -174,7 +172,7 @@ public class UserPrivilegeRecord extends UpdatableRecordImpl<UserPrivilegeRecord
      * {@inheritDoc}
      */
     @Override
-    public Byte component3() {
+    public Byte value3() {
         return getSuperAdmin();
     }
 
@@ -200,16 +198,19 @@ public class UserPrivilegeRecord extends UpdatableRecordImpl<UserPrivilegeRecord
      * {@inheritDoc}
      */
     @Override
-    public Byte value3() {
-        return getSuperAdmin();
+    public UserPrivilegeRecord value3(Byte value) {
+        setSuperAdmin(value);
+        return this;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public UserPrivilegeRecord value3(Byte value) {
-        setSuperAdmin(value);
+    public UserPrivilegeRecord values(Integer value1, Integer value2, Byte value3) {
+        value1(value1);
+        value2(value2);
+        value3(value3);
         return this;
     }
 
@@ -225,13 +226,13 @@ public class UserPrivilegeRecord extends UpdatableRecordImpl<UserPrivilegeRecord
     }
 
     /**
-     * {@inheritDoc}
+     * Create a detached, initialised UserPrivilegeRecord
      */
-    @Override
-    public UserPrivilegeRecord values(Integer value1, Integer value2, Byte value3) {
-        value1(value1);
-        value2(value2);
-        value3(value3);
-        return this;
+    public UserPrivilegeRecord(Integer id, Integer userId, Byte superAdmin) {
+        super(UserPrivilege.USER_PRIVILEGE);
+
+        set(0, id);
+        set(1, userId);
+        set(2, superAdmin);
     }
 }

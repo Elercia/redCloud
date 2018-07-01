@@ -34,12 +34,12 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBa
         UserRecord userRecord = mapToRecord(entity);
 
         try {
-            userRecord.store();
+            userRecord.insert();
         } catch (Throwable t) {
             throw new DatabaseRuntimeException("User insert failed", t);
         }
 
-        return entity;
+        return findByName(userRecord.getName()).get(0);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBa
         UserRecord userRecord = mapToRecord(entity);
 
         try {
-            userRecord.store();
+            userRecord.update();
         } catch (Throwable t) {
             throw new DatabaseRuntimeException("User update failed", t);
         }
@@ -109,7 +109,7 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBa
         userRecord.setResourceId(base.getResourceId().toString());
         userRecord.setCreationDate(new Timestamp(base.getCreationDate().getTime()));
 
-        return null;
+        return userRecord;
     }
 
     @Override

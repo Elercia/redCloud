@@ -8,13 +8,23 @@ import fr.elercia.redcloud.dao.generated.Indexes;
 import fr.elercia.redcloud.dao.generated.Keys;
 import fr.elercia.redcloud.dao.generated.Redcloud;
 import fr.elercia.redcloud.dao.generated.tables.records.UserPrivilegeRecord;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.TableImpl;
 
-import javax.annotation.Generated;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -30,7 +40,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserPrivilege extends TableImpl<UserPrivilegeRecord> {
 
-    private static final long serialVersionUID = 465782701;
+    private static final long serialVersionUID = -1278169845;
 
     /**
      * The reference instance of <code>redcloud.user_privilege</code>
@@ -58,7 +68,7 @@ public class UserPrivilege extends TableImpl<UserPrivilegeRecord> {
     /**
      * The column <code>redcloud.user_privilege.SUPER_ADMIN</code>.
      */
-    public final TableField<UserPrivilegeRecord, Byte> SUPER_ADMIN = createField("SUPER_ADMIN", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "");
+    public final TableField<UserPrivilegeRecord, Byte> SUPER_ADMIN = createField("SUPER_ADMIN", org.jooq.impl.SQLDataType.TINYINT.nullable(false), this, "");
 
     /**
      * Create a <code>redcloud.user_privilege</code> table reference
@@ -102,7 +112,7 @@ public class UserPrivilege extends TableImpl<UserPrivilegeRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.USER_PRIVILEGE_PRIMARY, Indexes.USER_PRIVILEGE_PRIVILEGE_ID_UINDEX, Indexes.USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_FK);
+        return Arrays.<Index>asList(Indexes.USER_PRIVILEGE_PRIMARY, Indexes.USER_PRIVILEGE_USER_PRIVILEGE_ID_UINDEX, Indexes.USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_UINDEX);
     }
 
     /**
@@ -126,7 +136,19 @@ public class UserPrivilege extends TableImpl<UserPrivilegeRecord> {
      */
     @Override
     public List<UniqueKey<UserPrivilegeRecord>> getKeys() {
-        return Arrays.<UniqueKey<UserPrivilegeRecord>>asList(Keys.KEY_USER_PRIVILEGE_PRIMARY, Keys.KEY_USER_PRIVILEGE_PRIVILEGE_ID_UINDEX);
+        return Arrays.<UniqueKey<UserPrivilegeRecord>>asList(Keys.KEY_USER_PRIVILEGE_PRIMARY, Keys.KEY_USER_PRIVILEGE_USER_PRIVILEGE_ID_UINDEX, Keys.KEY_USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_UINDEX);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<UserPrivilegeRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<UserPrivilegeRecord, ?>>asList(Keys.USER_PRIVILEGE_USER_ID_FK);
+    }
+
+    public User user() {
+        return new User(this, Keys.USER_PRIVILEGE_USER_ID_FK);
     }
 
     /**

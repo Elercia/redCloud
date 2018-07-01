@@ -28,11 +28,11 @@ public class SQLConfig {
     @Bean
     public DataSource dataSource() {
         BoneCPDataSource dataSource = new BoneCPDataSource();
- 
-        dataSource.setDriverClass(env.getRequiredProperty("db.driver"));
-        dataSource.setJdbcUrl(env.getRequiredProperty("db.url"));
-        dataSource.setUsername(env.getRequiredProperty("db.username"));
-        dataSource.setPassword(env.getRequiredProperty("db.password"));
+
+        dataSource.setDriverClass(env.getRequiredProperty("spring.datasource.driver-class-name"));
+        dataSource.setJdbcUrl(env.getRequiredProperty("spring.datasource.url"));
+        dataSource.setUsername(env.getRequiredProperty("spring.datasource.username"));
+        dataSource.setPassword(env.getRequiredProperty("spring.datasource.password"));
 
         return dataSource;
     }
@@ -71,7 +71,7 @@ public class SQLConfig {
             jooqToSpringExceptionTransformer()
         ));
 
-        String sqlDialectName = env.getRequiredProperty("jooq.sql.dialect");
+        String sqlDialectName = env.getRequiredProperty("spring.jooq.sql-dialect");
         SQLDialect dialect = SQLDialect.valueOf(sqlDialectName);
         jooqConfiguration.set(dialect);
 

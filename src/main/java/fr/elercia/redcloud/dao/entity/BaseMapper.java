@@ -24,7 +24,7 @@ public class BaseMapper {
 
     public static DirectoryBase recordToBase(DirectoryRecord directoryRecord) {
 
-        return new DirectoryBase(directoryRecord.getId(), directoryRecord.getName(), UUID.fromString(directoryRecord.getResourcesId()), directoryRecord.getCreationDate());
+        return new DirectoryBase(directoryRecord.getId(), directoryRecord.getName(), UUID.fromString(directoryRecord.getResourceId()), directoryRecord.getCreationDate());
     }
 
 
