@@ -1,9 +1,8 @@
 package fr.elercia.redcloud.dao.entity;
 
-import fr.elercia.redcloud.business.entity.PrivilegeType;
+import fr.elercia.redcloud.business.entity.UserType;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 public class UserBase {
@@ -13,15 +12,19 @@ public class UserBase {
     private Date creationDate;
     private UUID resourceId;
     private String password;
-    private List<PrivilegeType> privileges;
+    private UserType userType;
 
-    public UserBase(int id, String name, Date creationDate, UUID resourceId, String password, List<PrivilegeType> privileges) {
+    public UserBase(String name, Date creationDate, String password, UserType userType) {
+        this(0, name, creationDate, UUID.randomUUID(), password,  userType);
+    }
+
+    public UserBase(int id, String name, Date creationDate, UUID resourceId, String password, UserType userType) {
         this.id = id;
         this.name = name;
         this.creationDate = creationDate;
         this.resourceId = resourceId;
         this.password = password;
-        this.privileges = privileges;
+        this.userType = userType;
     }
 
     public int getId() {
@@ -64,11 +67,11 @@ public class UserBase {
         this.password = password;
     }
 
-    public List<PrivilegeType> getPrivileges() {
-        return privileges;
+    public UserType getUserType() {
+        return userType;
     }
 
-    public void setPrivileges(List<PrivilegeType> privileges) {
-        this.privileges = privileges;
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

@@ -1,6 +1,5 @@
 package fr.elercia.redcloud.api.error;
 
-import fr.elercia.redcloud.api.interceptor.RequirePrivilegeInterceptor;
 import fr.elercia.redcloud.logging.LoggerWrapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,7 @@ import java.util.Date;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final LoggerWrapper LOG = new LoggerWrapper(RequirePrivilegeInterceptor.class);
+    private static final LoggerWrapper LOG = new LoggerWrapper(RestExceptionHandler.class);
 
     @ExceptionHandler(Throwable.class)
     public final ResponseEntity<ErrorDetails> handleAllExceptions(Throwable ex, WebRequest request) {
@@ -22,7 +21,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         LOG.error("Handle rest exception", "exception", ex.getClass().getSimpleName());
         ex.printStackTrace();
 
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(true));
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), "[" + ex.getClass().getSimpleName() + "] " + ex.getMessage(), request.getDescription(true));
 //        ErrorDetails errorDetails = new ErrorDetails(new Date(), "Internal server error.", request.getDescription(true));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }

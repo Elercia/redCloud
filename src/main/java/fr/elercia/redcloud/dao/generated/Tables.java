@@ -6,7 +6,6 @@ package fr.elercia.redcloud.dao.generated;
 
 import fr.elercia.redcloud.dao.generated.tables.Directory;
 import fr.elercia.redcloud.dao.generated.tables.User;
-import fr.elercia.redcloud.dao.generated.tables.UserPrivilege;
 
 import javax.annotation.Generated;
 
@@ -33,9 +32,4 @@ public class Tables {
      * The table <code>redcloud.user</code>.
      */
     public static final User USER = fr.elercia.redcloud.dao.generated.tables.User.USER;
-
-    /**
-     * The table <code>redcloud.user_privilege</code>.
-     */
-    public static final UserPrivilege USER_PRIVILEGE = fr.elercia.redcloud.dao.generated.tables.UserPrivilege.USER_PRIVILEGE;
 }

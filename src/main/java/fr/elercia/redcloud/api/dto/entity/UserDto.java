@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.api.dto.entity;
 
-import fr.elercia.redcloud.business.entity.PrivilegeType;
+import fr.elercia.redcloud.business.entity.UserType;
 
 import java.util.Date;
 import java.util.List;
@@ -10,11 +10,13 @@ public class UserDto extends SimpleUserDto {
 
     private UUID resourceId;
     private Date createdDate;
+    private UserType userType;
 
-    public UserDto(String name, UUID resourceId, List<PrivilegeType> privileges, Date createdDate) {
-        super(name, privileges);
+    public UserDto(String name, UUID resourceId, UserType userType, Date createdDate) {
+        super(name);
         this.resourceId = resourceId;
         this.createdDate = createdDate;
+        this.userType = userType;
     }
 
     public UUID getResourceId() {
@@ -23,5 +25,9 @@ public class UserDto extends SimpleUserDto {
 
     public Date getCreatedDate() {
         return createdDate;
+    }
+
+    public UserType getUserType() {
+        return userType;
     }
 }

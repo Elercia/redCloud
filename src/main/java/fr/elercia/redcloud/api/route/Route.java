@@ -8,6 +8,7 @@ public class Route {
     public static final String TEST_SERVICE = TEST + "testservice/";
 
     public static final String USERS = BASE + "users/";
+    public static final String USERS_NAME = USERS + "name/";
     public static final String USER = BASE + "user/" + QueryParam.USER_ID + "/";
 
     public static final String SESSION = BASE + "session/";

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class DtoMapper {
 
     public UserDto entityToDto(User user) {
-        return new UserDto(user.getName(), user.getResourceId(), user.getPrivilegesTypes(), user.getCreatedDate());
+        return new UserDto(user.getName(), user.getResourceId(), user.getUserType(), user.getCreatedDate());
     }
 
     public List<UserDto> entityToDto(List<User> user) {

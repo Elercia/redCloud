@@ -1,21 +1,11 @@
 package fr.elercia.redcloud.api.dto.entity;
 
-import fr.elercia.redcloud.business.entity.PrivilegeType;
-
-import java.util.List;
-
 public class SimpleUserDto {
 
     private String name;
-    private List<PrivilegeType> privileges;
 
-    public SimpleUserDto(String name, List<PrivilegeType> privileges) {
+    public SimpleUserDto(String name) {
         this.name = name;
-        this.privileges = privileges;
-    }
-
-    public List<PrivilegeType> getPrivileges() {
-        return privileges;
     }
 
     public String getName() {

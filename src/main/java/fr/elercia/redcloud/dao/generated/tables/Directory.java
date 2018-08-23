@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Directory extends TableImpl<DirectoryRecord> {
 
-    private static final long serialVersionUID = -1428760798;
+    private static final long serialVersionUID = 1121313301;
 
     /**
      * The reference instance of <code>redcloud.directory</code>
@@ -80,12 +80,12 @@ public class Directory extends TableImpl<DirectoryRecord> {
     /**
      * The column <code>redcloud.directory.parent_id</code>.
      */
-    public final TableField<DirectoryRecord, Integer> PARENT_ID = createField("parent_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
+    public final TableField<DirectoryRecord, Integer> PARENT_ID = createField("parent_id", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.field("NULL", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
      * The column <code>redcloud.directory.creation_date</code>.
      */
-    public final TableField<DirectoryRecord, Timestamp> CREATION_DATE = createField("creation_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<DirectoryRecord, Timestamp> CREATION_DATE = createField("creation_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("current_timestamp(6)", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>redcloud.directory</code> table reference

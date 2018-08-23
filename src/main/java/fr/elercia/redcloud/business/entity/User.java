@@ -1,7 +1,6 @@
 package fr.elercia.redcloud.business.entity;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 public class User {
@@ -9,17 +8,17 @@ public class User {
     private int id;
     private String name;
     private UUID resourceId;
-    private String password;
-    private List<PrivilegeType> privileges;
+    private String hashedPassword;
+    private UserType userType;
     private Date createdDate;
     private Directory rootDirectory;
 
-    public User(int id, String name, UUID resourceId, String password, List<PrivilegeType> privileges, Date createdDate, Directory rootDirectory) {
+    public User(int id, String name, UUID resourceId, String hashedPassword, UserType userType, Date createdDate, Directory rootDirectory) {
         this.id = id;
         this.name = name;
         this.resourceId = resourceId;
-        this.password = password;
-        this.privileges = privileges;
+        this.hashedPassword = hashedPassword;
+        this.userType = userType;
         this.createdDate = createdDate;
         this.rootDirectory = rootDirectory;
     }
@@ -40,12 +39,12 @@ public class User {
         this.name = name;
     }
 
-    public List<PrivilegeType> getPrivilegesTypes() {
-        return privileges;
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
-    public void setPrivileges(List<PrivilegeType> privileges) {
-        this.privileges = privileges;
+    public UserType getUserType() {
+        return userType;
     }
 
     public Date getCreatedDate() {
@@ -64,12 +63,12 @@ public class User {
         return resourceId;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 
-    public String getPassword() {
-        return password;
+    public String getHashedPassword() {
+        return hashedPassword;
     }
 
     public Directory getRootDirectory() {

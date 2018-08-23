@@ -2,13 +2,11 @@ package fr.elercia.redcloud.dao.repository.impl;
 
 import fr.elercia.redcloud.dao.entity.BaseMapper;
 import fr.elercia.redcloud.dao.entity.UserBase;
-import fr.elercia.redcloud.dao.generated.tables.records.UserPrivilegeRecord;
 import fr.elercia.redcloud.dao.generated.tables.records.UserRecord;
 import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.exceptions.DatabaseRuntimeException;
 import org.jooq.DSLContext;
 import org.jooq.Record;
-import org.jooq.SelectJoinStep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -18,7 +16,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static fr.elercia.redcloud.dao.generated.tables.User.USER;
-import static fr.elercia.redcloud.dao.generated.tables.UserPrivilege.USER_PRIVILEGE;
 
 @Repository
 public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBase> implements UserRepository {
@@ -85,7 +82,7 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBa
     @Override
     public List<UserBase> findByName(String name) {
         return createSelectQuery()
-                .where(USER.NAME.eq(name))
+                .where(USER.NAME.like("%" + name + "%"))
                 .fetch().map(this::mapToBase);
     }
 
@@ -93,9 +90,8 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBa
     protected UserBase mapToBase(Record record) {
 
         UserRecord userRecord = record.into(USER);
-        UserPrivilegeRecord userPrivilegeRecord = record.into(USER_PRIVILEGE);
 
-        return BaseMapper.recordToBase(userRecord, userPrivilegeRecord);
+        return BaseMapper.recordToBase(userRecord);
     }
 
     @Override
@@ -105,17 +101,11 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBa
 
         userRecord.setId(base.getId());
         userRecord.setName(base.getName());
-        userRecord.setPassword(base.getPassword());
+        userRecord.setHashedpassword(base.getPassword());
         userRecord.setResourceId(base.getResourceId().toString());
         userRecord.setCreationDate(new Timestamp(base.getCreationDate().getTime()));
+        userRecord.setUserType(base.getUserType().toString());
 
         return userRecord;
-    }
-
-    @Override
-    protected SelectJoinStep<Record> createSelectQuery() {
-        return jooq.select().from(USER)
-                .innerJoin(USER_PRIVILEGE)
-                .on(USER.ID.eq(USER_PRIVILEGE.USER_ID));
     }
 }

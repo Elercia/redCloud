@@ -10,11 +10,12 @@ public class BusinessMapper {
     }
 
     public static User mapToUser(UserBase userBase, DirectoryBase directoryBase) {
-        return new User(userBase.getId(), userBase.getName(), userBase.getResourceId(), userBase.getPassword(), userBase.getPrivileges(), userBase.getCreationDate(), mapToDirectory(directoryBase));
+        return new User(userBase.getId(), userBase.getName(), userBase.getResourceId(), userBase.getPassword(), userBase.getUserType(), userBase.getCreationDate(), null); //TODO Directory mapping
 
     }
 
     public static Directory mapToDirectory(DirectoryBase directoryBase) {
+
         return mapToDirectory(directoryBase, null);
     }
 

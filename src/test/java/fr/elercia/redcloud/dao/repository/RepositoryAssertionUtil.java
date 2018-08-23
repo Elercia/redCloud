@@ -1,6 +1,5 @@
 package fr.elercia.redcloud.dao.repository;
 
-import fr.elercia.redcloud.business.entity.PrivilegeType;
 import fr.elercia.redcloud.dao.entity.UserBase;
 import junit.framework.AssertionFailedError;
 
@@ -18,10 +17,6 @@ public class RepositoryAssertionUtil {
         assertEquals(one.getName(), two.getName(), message);
         assertEquals(one.getPassword(), two.getPassword(), message);
         assertEquals(one.getResourceId(), two.getResourceId(), message);
-
-        for(PrivilegeType privilegeType : one.getPrivileges()) {
-            if(!two.getPrivileges().contains(privilegeType))
-                throw new AssertionFailedError(message);
-        }
+        assertEquals(one.getUserType(), two.getUserType(), message);
     }
 }

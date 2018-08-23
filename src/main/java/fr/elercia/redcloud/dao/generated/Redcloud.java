@@ -6,7 +6,6 @@ package fr.elercia.redcloud.dao.generated;
 
 import fr.elercia.redcloud.dao.generated.tables.Directory;
 import fr.elercia.redcloud.dao.generated.tables.User;
-import fr.elercia.redcloud.dao.generated.tables.UserPrivilege;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +31,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Redcloud extends SchemaImpl {
 
-    private static final long serialVersionUID = -122112409;
+    private static final long serialVersionUID = 800226266;
 
     /**
      * The reference instance of <code>redcloud</code>
@@ -48,11 +47,6 @@ public class Redcloud extends SchemaImpl {
      * The table <code>redcloud.user</code>.
      */
     public final User USER = fr.elercia.redcloud.dao.generated.tables.User.USER;
-
-    /**
-     * The table <code>redcloud.user_privilege</code>.
-     */
-    public final UserPrivilege USER_PRIVILEGE = fr.elercia.redcloud.dao.generated.tables.UserPrivilege.USER_PRIVILEGE;
 
     /**
      * No further instances allowed
@@ -80,7 +74,6 @@ public class Redcloud extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             Directory.DIRECTORY,
-            User.USER,
-            UserPrivilege.USER_PRIVILEGE);
+            User.USER);
     }
 }

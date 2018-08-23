@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = -725258211;
+    private static final long serialVersionUID = 933034759;
 
     /**
      * The reference instance of <code>redcloud.user</code>
@@ -68,14 +68,19 @@ public class User extends TableImpl<UserRecord> {
     public final TableField<UserRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
 
     /**
-     * The column <code>redcloud.user.password</code>.
+     * The column <code>redcloud.user.user_type</code>.
      */
-    public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
+    public final TableField<UserRecord, String> USER_TYPE = createField("user_type", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
+
+    /**
+     * The column <code>redcloud.user.hashedPassword</code>.
+     */
+    public final TableField<UserRecord, String> HASHEDPASSWORD = createField("hashedPassword", org.jooq.impl.SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
      * The column <code>redcloud.user.creation_date</code>.
      */
-    public final TableField<UserRecord, Timestamp> CREATION_DATE = createField("creation_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<UserRecord, Timestamp> CREATION_DATE = createField("creation_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("current_timestamp(6)", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>redcloud.user.resource_id</code>.

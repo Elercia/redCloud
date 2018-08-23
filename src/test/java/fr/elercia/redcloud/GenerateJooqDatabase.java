@@ -12,9 +12,6 @@ class GenerateJooqDatabase {
     @Test
     void generate() throws Exception {
         Configuration configuration = JAXB.unmarshal(new File("sql/config.xml"), Configuration.class);
-        configuration.getJdbc()
-                .withUser("root")
-                .withPassword("password");
 
         GenerationTool.generate(configuration);
     }

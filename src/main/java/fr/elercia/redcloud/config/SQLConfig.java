@@ -79,7 +79,7 @@ public class SQLConfig {
     }
 
     @Bean
-    public DefaultDSLContext getDSLContext() {
+    public DefaultDSLContext getDSLContext() { // TODO Quit when database is not reachable
         return new DefaultDSLContext(configuration());
     }
 }

@@ -6,7 +6,6 @@ package fr.elercia.redcloud.dao.generated;
 
 import fr.elercia.redcloud.dao.generated.tables.Directory;
 import fr.elercia.redcloud.dao.generated.tables.User;
-import fr.elercia.redcloud.dao.generated.tables.UserPrivilege;
 
 import javax.annotation.Generated;
 
@@ -40,9 +39,6 @@ public class Indexes {
     public static final Index USER_USER_ID_UINDEX = Indexes0.USER_USER_ID_UINDEX;
     public static final Index USER_USER_NAME_UINDEX = Indexes0.USER_USER_NAME_UINDEX;
     public static final Index USER_USER_RESOURCE_ID_UINDEX = Indexes0.USER_USER_RESOURCE_ID_UINDEX;
-    public static final Index USER_PRIVILEGE_PRIMARY = Indexes0.USER_PRIVILEGE_PRIMARY;
-    public static final Index USER_PRIVILEGE_USER_PRIVILEGE_ID_UINDEX = Indexes0.USER_PRIVILEGE_USER_PRIVILEGE_ID_UINDEX;
-    public static final Index USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_UINDEX = Indexes0.USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_UINDEX;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -57,8 +53,5 @@ public class Indexes {
         public static Index USER_USER_ID_UINDEX = Internal.createIndex("user_id_uindex", User.USER, new OrderField[] { User.USER.ID }, true);
         public static Index USER_USER_NAME_UINDEX = Internal.createIndex("user_name_uindex", User.USER, new OrderField[] { User.USER.NAME }, true);
         public static Index USER_USER_RESOURCE_ID_UINDEX = Internal.createIndex("user_resource_id_uindex", User.USER, new OrderField[] { User.USER.RESOURCE_ID }, true);
-        public static Index USER_PRIVILEGE_PRIMARY = Internal.createIndex("PRIMARY", UserPrivilege.USER_PRIVILEGE, new OrderField[] { UserPrivilege.USER_PRIVILEGE.ID }, true);
-        public static Index USER_PRIVILEGE_USER_PRIVILEGE_ID_UINDEX = Internal.createIndex("user_privilege_id_uindex", UserPrivilege.USER_PRIVILEGE, new OrderField[] { UserPrivilege.USER_PRIVILEGE.ID }, true);
-        public static Index USER_PRIVILEGE_USER_PRIVILEGE_USER_ID_UINDEX = Internal.createIndex("user_privilege_user_id_uindex", UserPrivilege.USER_PRIVILEGE, new OrderField[] { UserPrivilege.USER_PRIVILEGE.USER_ID }, true);
     }
 }

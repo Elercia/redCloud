@@ -1,0 +1,13 @@
+
+Api :
+    Update and delete user
+    Directory apis
+        crud
+
+Services:
+    Create directory at user creation
+    Fetch root directory when fetching user
+    Add log
+
+DATABASE :
+    Create a trigger to add resource id by default when inserting resource
