@@ -17,11 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
 
 @Api(value = "Operations about users.", description = "Manage user and get info about them.")
 @RestController
+@RequestMapping("/")
 public class UserController {
 
     private static final LoggerWrapper LOG = new LoggerWrapper(UserController.class);
@@ -57,13 +59,13 @@ public class UserController {
 
     @ApiOperation(value = "Find user by name")
     @GetMapping(Route.USERS_NAME)
-    public List<UserDto> findByName(@RequestParam String researchedName) throws UserNotFoundException {
+    public UserDto findByName(@RequestParam String researchedName) throws UserNotFoundException {
 
         LOG.info("findByName", "name", researchedName);
 
-        List<User> users = userService.findByName(researchedName);
+        User user = userService.findByName(researchedName);
 
-        return dtoMapper.entityToDto(users);
+        return dtoMapper.entityToDto(user);
     }
 
     @ApiOperation(value = "Get one user")
@@ -72,9 +74,17 @@ public class UserController {
 
         LOG.info("getUser", "userId", userId);
 
-        // TODO auth service to check the right of getting on this user
         return dtoMapper.entityToDto(userService.findByResourceId(userId));
     }
 
+    @ApiOperation(value = "Get one user")
+    @DeleteMapping(Route.USER)
+    public void deleteUser(@RequestParam(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
 
+        LOG.info("deleteUser", "userId", userId);
+
+       User user = userService.findByResourceId(userId);
+
+       userService.deleteUser(user);
+    }
 }

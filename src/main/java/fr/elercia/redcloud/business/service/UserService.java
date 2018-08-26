@@ -2,7 +2,6 @@ package fr.elercia.redcloud.business.service;
 
 import com.google.common.collect.Lists;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
-import fr.elercia.redcloud.api.dto.entity.SimpleUserDto;
 import fr.elercia.redcloud.business.entity.BusinessMapper;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
@@ -22,10 +21,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private UserRepository userRepository;
+    private PasswordEncoderImpl passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoderImpl passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User findByResourceId(UUID userId) throws UserNotFoundException {
@@ -39,15 +40,15 @@ public class UserService {
         return BusinessMapper.mapToUser(userBase, null);
     }
 
-    public List<User> findByName(String name) throws UserNotFoundException {
+    public User findByName(String name) throws UserNotFoundException { // TODO return one uer instead of a list
 
         List<UserBase> userBases = userRepository.findByName(name);
 
-        if (userBases == null || userBases.isEmpty()) {
+        if (userBases == null || userBases.isEmpty() || userBases.size() > 1) {
             throw new UserNotFoundException();
         }
 
-        return userBases.stream().map(ub -> BusinessMapper.mapToUser(ub, null)).collect(Collectors.toList());
+        return BusinessMapper.mapToUser(userBases.get(0), null);
     }
 
     public List<User> getAllUsers() {
@@ -65,12 +66,17 @@ public class UserService {
             throw new InvalidUserCreationException("User with this name already exists");
         }
 
-        String hashedPassword = HashPasswordUtils.hashString(wantedUser.getUnHashedPassword());
+        String hashedPassword = passwordEncoder.encode(wantedUser.getUnHashedPassword());
 
         UserBase newUser = new UserBase(wantedUser.getName(), new Date(), hashedPassword, UserType.USER);
 
         newUser = userRepository.add(newUser);
 
         return BusinessMapper.mapToUser(newUser, null);
+    }
+
+    public void deleteUser(User user) {
+
+        userRepository.delete(user.getId());
     }
 }

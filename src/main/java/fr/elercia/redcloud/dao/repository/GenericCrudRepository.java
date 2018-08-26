@@ -7,7 +7,7 @@ public interface GenericCrudRepository<T> {
 
     T add(T entity);
 
-    void delete(T entity);
+    void delete(int id);
 
     void update(T entity);
 

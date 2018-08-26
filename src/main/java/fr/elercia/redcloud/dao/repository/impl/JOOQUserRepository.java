@@ -52,11 +52,11 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBa
     }
 
     @Override
-    public void delete(UserBase entity) {
+    public void delete(int id) {
 
-        int numberOfDelete = jooq.deleteFrom(USER).where(USER.ID.eq(entity.getId())).execute();
+        int numberOfDelete = jooq.deleteFrom(USER).where(USER.ID.eq(id)).execute();
         if (numberOfDelete == 0) {
-            throw new DatabaseRuntimeException("User not found found for delete (id:" + entity.getId() + ")");
+            throw new DatabaseRuntimeException("User not found found for delete (id:" + id + ")");
         }
     }
 

@@ -32,7 +32,7 @@ public class SwaggerConfig{
                 .version("0.1")
                 .license("GNU General Public License v3.0")
                 .licenseUrl("https://github.com/Elercia/redCloud/blob/master/LICENSE.md")
-                .contact(new Contact("Vincent Rabier", "https://github.com/Elercia", "rabierv@hotmail.fr"))
+                .contact(new Contact("-", "https://github.com/Elercia", "-"))
                 .build();
     }
 }
