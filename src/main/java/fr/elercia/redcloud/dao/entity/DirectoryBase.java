@@ -7,12 +7,14 @@ public class DirectoryBase {
 
     private int id;
     private String name;
+    private Integer parentId;
     private UUID resourceID;
     private Date creationDate;
 
-    public DirectoryBase(int id, String name, UUID resourceID, Date creationDate) {
+    public DirectoryBase(int id, String name, Integer parentId, UUID resourceID, Date creationDate) {
         this.id = id;
         this.name = name;
+        this.parentId = parentId;
         this.resourceID = resourceID;
         this.creationDate = creationDate;
     }
@@ -47,5 +49,13 @@ public class DirectoryBase {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

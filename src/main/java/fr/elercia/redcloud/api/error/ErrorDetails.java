@@ -1,20 +1,21 @@
 package fr.elercia.redcloud.api.error;
 
+import java.time.Instant;
 import java.util.Date;
 
 public class ErrorDetails {
-    private Date timestamp;
+    private Instant timestamp;
     private String message;
     private String details;
 
-    public ErrorDetails(Date timestamp, String message, String details) {
+    public ErrorDetails(Instant timestamp, String message, String details) {
         super();
         this.timestamp = timestamp;
         this.message = message;
         this.details = details;
     }
 
-    public Date getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 

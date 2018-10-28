@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "Create a user")
-    @PostMapping(name = Route.USERS, consumes = {"application/json"})
+    @PostMapping(Route.USERS)
     public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto wantedUser) throws InvalidUserCreationException {
 
         LOG.info("createUser", "name", wantedUser.getName());

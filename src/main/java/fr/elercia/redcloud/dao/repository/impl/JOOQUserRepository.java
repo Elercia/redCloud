@@ -18,7 +18,7 @@ import java.util.UUID;
 import static fr.elercia.redcloud.dao.generated.tables.User.USER;
 
 @Repository
-public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBase> implements UserRepository {
+public class JOOQUserRepository extends JOOQUtilityRepository<UserRecord, UserBase> implements UserRepository {
 
     @Autowired
     public JOOQUserRepository(@Qualifier("getDSLContext") DSLContext jooq) {
@@ -82,7 +82,7 @@ public class JOOQUserRepository extends JooqUtilityRepository<UserRecord, UserBa
     @Override
     public List<UserBase> findByName(String name) {
         return createSelectQuery()
-                .where(USER.NAME.like("%" + name + "%"))
+                .where(USER.NAME.eq(name))
                 .fetch().map(this::mapToBase);
     }
 

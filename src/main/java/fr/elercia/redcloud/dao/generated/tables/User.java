@@ -16,11 +16,9 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import org.jooq.Field;
-import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
-import org.jooq.Record;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = 933034759;
+    private static final long serialVersionUID = 1205163036;
 
     /**
      * The reference instance of <code>redcloud.user</code>
@@ -114,10 +112,6 @@ public class User extends TableImpl<UserRecord> {
 
     private User(Name alias, Table<UserRecord> aliased, Field<?>[] parameters) {
         super(alias, null, aliased, parameters, DSL.comment(""));
-    }
-
-    public <O extends Record> User(Table<O> child, ForeignKey<O, UserRecord> key) {
-        super(child, key, USER);
     }
 
     /**

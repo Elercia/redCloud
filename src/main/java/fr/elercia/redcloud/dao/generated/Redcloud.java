@@ -5,6 +5,7 @@ package fr.elercia.redcloud.dao.generated;
 
 
 import fr.elercia.redcloud.dao.generated.tables.Directory;
+import fr.elercia.redcloud.dao.generated.tables.File;
 import fr.elercia.redcloud.dao.generated.tables.User;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Redcloud extends SchemaImpl {
 
-    private static final long serialVersionUID = 800226266;
+    private static final long serialVersionUID = 2079461191;
 
     /**
      * The reference instance of <code>redcloud</code>
@@ -42,6 +43,11 @@ public class Redcloud extends SchemaImpl {
      * The table <code>redcloud.directory</code>.
      */
     public final Directory DIRECTORY = fr.elercia.redcloud.dao.generated.tables.Directory.DIRECTORY;
+
+    /**
+     * The table <code>redcloud.file</code>.
+     */
+    public final File FILE = fr.elercia.redcloud.dao.generated.tables.File.FILE;
 
     /**
      * The table <code>redcloud.user</code>.
@@ -74,6 +80,7 @@ public class Redcloud extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             Directory.DIRECTORY,
+            File.FILE,
             User.USER);
     }
 }

@@ -5,8 +5,10 @@ package fr.elercia.redcloud.dao.generated;
 
 
 import fr.elercia.redcloud.dao.generated.tables.Directory;
+import fr.elercia.redcloud.dao.generated.tables.File;
 import fr.elercia.redcloud.dao.generated.tables.User;
 import fr.elercia.redcloud.dao.generated.tables.records.DirectoryRecord;
+import fr.elercia.redcloud.dao.generated.tables.records.FileRecord;
 import fr.elercia.redcloud.dao.generated.tables.records.UserRecord;
 
 import javax.annotation.Generated;
@@ -36,6 +38,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<DirectoryRecord, Integer> IDENTITY_DIRECTORY = Identities0.IDENTITY_DIRECTORY;
+    public static final Identity<FileRecord, Integer> IDENTITY_FILE = Identities0.IDENTITY_FILE;
     public static final Identity<UserRecord, Integer> IDENTITY_USER = Identities0.IDENTITY_USER;
 
     // -------------------------------------------------------------------------
@@ -44,6 +47,9 @@ public class Keys {
 
     public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_PRIMARY = UniqueKeys0.KEY_DIRECTORY_PRIMARY;
     public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_DIRECTORY_ID_UINDEX = UniqueKeys0.KEY_DIRECTORY_DIRECTORY_ID_UINDEX;
+    public static final UniqueKey<FileRecord> KEY_FILE_PRIMARY = UniqueKeys0.KEY_FILE_PRIMARY;
+    public static final UniqueKey<FileRecord> KEY_FILE_FILE_ID_UINDEX = UniqueKeys0.KEY_FILE_FILE_ID_UINDEX;
+    public static final UniqueKey<FileRecord> KEY_FILE_FILE_RESOURCE_ID_UINDEX = UniqueKeys0.KEY_FILE_FILE_RESOURCE_ID_UINDEX;
     public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = UniqueKeys0.KEY_USER_PRIMARY;
     public static final UniqueKey<UserRecord> KEY_USER_USER_ID_UINDEX = UniqueKeys0.KEY_USER_USER_ID_UINDEX;
     public static final UniqueKey<UserRecord> KEY_USER_USER_NAME_UINDEX = UniqueKeys0.KEY_USER_USER_NAME_UINDEX;
@@ -53,8 +59,8 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<DirectoryRecord, UserRecord> DIRECTORY_USER_ID_FK = ForeignKeys0.DIRECTORY_USER_ID_FK;
     public static final ForeignKey<DirectoryRecord, DirectoryRecord> DIRECTORY_DIRECTORY_ID_FK = ForeignKeys0.DIRECTORY_DIRECTORY_ID_FK;
+    public static final ForeignKey<FileRecord, DirectoryRecord> FILE_DIRECTORY_ID_FK = ForeignKeys0.FILE_DIRECTORY_ID_FK;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -62,12 +68,16 @@ public class Keys {
 
     private static class Identities0 {
         public static Identity<DirectoryRecord, Integer> IDENTITY_DIRECTORY = Internal.createIdentity(Directory.DIRECTORY, Directory.DIRECTORY.ID);
+        public static Identity<FileRecord, Integer> IDENTITY_FILE = Internal.createIdentity(File.FILE, File.FILE.ID);
         public static Identity<UserRecord, Integer> IDENTITY_USER = Internal.createIdentity(User.USER, User.USER.ID);
     }
 
     private static class UniqueKeys0 {
         public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_PRIMARY = Internal.createUniqueKey(Directory.DIRECTORY, "KEY_directory_PRIMARY", Directory.DIRECTORY.ID);
         public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_DIRECTORY_ID_UINDEX = Internal.createUniqueKey(Directory.DIRECTORY, "KEY_directory_directory_id_uindex", Directory.DIRECTORY.ID);
+        public static final UniqueKey<FileRecord> KEY_FILE_PRIMARY = Internal.createUniqueKey(File.FILE, "KEY_file_PRIMARY", File.FILE.ID);
+        public static final UniqueKey<FileRecord> KEY_FILE_FILE_ID_UINDEX = Internal.createUniqueKey(File.FILE, "KEY_file_file_id_uindex", File.FILE.ID);
+        public static final UniqueKey<FileRecord> KEY_FILE_FILE_RESOURCE_ID_UINDEX = Internal.createUniqueKey(File.FILE, "KEY_file_file_resource_id_uindex", File.FILE.RESOURCE_ID);
         public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = Internal.createUniqueKey(User.USER, "KEY_user_PRIMARY", User.USER.ID);
         public static final UniqueKey<UserRecord> KEY_USER_USER_ID_UINDEX = Internal.createUniqueKey(User.USER, "KEY_user_user_id_uindex", User.USER.ID);
         public static final UniqueKey<UserRecord> KEY_USER_USER_NAME_UINDEX = Internal.createUniqueKey(User.USER, "KEY_user_user_name_uindex", User.USER.NAME);
@@ -75,7 +85,7 @@ public class Keys {
     }
 
     private static class ForeignKeys0 {
-        public static final ForeignKey<DirectoryRecord, UserRecord> DIRECTORY_USER_ID_FK = Internal.createForeignKey(fr.elercia.redcloud.dao.generated.Keys.KEY_USER_PRIMARY, Directory.DIRECTORY, "directory_user_id_fk", Directory.DIRECTORY.USER_ID);
         public static final ForeignKey<DirectoryRecord, DirectoryRecord> DIRECTORY_DIRECTORY_ID_FK = Internal.createForeignKey(fr.elercia.redcloud.dao.generated.Keys.KEY_DIRECTORY_PRIMARY, Directory.DIRECTORY, "directory_directory_id_fk", Directory.DIRECTORY.PARENT_ID);
+        public static final ForeignKey<FileRecord, DirectoryRecord> FILE_DIRECTORY_ID_FK = Internal.createForeignKey(fr.elercia.redcloud.dao.generated.Keys.KEY_DIRECTORY_PRIMARY, File.FILE, "file_directory_id_fk", File.FILE.DIRECTORY_ID);
     }
 }

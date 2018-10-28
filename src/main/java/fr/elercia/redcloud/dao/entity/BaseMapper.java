@@ -2,13 +2,16 @@ package fr.elercia.redcloud.dao.entity;
 
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.dao.generated.tables.records.DirectoryRecord;
+import fr.elercia.redcloud.dao.generated.tables.records.FileRecord;
 import fr.elercia.redcloud.dao.generated.tables.records.UserRecord;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class BaseMapper {
+
+    public static FileBase recordToBase(FileRecord fileRecord) {
+        return null;
+    }
 
     public static UserBase recordToBase(UserRecord userRecord) {
         UserBase userBase = new UserBase(userRecord.getId(),
@@ -23,6 +26,11 @@ public class BaseMapper {
 
     public static DirectoryBase recordToBase(DirectoryRecord directoryRecord) {
 
-        return new DirectoryBase(directoryRecord.getId(), directoryRecord.getName(), UUID.fromString(directoryRecord.getResourceId().toString()), directoryRecord.getCreationDate());
+        return new DirectoryBase(
+                directoryRecord.getId(),
+                directoryRecord.getName(),
+                directoryRecord.getParentId(),
+                UUID.fromString(directoryRecord.getResourceId()),
+                directoryRecord.getCreationDate());
     }
 }

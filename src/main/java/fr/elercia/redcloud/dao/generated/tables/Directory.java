@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Directory extends TableImpl<DirectoryRecord> {
 
-    private static final long serialVersionUID = 1121313301;
+    private static final long serialVersionUID = 646613385;
 
     /**
      * The reference instance of <code>redcloud.directory</code>
@@ -71,11 +71,6 @@ public class Directory extends TableImpl<DirectoryRecord> {
      * The column <code>redcloud.directory.resource_id</code>.
      */
     public final TableField<DirectoryRecord, String> RESOURCE_ID = createField("resource_id", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "");
-
-    /**
-     * The column <code>redcloud.directory.user_id</code>.
-     */
-    public final TableField<DirectoryRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>redcloud.directory.parent_id</code>.
@@ -133,7 +128,7 @@ public class Directory extends TableImpl<DirectoryRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.DIRECTORY_DIRECTORY_DIRECTORY_ID_FK, Indexes.DIRECTORY_DIRECTORY_ID_UINDEX, Indexes.DIRECTORY_DIRECTORY_USER_ID_FK, Indexes.DIRECTORY_PRIMARY);
+        return Arrays.<Index>asList(Indexes.DIRECTORY_DIRECTORY_DIRECTORY_ID_FK, Indexes.DIRECTORY_DIRECTORY_ID_UINDEX, Indexes.DIRECTORY_PRIMARY);
     }
 
     /**
@@ -165,11 +160,7 @@ public class Directory extends TableImpl<DirectoryRecord> {
      */
     @Override
     public List<ForeignKey<DirectoryRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<DirectoryRecord, ?>>asList(Keys.DIRECTORY_USER_ID_FK, Keys.DIRECTORY_DIRECTORY_ID_FK);
-    }
-
-    public User user() {
-        return new User(this, Keys.DIRECTORY_USER_ID_FK);
+        return Arrays.<ForeignKey<DirectoryRecord, ?>>asList(Keys.DIRECTORY_DIRECTORY_ID_FK);
     }
 
     public fr.elercia.redcloud.dao.generated.tables.Directory directory() {

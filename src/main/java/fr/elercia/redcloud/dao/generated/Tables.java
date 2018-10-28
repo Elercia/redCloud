@@ -5,6 +5,7 @@ package fr.elercia.redcloud.dao.generated;
 
 
 import fr.elercia.redcloud.dao.generated.tables.Directory;
+import fr.elercia.redcloud.dao.generated.tables.File;
 import fr.elercia.redcloud.dao.generated.tables.User;
 
 import javax.annotation.Generated;
@@ -27,6 +28,11 @@ public class Tables {
      * The table <code>redcloud.directory</code>.
      */
     public static final Directory DIRECTORY = fr.elercia.redcloud.dao.generated.tables.Directory.DIRECTORY;
+
+    /**
+     * The table <code>redcloud.file</code>.
+     */
+    public static final File FILE = fr.elercia.redcloud.dao.generated.tables.File.FILE;
 
     /**
      * The table <code>redcloud.user</code>.

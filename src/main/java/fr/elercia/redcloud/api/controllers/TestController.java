@@ -1,6 +1,7 @@
 package fr.elercia.redcloud.api.controllers;
 
 import fr.elercia.redcloud.api.route.Route;
+import fr.elercia.redcloud.business.service.security.PermitAll;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,14 @@ public class TestController extends ControllerUtils{
 
     @ApiOperation(value = "Realise a ping on the redcloud api")
     @GetMapping(Route.PING)
+    @PermitAll
     public String ping() {
         return "pong";
     }
 
     @ApiOperation(value = "Test api. Input and outputs will change through time.")
     @GetMapping(Route.TEST_API)
+    @PermitAll
     public Enumeration<String> test() {
         return getRequest().getHeaderNames();
     }

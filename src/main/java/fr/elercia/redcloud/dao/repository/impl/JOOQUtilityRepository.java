@@ -5,12 +5,12 @@ import org.jooq.Record;
 import org.jooq.SelectJoinStep;
 import org.jooq.impl.TableImpl;
 
-public abstract class JooqUtilityRepository<R extends Record, T> {
+public abstract class JOOQUtilityRepository<R extends Record, T> {
 
     protected DSLContext jooq;
     private TableImpl<R> table;
 
-    protected JooqUtilityRepository(DSLContext jooq, TableImpl<R> table) {
+    protected JOOQUtilityRepository(DSLContext jooq, TableImpl<R> table) {
 
         this.jooq = jooq;
         this.table = table;

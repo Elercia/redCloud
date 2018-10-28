@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+
+import java.time.Instant;
 import java.util.Date;
 
 @ControllerAdvice
@@ -21,8 +23,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         LOG.error("Handle rest exception", "exception", ex.getClass().getSimpleName());
         ex.printStackTrace();
 
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), "[" + ex.getClass().getSimpleName() + "] " + ex.getMessage(), request.getDescription(true));
-//        ErrorDetails errorDetails = new ErrorDetails(new Date(), "Internal server error.", request.getDescription(true));
+        String message = "[" + ex.getClass().getSimpleName() + "] " + (ex.getMessage() != null ? ex.getMessage() : "");
+
+        ErrorDetails errorDetails = new ErrorDetails(Instant.now(), message, request.getDescription(true));
+//        ErrorDetails errorDetails = new ErrorDetails(nInstant.now(), "Internal server error.", request.getDescription(true));
+
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

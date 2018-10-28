@@ -12,4 +12,8 @@ public class ControllerUtils {
     public HttpServletRequest getRequest() {
         return request;
     }
+
+    public String getAuthToken() {
+        return null;
+    }
 }
