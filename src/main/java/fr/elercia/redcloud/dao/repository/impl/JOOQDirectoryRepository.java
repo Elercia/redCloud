@@ -33,7 +33,7 @@ public class JOOQDirectoryRepository extends JOOQUtilityRepository<DirectoryReco
         try {
             directoryRecord.insert();
         } catch (Throwable t) {
-            throw new DatabaseRuntimeException("User insert failed", t);
+            throw new DatabaseRuntimeException("Directory insert failed", t);
         }
 
         return findById(directoryRecord.getId());
@@ -47,7 +47,7 @@ public class JOOQDirectoryRepository extends JOOQUtilityRepository<DirectoryReco
         try {
             directoryRecord.update();
         } catch (Throwable t) {
-            throw new DatabaseRuntimeException("User update failed", t);
+            throw new DatabaseRuntimeException("Directory update failed", t);
         }
     }
 
@@ -56,7 +56,7 @@ public class JOOQDirectoryRepository extends JOOQUtilityRepository<DirectoryReco
 
         int numberOfDelete = jooq.deleteFrom(DIRECTORY).where(DIRECTORY.ID.eq(id)).execute();
         if (numberOfDelete == 0) {
-            throw new DatabaseRuntimeException("User not found found for delete (id:" + id + ")");
+            throw new DatabaseRuntimeException("Directory not found found for delete (id:" + id + ")");
         }
     }
 

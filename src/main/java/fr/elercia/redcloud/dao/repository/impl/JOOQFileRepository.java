@@ -3,7 +3,6 @@ package fr.elercia.redcloud.dao.repository.impl;
 import fr.elercia.redcloud.dao.entity.BaseMapper;
 import fr.elercia.redcloud.dao.entity.FileBase;
 import fr.elercia.redcloud.dao.generated.tables.records.FileRecord;
-import fr.elercia.redcloud.dao.generated.tables.records.UserRecord;
 import fr.elercia.redcloud.dao.repository.FileRepository;
 import fr.elercia.redcloud.exceptions.DatabaseRuntimeException;
 import org.jooq.DSLContext;
@@ -13,12 +12,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import static fr.elercia.redcloud.dao.generated.tables.File.FILE;
-import static fr.elercia.redcloud.dao.generated.tables.User.USER;
 
 @Repository
 public class JOOQFileRepository extends JOOQUtilityRepository<FileRecord, FileBase> implements FileRepository {
@@ -36,7 +33,7 @@ public class JOOQFileRepository extends JOOQUtilityRepository<FileRecord, FileBa
         try {
             fileRecord.insert();
         } catch (Throwable t) {
-            throw new DatabaseRuntimeException("User insert failed", t);
+            throw new DatabaseRuntimeException("File insert failed", t);
         }
 
         return findById(fileRecord.getId());
@@ -50,7 +47,7 @@ public class JOOQFileRepository extends JOOQUtilityRepository<FileRecord, FileBa
         try {
             fileRecord.update();
         } catch (Throwable t) {
-            throw new DatabaseRuntimeException("User update failed", t);
+            throw new DatabaseRuntimeException("File update failed", t);
         }
     }
 
@@ -59,7 +56,7 @@ public class JOOQFileRepository extends JOOQUtilityRepository<FileRecord, FileBa
 
         int numberOfDelete = jooq.deleteFrom(FILE).where(FILE.ID.eq(id)).execute();
         if (numberOfDelete == 0) {
-            throw new DatabaseRuntimeException("User not found found for delete (id:" + id + ")");
+            throw new DatabaseRuntimeException("File not found found for delete (id:" + id + ")");
         }
     }
 
