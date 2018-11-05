@@ -11,4 +11,5 @@ Services:
 
 DATABASE :
     Create a trigger to add resource id by default when inserting resource
-    JOOQUtility should implements update, delete, add
+    User
+        return null when user not found

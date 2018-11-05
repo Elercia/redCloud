@@ -10,7 +10,12 @@ import java.util.UUID;
 public class BaseMapper {
 
     public static FileBase recordToBase(FileRecord fileRecord) {
-        return null;
+        return new FileBase(
+                fileRecord.getId(),
+                fileRecord.getName(),
+                UUID.fromString(fileRecord.getResourceId()),
+                fileRecord.getCreationDate(),
+                fileRecord.getDirectoryId());
     }
 
     public static UserBase recordToBase(UserRecord userRecord) {

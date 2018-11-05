@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class TestUtils {
 
-    public static UserBase createUser() {
+    public static UserBase createUserBase() {
         return new UserBase(0, "Testuser", new Date(), UUID.randomUUID(), "password", UserType.USER);
     }
 

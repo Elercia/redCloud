@@ -36,7 +36,7 @@ public class JOOQUserRepository extends JOOQUtilityRepository<UserRecord, UserBa
             throw new DatabaseRuntimeException("User insert failed", t);
         }
 
-        return findByName(userRecord.getName()).get(0);
+        return findByName(userRecord.getName());
     }
 
     @Override
@@ -80,14 +80,18 @@ public class JOOQUserRepository extends JOOQUtilityRepository<UserRecord, UserBa
     }
 
     @Override
-    public List<UserBase> findByName(String name) {
-        return createSelectQuery()
+    public UserBase findByName(String name) {
+        return mapToBase(createSelectQuery()
                 .where(USER.NAME.eq(name))
-                .fetch().map(this::mapToBase);
+                .fetchOne());
     }
 
     @Override
     protected UserBase mapToBase(Record record) {
+
+        if(record == null) {
+            return null;
+        }
 
         UserRecord userRecord = record.into(USER);
 

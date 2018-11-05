@@ -1,4 +1,4 @@
-package fr.elercia.redcloud;
+package fr.elercia.redcloud.dao;
 
 import org.jooq.codegen.GenerationTool;
 import org.jooq.meta.jaxb.Configuration;

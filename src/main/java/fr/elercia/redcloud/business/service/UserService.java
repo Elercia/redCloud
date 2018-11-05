@@ -40,15 +40,15 @@ public class UserService {
         return BusinessMapper.mapToUser(userBase, null);
     }
 
-    public User findByName(String name) throws UserNotFoundException { // TODO return one uer instead of a list
+    public User findByName(String name) throws UserNotFoundException {
 
-        List<UserBase> userBases = userRepository.findByName(name);
+        UserBase userBase = userRepository.findByName(name);
 
-        if (userBases == null || userBases.isEmpty() || userBases.size() > 1) {
+        if (userBase == null) {
             throw new UserNotFoundException();
         }
 
-        return BusinessMapper.mapToUser(userBases.get(0), null);
+        return BusinessMapper.mapToUser(userBase, null);
     }
 
     public List<User> getAllUsers() {
@@ -60,9 +60,9 @@ public class UserService {
 
     public User createUser(CreateUserDto wantedUser) throws InvalidUserCreationException {
 
-        List<UserBase> userBases = userRepository.findByName(wantedUser.getName());
+        UserBase userBase = userRepository.findByName(wantedUser.getName());
 
-        if (!userBases.isEmpty()) {
+        if (userBase != null) {
             throw new InvalidUserCreationException("User with this name already exists");
         }
 

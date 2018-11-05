@@ -9,5 +9,5 @@ import java.util.UUID;
 public interface UserRepository extends GenericCrudRepository<UserBase> {
     UserBase findByResourceId(UUID id);
 
-    List<UserBase> findByName(String name);
+    UserBase findByName(String name);
 }
