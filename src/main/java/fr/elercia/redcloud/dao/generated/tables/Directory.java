@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Directory extends TableImpl<DirectoryRecord> {
 
-    private static final long serialVersionUID = 646613385;
+    private static final long serialVersionUID = -1055616946;
 
     /**
      * The reference instance of <code>redcloud.directory</code>
@@ -81,6 +81,11 @@ public class Directory extends TableImpl<DirectoryRecord> {
      * The column <code>redcloud.directory.creation_date</code>.
      */
     public final TableField<DirectoryRecord, Timestamp> CREATION_DATE = createField("creation_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("current_timestamp(6)", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+
+    /**
+     * The column <code>redcloud.directory.user_id</code>.
+     */
+    public final TableField<DirectoryRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * Create a <code>redcloud.directory</code> table reference
@@ -128,7 +133,7 @@ public class Directory extends TableImpl<DirectoryRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.DIRECTORY_DIRECTORY_DIRECTORY_ID_FK, Indexes.DIRECTORY_DIRECTORY_ID_UINDEX, Indexes.DIRECTORY_PRIMARY);
+        return Arrays.<Index>asList(Indexes.DIRECTORY_DIRECTORY_DIRECTORY_ID_FK, Indexes.DIRECTORY_DIRECTORY_ID_UINDEX, Indexes.DIRECTORY_DIRECTORY_UNIQUE_NAME_PARENT, Indexes.DIRECTORY_DIRECTORY_USER_USER_ID_FK, Indexes.DIRECTORY_PRIMARY);
     }
 
     /**
@@ -152,7 +157,7 @@ public class Directory extends TableImpl<DirectoryRecord> {
      */
     @Override
     public List<UniqueKey<DirectoryRecord>> getKeys() {
-        return Arrays.<UniqueKey<DirectoryRecord>>asList(Keys.KEY_DIRECTORY_PRIMARY, Keys.KEY_DIRECTORY_DIRECTORY_ID_UINDEX);
+        return Arrays.<UniqueKey<DirectoryRecord>>asList(Keys.KEY_DIRECTORY_PRIMARY, Keys.KEY_DIRECTORY_DIRECTORY_ID_UINDEX, Keys.KEY_DIRECTORY_DIRECTORY_UNIQUE_NAME_PARENT);
     }
 
     /**
@@ -160,11 +165,11 @@ public class Directory extends TableImpl<DirectoryRecord> {
      */
     @Override
     public List<ForeignKey<DirectoryRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<DirectoryRecord, ?>>asList(Keys.DIRECTORY_DIRECTORY_ID_FK);
+        return Arrays.<ForeignKey<DirectoryRecord, ?>>asList(Keys.DIRECTORY_USER_USER_ID_FK);
     }
 
-    public fr.elercia.redcloud.dao.generated.tables.Directory directory() {
-        return new fr.elercia.redcloud.dao.generated.tables.Directory(this, Keys.DIRECTORY_DIRECTORY_ID_FK);
+    public User user() {
+        return new User(this, Keys.DIRECTORY_USER_USER_ID_FK);
     }
 
     /**

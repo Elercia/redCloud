@@ -16,6 +16,14 @@ public abstract class JOOQUtilityRepository<R extends Record, T> {
         this.table = table;
     }
 
+    protected T map(Record record) {
+        if(record == null) {
+            return null;
+        }
+
+        return mapToBase(record);
+    }
+
     protected abstract T mapToBase(Record record);
 
     protected abstract R mapToRecord(T base);

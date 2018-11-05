@@ -36,6 +36,7 @@ public class BaseMapper {
                 directoryRecord.getName(),
                 directoryRecord.getParentId(),
                 UUID.fromString(directoryRecord.getResourceId()),
-                directoryRecord.getCreationDate());
+                directoryRecord.getCreationDate(),
+                directoryRecord.getUserId());
     }
 }

@@ -68,7 +68,7 @@ public class UserService {
 
         String hashedPassword = passwordEncoder.encode(wantedUser.getUnHashedPassword());
 
-        UserBase newUser = new UserBase(wantedUser.getName(), new Date(), hashedPassword, UserType.USER);
+        UserBase newUser = new UserBase(wantedUser.getName(), new Date(), hashedPassword, UserType.USER, 0);//FIXME dir id
 
         newUser = userRepository.add(newUser);
 

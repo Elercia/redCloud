@@ -47,8 +47,10 @@ public class Keys {
 
     public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_PRIMARY = UniqueKeys0.KEY_DIRECTORY_PRIMARY;
     public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_DIRECTORY_ID_UINDEX = UniqueKeys0.KEY_DIRECTORY_DIRECTORY_ID_UINDEX;
+    public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_DIRECTORY_UNIQUE_NAME_PARENT = UniqueKeys0.KEY_DIRECTORY_DIRECTORY_UNIQUE_NAME_PARENT;
     public static final UniqueKey<FileRecord> KEY_FILE_PRIMARY = UniqueKeys0.KEY_FILE_PRIMARY;
     public static final UniqueKey<FileRecord> KEY_FILE_FILE_ID_UINDEX = UniqueKeys0.KEY_FILE_FILE_ID_UINDEX;
+    public static final UniqueKey<FileRecord> KEY_FILE_FILE_UNIQUE_NAME_DIRECTORY = UniqueKeys0.KEY_FILE_FILE_UNIQUE_NAME_DIRECTORY;
     public static final UniqueKey<FileRecord> KEY_FILE_FILE_RESOURCE_ID_UINDEX = UniqueKeys0.KEY_FILE_FILE_RESOURCE_ID_UINDEX;
     public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = UniqueKeys0.KEY_USER_PRIMARY;
     public static final UniqueKey<UserRecord> KEY_USER_USER_ID_UINDEX = UniqueKeys0.KEY_USER_USER_ID_UINDEX;
@@ -59,7 +61,7 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<DirectoryRecord, DirectoryRecord> DIRECTORY_DIRECTORY_ID_FK = ForeignKeys0.DIRECTORY_DIRECTORY_ID_FK;
+    public static final ForeignKey<DirectoryRecord, UserRecord> DIRECTORY_USER_USER_ID_FK = ForeignKeys0.DIRECTORY_USER_USER_ID_FK;
     public static final ForeignKey<FileRecord, DirectoryRecord> FILE_DIRECTORY_ID_FK = ForeignKeys0.FILE_DIRECTORY_ID_FK;
 
     // -------------------------------------------------------------------------
@@ -75,8 +77,10 @@ public class Keys {
     private static class UniqueKeys0 {
         public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_PRIMARY = Internal.createUniqueKey(Directory.DIRECTORY, "KEY_directory_PRIMARY", Directory.DIRECTORY.ID);
         public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_DIRECTORY_ID_UINDEX = Internal.createUniqueKey(Directory.DIRECTORY, "KEY_directory_directory_id_uindex", Directory.DIRECTORY.ID);
+        public static final UniqueKey<DirectoryRecord> KEY_DIRECTORY_DIRECTORY_UNIQUE_NAME_PARENT = Internal.createUniqueKey(Directory.DIRECTORY, "KEY_directory_directory_unique_name_parent", Directory.DIRECTORY.PARENT_ID, Directory.DIRECTORY.NAME);
         public static final UniqueKey<FileRecord> KEY_FILE_PRIMARY = Internal.createUniqueKey(File.FILE, "KEY_file_PRIMARY", File.FILE.ID);
         public static final UniqueKey<FileRecord> KEY_FILE_FILE_ID_UINDEX = Internal.createUniqueKey(File.FILE, "KEY_file_file_id_uindex", File.FILE.ID);
+        public static final UniqueKey<FileRecord> KEY_FILE_FILE_UNIQUE_NAME_DIRECTORY = Internal.createUniqueKey(File.FILE, "KEY_file_file_unique_name_directory", File.FILE.DIRECTORY_ID, File.FILE.NAME);
         public static final UniqueKey<FileRecord> KEY_FILE_FILE_RESOURCE_ID_UINDEX = Internal.createUniqueKey(File.FILE, "KEY_file_file_resource_id_uindex", File.FILE.RESOURCE_ID);
         public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = Internal.createUniqueKey(User.USER, "KEY_user_PRIMARY", User.USER.ID);
         public static final UniqueKey<UserRecord> KEY_USER_USER_ID_UINDEX = Internal.createUniqueKey(User.USER, "KEY_user_user_id_uindex", User.USER.ID);
@@ -85,7 +89,7 @@ public class Keys {
     }
 
     private static class ForeignKeys0 {
-        public static final ForeignKey<DirectoryRecord, DirectoryRecord> DIRECTORY_DIRECTORY_ID_FK = Internal.createForeignKey(fr.elercia.redcloud.dao.generated.Keys.KEY_DIRECTORY_PRIMARY, Directory.DIRECTORY, "directory_directory_id_fk", Directory.DIRECTORY.PARENT_ID);
+        public static final ForeignKey<DirectoryRecord, UserRecord> DIRECTORY_USER_USER_ID_FK = Internal.createForeignKey(fr.elercia.redcloud.dao.generated.Keys.KEY_USER_PRIMARY, Directory.DIRECTORY, "directory_user_user_id_fk", Directory.DIRECTORY.USER_ID);
         public static final ForeignKey<FileRecord, DirectoryRecord> FILE_DIRECTORY_ID_FK = Internal.createForeignKey(fr.elercia.redcloud.dao.generated.Keys.KEY_DIRECTORY_PRIMARY, File.FILE, "file_directory_id_fk", File.FILE.DIRECTORY_ID);
     }
 }

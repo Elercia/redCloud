@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class File extends TableImpl<FileRecord> {
 
-    private static final long serialVersionUID = 78627264;
+    private static final long serialVersionUID = -1185066663;
 
     /**
      * The reference instance of <code>redcloud.file</code>
@@ -123,7 +123,7 @@ public class File extends TableImpl<FileRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.FILE_FILE_DIRECTORY_ID_FK, Indexes.FILE_FILE_ID_UINDEX, Indexes.FILE_FILE_RESOURCE_ID_UINDEX, Indexes.FILE_PRIMARY);
+        return Arrays.<Index>asList(Indexes.FILE_FILE_ID_UINDEX, Indexes.FILE_FILE_RESOURCE_ID_UINDEX, Indexes.FILE_FILE_UNIQUE_NAME_DIRECTORY, Indexes.FILE_PRIMARY);
     }
 
     /**
@@ -147,7 +147,7 @@ public class File extends TableImpl<FileRecord> {
      */
     @Override
     public List<UniqueKey<FileRecord>> getKeys() {
-        return Arrays.<UniqueKey<FileRecord>>asList(Keys.KEY_FILE_PRIMARY, Keys.KEY_FILE_FILE_ID_UINDEX, Keys.KEY_FILE_FILE_RESOURCE_ID_UINDEX);
+        return Arrays.<UniqueKey<FileRecord>>asList(Keys.KEY_FILE_PRIMARY, Keys.KEY_FILE_FILE_ID_UINDEX, Keys.KEY_FILE_FILE_UNIQUE_NAME_DIRECTORY, Keys.KEY_FILE_FILE_RESOURCE_ID_UINDEX);
     }
 
     /**

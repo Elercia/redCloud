@@ -62,19 +62,19 @@ public class JOOQDirectoryRepository extends JOOQUtilityRepository<DirectoryReco
 
     @Override
     public List<DirectoryBase> findAll() {
-        return createSelectQuery().fetch().map(this::mapToBase);
+        return createSelectQuery().fetch().map(this::map);
     }
 
     @Override
     public DirectoryBase findById(int id) {
-        return mapToBase(createSelectQuery()
+        return map(createSelectQuery()
                 .where(DIRECTORY.ID.eq(id))
                 .fetchOne());
     }
 
     @Override
     public DirectoryBase findByResourceId(UUID id) {
-        return mapToBase(createSelectQuery()
+        return map(createSelectQuery()
                 .where(DIRECTORY.RESOURCE_ID.eq(id.toString()))
                 .fetchOne());
     }
@@ -97,6 +97,7 @@ public class JOOQDirectoryRepository extends JOOQUtilityRepository<DirectoryReco
         directoryRecord.setParentId(base.getParentId());
         directoryRecord.setResourceId(base.getResourceId().toString());
         directoryRecord.setCreationDate(new Timestamp(base.getCreationDate().getTime()));
+        directoryRecord.setUserId(base.getUserId());
 
         return directoryRecord;
     }

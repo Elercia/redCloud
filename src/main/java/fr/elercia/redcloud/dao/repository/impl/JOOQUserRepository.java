@@ -62,26 +62,26 @@ public class JOOQUserRepository extends JOOQUtilityRepository<UserRecord, UserBa
 
     @Override
     public List<UserBase> findAll() {
-        return createSelectQuery().fetch().map(this::mapToBase);
+        return createSelectQuery().fetch().map(this::map);
     }
 
     @Override
     public UserBase findById(int id) {
-        return mapToBase(createSelectQuery()
+        return map(createSelectQuery()
                 .where(USER.ID.eq(id))
                 .fetchOne());
     }
 
     @Override
     public UserBase findByResourceId(UUID id) {
-        return mapToBase(createSelectQuery()
+        return map(createSelectQuery()
                 .where(USER.RESOURCE_ID.eq(id.toString()))
                 .fetchOne());
     }
 
     @Override
     public UserBase findByName(String name) {
-        return mapToBase(createSelectQuery()
+        return map(createSelectQuery()
                 .where(USER.NAME.eq(name))
                 .fetchOne());
     }

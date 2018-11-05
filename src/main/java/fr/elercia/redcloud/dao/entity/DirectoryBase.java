@@ -10,13 +10,15 @@ public class DirectoryBase {
     private Integer parentId;
     private UUID resourceID;
     private Date creationDate;
+    private int userId;
 
-    public DirectoryBase(int id, String name, Integer parentId, UUID resourceID, Date creationDate) {
+    public DirectoryBase(int id, String name, Integer parentId, UUID resourceID, Date creationDate, int userId) {
         this.id = id;
         this.name = name;
         this.parentId = parentId;
         this.resourceID = resourceID;
         this.creationDate = creationDate;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -57,5 +59,13 @@ public class DirectoryBase {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
