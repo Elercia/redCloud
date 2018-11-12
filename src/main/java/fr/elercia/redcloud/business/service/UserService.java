@@ -3,6 +3,7 @@ package fr.elercia.redcloud.business.service;
 import com.google.common.collect.Lists;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.business.entity.BusinessMapper;
+import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.dao.entity.UserBase;
@@ -21,12 +22,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private UserRepository userRepository;
-    private PasswordEncoderImpl passwordEncoder;
+    private DirectoryService directoryService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoderImpl passwordEncoder) {
+    public UserService(UserRepository userRepository, DirectoryService directoryService) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.directoryService = directoryService;
     }
 
     public User findByResourceId(UUID userId) throws UserNotFoundException {
@@ -37,7 +38,7 @@ public class UserService {
             throw new UserNotFoundException();
         }
 
-        return BusinessMapper.mapToUser(userBase, null);
+        return BusinessMapper.mapToUser(userBase, directoryService.findRootDirectory(userBase.getId()));
     }
 
     public User findByName(String name) throws UserNotFoundException {
@@ -54,7 +55,7 @@ public class UserService {
     public List<User> getAllUsers() {
         return Lists.newArrayList(userRepository.findAll())
                 .stream()
-                .map(e -> BusinessMapper.mapToUser(e, null))
+                .map(e -> BusinessMapper.mapToUser(e, directoryService.findRootDirectory(e.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -66,13 +67,19 @@ public class UserService {
             throw new InvalidUserCreationException("User with this name already exists");
         }
 
-        String hashedPassword = passwordEncoder.encode(wantedUser.getUnHashedPassword());
+        String hashedPassword = PasswordEncoder.encode(wantedUser.getUnHashedPassword());
 
-        UserBase newUser = new UserBase(wantedUser.getName(), new Date(), hashedPassword, UserType.USER, 0);//FIXME dir id
+        UserBase newUserBase = new UserBase(wantedUser.getName(), new Date(), hashedPassword, UserType.USER);
+        newUserBase = userRepository.add(newUserBase);
 
-        newUser = userRepository.add(newUser);
+        User newUser = BusinessMapper.mapToUser(newUserBase, null);
 
-        return BusinessMapper.mapToUser(newUser, null);
+        Directory directory = new Directory("root", null, newUser.getId());
+        directoryService.create(directory);
+
+        newUser.setRootDirectory(directory);
+
+        return newUser;
     }
 
     public void deleteUser(User user) {

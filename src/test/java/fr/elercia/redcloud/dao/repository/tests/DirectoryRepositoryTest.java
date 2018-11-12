@@ -1,9 +1,12 @@
-package fr.elercia.redcloud.dao.repository;
+package fr.elercia.redcloud.dao.repository.tests;
 
 import fr.elercia.redcloud.TestUtils;
 import fr.elercia.redcloud.config.SQLConfig;
 import fr.elercia.redcloud.dao.entity.DirectoryBase;
 import fr.elercia.redcloud.dao.entity.UserBase;
+import fr.elercia.redcloud.dao.repository.DirectoryRepository;
+import fr.elercia.redcloud.dao.repository.RepositoryAssertionUtil;
+import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.dao.repository.impl.JOOQDirectoryRepository;
 import fr.elercia.redcloud.dao.repository.impl.JOOQUserRepository;
 import org.jooq.DSLContext;
@@ -55,7 +58,7 @@ public class DirectoryRepositoryTest {
 
         DirectoryBase newDir = directoryRepository.findByResourceId(directoryBase.getResourceId());
 
-        RepositoryAssertionUtil.assertDirectoryBaseEquals(newDir, newDir, "Directory not updated");
+        RepositoryAssertionUtil.assertDirectoryBaseEquals(directoryBase, newDir, "Directory not updated");
 
         // delete directory
         directoryRepository.delete(directoryBase.getId());

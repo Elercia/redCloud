@@ -1,7 +1,9 @@
 package fr.elercia.redcloud.business.service;
 
+import fr.elercia.redcloud.business.entity.Token;
 import fr.elercia.redcloud.business.entity.User;
-import fr.elercia.redcloud.exceptions.WrongLoginException;
+import fr.elercia.redcloud.exceptions.InvalidLoginException;
+import fr.elercia.redcloud.exceptions.TokenNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,39 +12,38 @@ public class AuthenticationService {
 
     private TokenStore tokenStore;
     private UserService userService;
-    private PasswordEncoderImpl passwordEncoder;
 
     @Autowired
-    public AuthenticationService(TokenStore tokenStore, UserService userService, PasswordEncoderImpl passwordEncoder) {
+    public AuthenticationService(TokenStore tokenStore, UserService userService) {
 
         this.tokenStore = tokenStore;
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    public String login(String username, String password) throws WrongLoginException {
+    public Token login(String username, String password) throws InvalidLoginException {
 
         User user;
+
         try {
             user = userService.findByName(username);
         } catch (Exception e) {
-            throw new WrongLoginException("No User found for this username", e);
+            throw new InvalidLoginException("No User found for this username", e);
         }
 
-        if(!passwordEncoder.matches(password, user.getHashedPassword())) {
-            throw new WrongLoginException("Password don't matches");
+        if(!PasswordEncoder.matches(password, user.getHashedPassword())) {
+            throw new InvalidLoginException("Password don't matches");
         }
 
-        return tokenStore.newToken(user);
+        return tokenStore.fabricToken(user);
     }
 
-    public boolean logout(String token) {
+    public void logout(String token) throws TokenNotFoundException {
 
-        return tokenStore.revokeToken(token);
+        tokenStore.revokeAccessToken(token);
     }
 
-    public User findByToken(String token) {
+    public Token findByToken(String token) throws TokenNotFoundException {
 
-        return tokenStore.retrieveFromToken(token);
+        return tokenStore.retrieveFromAccessToken(token);
     }
 }

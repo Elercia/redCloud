@@ -14,7 +14,7 @@ public class UserBase {
     private String password;
     private UserType userType;
 
-    public UserBase(String name, Date creationDate, String password, UserType userType, int directoryId) {
+    public UserBase(String name, Date creationDate, String password, UserType userType) {
         this(0, name, creationDate, UUID.randomUUID(), password,  userType);
     }
 

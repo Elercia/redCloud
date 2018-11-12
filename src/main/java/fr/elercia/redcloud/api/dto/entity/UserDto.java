@@ -12,6 +12,10 @@ public class UserDto extends SimpleUserDto {
     private Date createdDate;
     private UserType userType;
 
+    public UserDto() {
+
+    }
+
     public UserDto(String name, UUID resourceId, UserType userType, Date createdDate) {
         super(name);
         this.resourceId = resourceId;

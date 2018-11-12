@@ -1,8 +1,10 @@
-package fr.elercia.redcloud.dao.repository;
+package fr.elercia.redcloud.dao.repository.tests;
 
 import fr.elercia.redcloud.TestUtils;
 import fr.elercia.redcloud.config.SQLConfig;
 import fr.elercia.redcloud.dao.entity.UserBase;
+import fr.elercia.redcloud.dao.repository.RepositoryAssertionUtil;
+import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.dao.repository.impl.JOOQUserRepository;
 import org.jooq.DSLContext;
 import org.junit.Before;

@@ -1,5 +1,6 @@
 package fr.elercia.redcloud.api.error;
 
+import fr.elercia.redcloud.exceptions.*;
 import fr.elercia.redcloud.logging.LoggerWrapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,9 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-
 import java.time.Instant;
-import java.util.Date;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -20,14 +19,35 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public final ResponseEntity<ErrorDetails> handleAllExceptions(Throwable ex, WebRequest request) {
 
-        LOG.error("Handle rest exception", "exception", ex.getClass().getSimpleName());
         ex.printStackTrace();
 
-        String message = "[" + ex.getClass().getSimpleName() + "] " + (ex.getMessage() != null ? ex.getMessage() : "");
+        LOG.debug("Handle rest exception", "exception", ex.getClass().getSimpleName(), "Message", ex.getMessage(), "Throws at", (ex.getStackTrace().length > 0 ? ex.getStackTrace()[0] : "none"));
+
+        HttpStatus status;
+        String message;
+
+        if (ex instanceof ResourceNotFoundException) {
+            status = HttpStatus.NOT_FOUND;
+            message = "Resource not found";
+        } else if (ex instanceof DatabaseRuntimeException) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            message = "Internal server error";
+        } else if (ex instanceof TokenNotFoundException) {
+            status = HttpStatus.BAD_REQUEST;
+            message = "Invalid token";
+        } else if (ex instanceof InvalidTokenException) {
+            status = HttpStatus.UNAUTHORIZED;
+            message = "Invalid token";
+        } else if (ex instanceof UnauthorizedRestCall || ex instanceof InvalidLoginException) {
+            status = HttpStatus.FORBIDDEN;
+            message = "Forbidden access";
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            message = "[" + ex.getClass().getSimpleName() + "] " + (ex.getMessage() != null ? ex.getMessage() : "");
+        }
 
         ErrorDetails errorDetails = new ErrorDetails(Instant.now(), message, request.getDescription(true));
-//        ErrorDetails errorDetails = new ErrorDetails(nInstant.now(), "Internal server error.", request.getDescription(true));
 
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetails, status);
     }
 }

@@ -10,13 +10,19 @@ public class Directory {
     private Directory parentDirectory;
     private UUID resourceId;
     private Date creationDate;
+    private int userId;
 
-    public Directory(int id, String name, Directory parentDirectory, UUID resourceId, Date creationDate) {
+    public Directory(String name, Directory parentDirectory, int userId) {
+        this(0, name, parentDirectory, UUID.randomUUID(), new Date(), userId);
+    }
+
+    public Directory(int id, String name, Directory parentDirectory, UUID resourceId, Date creationDate, int userId) {
         this.id = id;
         this.name = name;
         this.parentDirectory = parentDirectory;
         this.resourceId = resourceId;
         this.creationDate = creationDate;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -57,5 +63,9 @@ public class Directory {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 }

@@ -11,7 +11,6 @@ public class BusinessMapper {
 
     public static User mapToUser(UserBase userBase, DirectoryBase directoryBase) {
         return new User(userBase.getId(), userBase.getName(), userBase.getResourceId(), userBase.getPassword(), userBase.getUserType(), userBase.getCreationDate(), null); //TODO Directory mapping
-
     }
 
     public static Directory mapToDirectory(DirectoryBase directoryBase) {
@@ -27,6 +26,6 @@ public class BusinessMapper {
             parentDirectory = mapToDirectory(parentDirectoryBase);
         }
 
-        return new Directory(directoryBase.getId(), directoryBase.getName(), parentDirectory, directoryBase.getResourceId(), directoryBase.getCreationDate());
+        return new Directory(directoryBase.getId(), directoryBase.getName(), parentDirectory, directoryBase.getResourceId(), directoryBase.getCreationDate(), 0);
     }
 }

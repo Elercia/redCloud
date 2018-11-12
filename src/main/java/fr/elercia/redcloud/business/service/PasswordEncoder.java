@@ -4,13 +4,13 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PasswordEncoderImpl {
+public class PasswordEncoder {
 
-    public String encode(CharSequence rawPassword) {
+    public static String encode(CharSequence rawPassword) {
         return DigestUtils.sha256Hex(rawPassword.toString());
     }
 
-    public boolean matches(CharSequence rawPassword, String encodedPassword) {
+    public static boolean matches(CharSequence rawPassword, String encodedPassword) {
         return encode(rawPassword).equals(encodedPassword);
     }
 }

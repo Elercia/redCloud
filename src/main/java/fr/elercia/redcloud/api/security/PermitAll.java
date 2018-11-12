@@ -1,4 +1,4 @@
-package fr.elercia.redcloud.business.service.security;
+package fr.elercia.redcloud.api.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

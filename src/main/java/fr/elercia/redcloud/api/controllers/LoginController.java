@@ -1,10 +1,14 @@
 package fr.elercia.redcloud.api.controllers;
 
+import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.LoginDto;
+import fr.elercia.redcloud.api.dto.entity.TokenDto;
 import fr.elercia.redcloud.api.route.Route;
+import fr.elercia.redcloud.business.entity.Token;
 import fr.elercia.redcloud.business.service.AuthenticationService;
-import fr.elercia.redcloud.business.service.security.PermitAll;
-import fr.elercia.redcloud.exceptions.WrongLoginException;
+import fr.elercia.redcloud.api.security.PermitAll;
+import fr.elercia.redcloud.exceptions.InvalidLoginException;
+import fr.elercia.redcloud.exceptions.TokenNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "Operations to login and logout", description = "Manager auth session")
 @RestController
 @RequestMapping("/")
-public class LoginController extends ControllerUtils{
-
+public class LoginController extends ControllerUtils {
 
     private AuthenticationService authenticationService;
 
@@ -25,19 +28,19 @@ public class LoginController extends ControllerUtils{
     }
 
     @PostMapping(Route.LOGIN)
-    @ApiOperation(value = "Get a token from a user")
+    @ApiOperation(value = "Authenticate user with Bearer Auth", consumes = "application/json")
     @PermitAll
-    public String login(@RequestBody LoginDto loginDto) throws WrongLoginException {
+    public TokenDto login(@RequestBody LoginDto loginDto) throws InvalidLoginException {
 
-        String token = authenticationService.login(loginDto.getUsename(), loginDto.getPassword());
+        Token token = authenticationService.login(loginDto.getUsername(), loginDto.getPassword());
 
-        return token;
+        return DtoMapper.map(token);
     }
 
     @GetMapping(Route.LOGOUT)
     @ApiOperation(value = "Revoke a token")
-    public boolean logout() {
+    public void logout() throws TokenNotFoundException {
 
-        return authenticationService.logout(getAuthToken());
+        authenticationService.logout(getAuthToken());
     }
 }

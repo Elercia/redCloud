@@ -1,6 +1,7 @@
 package fr.elercia.redcloud.dao.repository;
 
 import fr.elercia.redcloud.dao.entity.DirectoryBase;
+import fr.elercia.redcloud.dao.entity.FileBase;
 import fr.elercia.redcloud.dao.entity.UserBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,5 +33,14 @@ public class RepositoryAssertionUtil {
         assertEquals(one.getResourceId(), two.getResourceId(), message);
         assertEquals(one.getParentId(), two.getParentId(), message);
         assertEquals(one.getUserId(), two.getUserId(), message);
+    }
+
+    public static void assertFileBaseEquals(FileBase one, FileBase two, String message) {
+
+        assertEquals(one.getId(), two.getId(), message);
+        assertEquals(one.getResourceId(), two.getResourceId(), message);
+        assertEquals(one.getDirectoryId(), two.getDirectoryId(), message);
+        assertEquals(one.getName(), two.getName(), message);
+        assertEquals(one.getCreationDate(), two.getCreationDate(), message);
     }
 }

@@ -1,4 +1,4 @@
-package fr.elercia.redcloud.dao.exception;
+package fr.elercia.redcloud.config;
 
 import org.jooq.ExecuteContext;
 import org.jooq.SQLDialect;
@@ -9,9 +9,7 @@ import org.springframework.jdbc.support.SQLExceptionTranslator;
 public class SQLExceptionTransformer extends DefaultExecuteListener {
     public void exception(ExecuteContext context) {
         SQLDialect dialect = context.configuration().dialect();
-        SQLExceptionTranslator translator
-          = new SQLErrorCodeSQLExceptionTranslator(dialect.name());
-        context.exception(translator
-          .translate("Access database using jOOQ", context.sql(), context.sqlException()));
+        SQLExceptionTranslator translator = new SQLErrorCodeSQLExceptionTranslator(dialect.name());
+        context.exception(translator.translate("Access database using jOOQ", context.sql(), context.sqlException()));
     }
 }

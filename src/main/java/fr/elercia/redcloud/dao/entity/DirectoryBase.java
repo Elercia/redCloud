@@ -12,6 +12,10 @@ public class DirectoryBase {
     private Date creationDate;
     private int userId;
 
+    public DirectoryBase(String name, Integer parentId, int userId) {
+        this(0, name, parentId, UUID.randomUUID(), new Date(), userId);
+    }
+
     public DirectoryBase(int id, String name, Integer parentId, UUID resourceID, Date creationDate, int userId) {
         this.id = id;
         this.name = name;

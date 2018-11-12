@@ -1,7 +1,6 @@
 package fr.elercia.redcloud.config;
 
 import com.jolbox.bonecp.BoneCPDataSource;
-import fr.elercia.redcloud.dao.exception.SQLExceptionTransformer;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DataSourceConnectionProvider;
 import org.jooq.impl.DefaultConfiguration;

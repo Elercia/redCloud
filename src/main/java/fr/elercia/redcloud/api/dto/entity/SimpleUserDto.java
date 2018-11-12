@@ -4,6 +4,10 @@ public class SimpleUserDto {
 
     private String name;
 
+    public SimpleUserDto() {
+
+    }
+
     public SimpleUserDto(String name) {
         this.name = name;
     }

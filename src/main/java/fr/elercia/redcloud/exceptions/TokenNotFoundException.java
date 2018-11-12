@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.exceptions;
 
-public class TokenNotFoundException extends RuntimeException{
+public class TokenNotFoundException extends Exception{
     public TokenNotFoundException() {
     }
 

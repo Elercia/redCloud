@@ -62,19 +62,19 @@ public class JOOQFileRepository extends JOOQUtilityRepository<FileRecord, FileBa
 
     @Override
     public List<FileBase> findAll() {
-        return createSelectQuery().fetch().map(this::mapToBase);
+        return createSelectQuery().fetch().map(this::map);
     }
 
     @Override
     public FileBase findById(int id) {
-        return mapToBase(createSelectQuery()
+        return map(createSelectQuery()
                 .where(FILE.ID.eq(id))
                 .fetchOne());
     }
 
     @Override
     public FileBase findByResourceId(UUID id) {
-        return mapToBase(createSelectQuery()
+        return map(createSelectQuery()
                 .where(FILE.RESOURCE_ID.eq(id.toString()))
                 .fetchOne());
     }
