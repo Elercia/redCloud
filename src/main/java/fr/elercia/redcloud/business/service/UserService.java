@@ -1,6 +1,5 @@
 package fr.elercia.redcloud.business.service;
 
-import com.google.common.collect.Lists;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.business.entity.BusinessMapper;
 import fr.elercia.redcloud.business.entity.Directory;
@@ -13,10 +12,10 @@ import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -30,15 +29,19 @@ public class UserService {
         this.directoryService = directoryService;
     }
 
-    public User findByResourceId(UUID userId) throws UserNotFoundException {
+    public User findByResourceId(UUID userResourceId) throws UserNotFoundException {
 
-        UserBase userBase = userRepository.findByResourceId(userId);
+        UserBase userBase = userRepository.findByResourceId(userResourceId);
 
         if (userBase == null) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("User not found with this resource Id");
         }
 
-        return BusinessMapper.mapToUser(userBase, directoryService.findRootDirectory(userBase.getId()));
+        User user = BusinessMapper.mapToUser(userBase);
+        Directory directory = directoryService.findRootDirectory(user);
+        user.setRootDirectory(directory);
+
+        return user;
     }
 
     public User findByName(String name) throws UserNotFoundException {
@@ -49,14 +52,24 @@ public class UserService {
             throw new UserNotFoundException();
         }
 
-        return BusinessMapper.mapToUser(userBase, null);
+        User user = BusinessMapper.mapToUser(userBase);
+        user.setRootDirectory(directoryService.findRootDirectory(user));
+
+        return user;
     }
 
     public List<User> getAllUsers() {
-        return Lists.newArrayList(userRepository.findAll())
-                .stream()
-                .map(e -> BusinessMapper.mapToUser(e, directoryService.findRootDirectory(e.getId())))
-                .collect(Collectors.toList());
+
+        List<User> users = new ArrayList<>();
+        List<UserBase> bases = userRepository.findAll();
+
+        for (UserBase base : bases) {
+            User user = BusinessMapper.mapToUser(base);
+            user.setRootDirectory(directoryService.findRootDirectory(user));
+            users.add(user);
+        }
+
+        return users;
     }
 
     public User createUser(CreateUserDto wantedUser) throws InvalidUserCreationException {
@@ -72,11 +85,9 @@ public class UserService {
         UserBase newUserBase = new UserBase(wantedUser.getName(), new Date(), hashedPassword, UserType.USER);
         newUserBase = userRepository.add(newUserBase);
 
-        User newUser = BusinessMapper.mapToUser(newUserBase, null);
+        User newUser = BusinessMapper.mapToUser(newUserBase);
 
-        Directory directory = new Directory("root", null, newUser.getId());
-        directoryService.create(directory);
-
+        Directory directory = directoryService.createRootDirectory(newUser);
         newUser.setRootDirectory(directory);
 
         return newUser;

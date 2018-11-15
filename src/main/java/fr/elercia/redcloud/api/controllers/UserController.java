@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,12 +28,10 @@ public class UserController {
     private static final LoggerWrapper LOG = new LoggerWrapper(UserController.class);
 
     private UserService userService;
-    private DtoMapper dtoMapper;
 
     @Autowired
-    public UserController(UserService userService, DtoMapper dtoMapper) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.dtoMapper = dtoMapper;
     }
 
     @ApiOperation(value = "Get the list of all users.")
@@ -43,7 +40,7 @@ public class UserController {
 
         LOG.info("getAllUser");
 
-        return dtoMapper.entityToDto(userService.getAllUsers());
+        return DtoMapper.entityToDto(userService.getAllUsers());
     }
 
     @ApiOperation(value = "Create a user")
@@ -52,7 +49,7 @@ public class UserController {
 
         LOG.info("createUser", "name", wantedUser.getName());
 
-        UserDto createdUser = dtoMapper.entityToDto(userService.createUser(wantedUser));
+        UserDto createdUser = DtoMapper.entityToDto(userService.createUser(wantedUser));
 
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -65,7 +62,7 @@ public class UserController {
 
         User user = userService.findByName(researchedName);
 
-        return dtoMapper.entityToDto(user);
+        return DtoMapper.entityToDto(user);
     }
 
     @ApiOperation(value = "Get one user")
@@ -74,7 +71,7 @@ public class UserController {
 
         LOG.info("getUser", "userId", userId);
 
-        return dtoMapper.entityToDto(userService.findByResourceId(userId));
+        return DtoMapper.entityToDto(userService.findByResourceId(userId));
     }
 
     @ApiOperation(value = "Get one user")

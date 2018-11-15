@@ -1,7 +1,6 @@
 package fr.elercia.redcloud.api.security;
 
 import fr.elercia.redcloud.business.entity.Token;
-import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.service.AuthenticationService;
 import fr.elercia.redcloud.config.SecurityConstants;
 import fr.elercia.redcloud.exceptions.TokenNotFoundException;

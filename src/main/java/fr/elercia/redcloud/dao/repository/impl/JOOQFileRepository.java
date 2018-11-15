@@ -80,6 +80,11 @@ public class JOOQFileRepository extends JOOQUtilityRepository<FileRecord, FileBa
     }
 
     @Override
+    public List<FileBase> findFiles(int directoryId) {
+        return createSelectQuery().where(FILE.DIRECTORY_ID.eq(directoryId)).fetch().map(this::map);
+    }
+
+    @Override
     protected FileBase mapToBase(Record record) {
 
         FileRecord fileRecord = record.into(FILE);

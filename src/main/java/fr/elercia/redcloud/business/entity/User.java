@@ -82,7 +82,7 @@ public class User {
     @Override
     public boolean equals(Object obj) {
 
-        if (obj == null || !(obj instanceof User)) {
+        if (!(obj instanceof User)) {
             return false;
         }
 

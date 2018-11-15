@@ -80,6 +80,18 @@ public class JOOQDirectoryRepository extends JOOQUtilityRepository<DirectoryReco
     }
 
     @Override
+    public DirectoryBase findRootDirectory(int userId) {
+        return map(createSelectQuery()
+                .where(DIRECTORY.PARENT_ID.isNull())
+                .and(DIRECTORY.USER_ID.eq(userId)).fetchOne());
+    }
+
+    @Override
+    public List<DirectoryBase> findSubDirectories(int parentId) {
+        return createSelectQuery().where(DIRECTORY.PARENT_ID.eq(parentId)).fetch().map(this::map);
+    }
+
+    @Override
     protected DirectoryBase mapToBase(Record record) {
 
         DirectoryRecord directoryRecord = record.into(DIRECTORY);

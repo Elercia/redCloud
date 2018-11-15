@@ -1,7 +1,6 @@
 package fr.elercia.redcloud.api.error;
 
 import java.time.Instant;
-import java.util.Date;
 
 public class ErrorDetails {
     private Instant timestamp;

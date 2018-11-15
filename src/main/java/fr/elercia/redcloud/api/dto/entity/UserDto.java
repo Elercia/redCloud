@@ -3,7 +3,6 @@ package fr.elercia.redcloud.api.dto.entity;
 import fr.elercia.redcloud.business.entity.UserType;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 public class UserDto extends SimpleUserDto {

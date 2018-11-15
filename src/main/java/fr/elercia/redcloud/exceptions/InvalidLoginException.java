@@ -1,8 +1,5 @@
 package fr.elercia.redcloud.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 public class InvalidLoginException extends Exception {
     public InvalidLoginException() {
     }

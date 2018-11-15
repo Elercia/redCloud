@@ -19,14 +19,13 @@ public class BaseMapper {
     }
 
     public static UserBase recordToBase(UserRecord userRecord) {
-        UserBase userBase = new UserBase(userRecord.getId(),
+
+        return new UserBase(userRecord.getId(),
                 userRecord.getName(),
                 userRecord.getCreationDate(),
                 UUID.fromString(userRecord.getResourceId()),
                 userRecord.getHashedpassword(),
                 UserType.valueOf(userRecord.getUserType()));
-
-        return userBase;
     }
 
     public static DirectoryBase recordToBase(DirectoryRecord directoryRecord) {
