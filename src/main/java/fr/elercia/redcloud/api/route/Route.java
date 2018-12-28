@@ -16,6 +16,7 @@ public class Route {
 
     public static final String DIRECTORIES = BASE + "/directories";
     public static final String DIRECTORY = BASE + "/directory/" + QueryParam.DIRECTORY_ID;
+    public static final String DIRECTORY_MOVE = DIRECTORY + "/move/" ;
 
     public static final String SESSION = BASE + "/session";
     public static final String LOGIN = SESSION + "/login";

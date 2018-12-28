@@ -59,10 +59,6 @@ public class Directory {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public UUID getResourceId() {
         return resourceId;
     }
@@ -89,5 +85,14 @@ public class Directory {
 
     public Directory getParentDirectory() {
         return parentDirectory;
+    }
+
+    public void setParentDirectory(Directory parentDirectory) {
+        this.parentDirectory = parentDirectory;
+    }
+
+    public void updateName(String name) {
+        if (name != null)
+            this.name = name;
     }
 }
