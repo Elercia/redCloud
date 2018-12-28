@@ -9,7 +9,7 @@ public class NoTest {
 
     @Test
     void test() {
-        System.out.println(PasswordEncoder.encode("jeanmi"));
+        System.out.println(PasswordEncoder.encode("password"));
         System.out.println(UUID.randomUUID());
     }
 }

@@ -1,22 +1,40 @@
 package fr.elercia.redcloud.business.entity;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
+@Entity
 public class File {
 
+    @Id
+    @GeneratedValue
     private int id;
-    private String name;
-    private UUID resourceId;
-    private Date creationDate;
-    private SimpleDirectory parenDirectory;
 
-    public File(int id, String name, UUID resourceId, Date creationDate, SimpleDirectory parenDirectory) {
-        this.id = id;
+    @Column
+    private String name;
+
+    @Column(unique = true)
+    @Type(type = "uuid-char")
+    private UUID resourceId;
+
+    @Column
+    private Date creationDate;
+
+    @ManyToOne
+    private Directory directory;
+
+    public File() {
+
+    }
+
+    public File(String name, Directory parenDirectory) {
         this.name = name;
-        this.resourceId = resourceId;
-        this.creationDate = creationDate;
-        this.parenDirectory = parenDirectory;
+        this.resourceId = UUID.randomUUID();
+        this.creationDate = new Date();
+        this.directory = parenDirectory;
     }
 
     public int getId() {
@@ -43,11 +61,11 @@ public class File {
         this.creationDate = creationDate;
     }
 
-    public SimpleDirectory getParenDirectory() {
-        return parenDirectory;
+    public Directory getDirectory() {
+        return directory;
     }
 
-    public void setParenDirectory(SimpleDirectory parenDirectory) {
-        this.parenDirectory = parenDirectory;
+    public void setDirectory(Directory directory) {
+        this.directory = directory;
     }
 }

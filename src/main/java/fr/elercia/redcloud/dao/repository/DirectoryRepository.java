@@ -1,15 +1,16 @@
 package fr.elercia.redcloud.dao.repository;
 
-import fr.elercia.redcloud.dao.entity.DirectoryBase;
+import fr.elercia.redcloud.business.entity.Directory;
+import fr.elercia.redcloud.business.entity.User;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.UUID;
 
-public interface DirectoryRepository extends GenericCrudRepository<DirectoryBase> {
+@Repository
+public interface DirectoryRepository extends CrudRepository<Directory, Integer> {
 
-    DirectoryBase findByResourceId(UUID id);
+    Directory findByResourceId(UUID resourceId);
 
-    DirectoryBase findRootDirectory(int userId);
-
-    List<DirectoryBase> findSubDirectories(int parentId);
+    Directory findByParentDirectoryIsNullAndUser(User user);
 }

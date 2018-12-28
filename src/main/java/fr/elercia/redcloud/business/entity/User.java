@@ -1,82 +1,109 @@
 package fr.elercia.redcloud.business.entity;
 
+import fr.elercia.redcloud.business.service.PasswordEncoder;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+@Entity
 public class User {
 
+    @Id
+    @GeneratedValue
     private int id;
-    private String name;
-    private UUID resourceId;
-    private String hashedPassword;
-    private UserType userType;
-    private Date createdDate;
-    private Directory rootDirectory;
 
-    public User(int id, String name, UUID resourceId, String hashedPassword, UserType userType, Date createdDate, Directory rootDirectory) {
-        this.id = id;
+    @Column
+    private String name;
+
+    @Column(unique = true)
+    @Type(type = "uuid-char")
+    private UUID resourceId;
+
+    @Column
+    private String hashedPassword;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
+    @Column
+    private Date creationDate;
+
+    @OneToMany(mappedBy = "user")
+    private List<Directory> directories;
+
+    public User() {
+
+    }
+
+    public User(String name, String hashedPassword, UserType userType) {
         this.name = name;
-        this.resourceId = resourceId;
         this.hashedPassword = hashedPassword;
         this.userType = userType;
-        this.createdDate = createdDate;
-        this.rootDirectory = rootDirectory;
+        this.creationDate = new Date();
+        this.resourceId = UUID.randomUUID();
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 
     public UserType getUserType() {
         return userType;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public void setResourceId(UUID resourceId) {
-        this.resourceId = resourceId;
-    }
 
     public UUID getResourceId() {
         return resourceId;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
-    }
 
     public String getHashedPassword() {
         return hashedPassword;
     }
 
     public Directory getRootDirectory() {
-        return rootDirectory;
+        for (Directory d : directories) {
+            if (d.getParentDirectory() == null) {
+                return d;
+            }
+        }
+        return null;
     }
 
+    public List<Directory> getDirectories() {
+        return directories;
+    }
+
+    public void updateUserType(UserType userType) {
+        if (userType != null)
+            this.userType = userType;
+    }
+
+    public void updateUnhashedPassword(String notHashedPassword) {
+        if (notHashedPassword != null)
+            this.hashedPassword = PasswordEncoder.encode(notHashedPassword);
+    }
+
+    public void updateName(String name) {
+        if (name != null)
+            this.name = name;
+    }
+
+
     public void setRootDirectory(Directory rootDirectory) {
-        this.rootDirectory = rootDirectory;
+        this.directories.add(rootDirectory);
     }
 
     @Override

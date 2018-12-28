@@ -1,20 +1,21 @@
 package fr.elercia.redcloud.config;
 
-import fr.elercia.redcloud.api.dto.DtoMapper;
-import fr.elercia.redcloud.business.entity.BusinessMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 public class BeanConfig {
 
     @Bean
-    public BusinessMapper getBusinessMapper() {
-        return new BusinessMapper();
-    }
-
-    @Bean
-    public DtoMapper getDtoMapper() {
-        return new DtoMapper();
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**");
+            }
+        };
     }
 }

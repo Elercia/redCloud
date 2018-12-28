@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.config;
 
 import fr.elercia.redcloud.api.route.Route;
-import fr.elercia.redcloud.api.security.SecurityRestCallInterceptor;
+import fr.elercia.redcloud.api.security.SecurityRestCallConnectionInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -13,7 +13,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public HandlerInterceptor securityRestCallInterceptor() {
-        return new SecurityRestCallInterceptor();
+        return new SecurityRestCallConnectionInterceptor();
     }
 
     @Override

@@ -1,11 +1,14 @@
 package fr.elercia.redcloud.dao.repository;
 
-import fr.elercia.redcloud.dao.entity.UserBase;
+import fr.elercia.redcloud.business.entity.User;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-public interface UserRepository extends GenericCrudRepository<UserBase> {
-    UserBase findByResourceId(UUID id);
+@Repository
+public interface UserRepository extends CrudRepository<User, Integer> {
+    User findByResourceId(UUID id);
 
-    UserBase findByName(String name);
+    User findByName(String name);
 }

@@ -1,7 +1,8 @@
 package fr.elercia.redcloud.api.error;
 
 import fr.elercia.redcloud.exceptions.*;
-import fr.elercia.redcloud.logging.LoggerWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,7 +15,7 @@ import java.time.Instant;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final LoggerWrapper LOG = new LoggerWrapper(RestExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     @ExceptionHandler(Throwable.class)
     public final ResponseEntity<ErrorDetails> handleAllExceptions(Throwable ex, WebRequest request) {

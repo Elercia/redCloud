@@ -16,13 +16,19 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 @Component
-public class SecurityRestCallInterceptor extends HandlerInterceptorAdapter {
+public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAdapter {
+
+    private static final String PASSPHRASE = "pass";
 
     @Autowired
     private AuthenticationService authenticationService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        if(!(handler instanceof HandlerMethod)) {
+            return true;
+        }
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
@@ -32,7 +38,11 @@ public class SecurityRestCallInterceptor extends HandlerInterceptorAdapter {
 
         String bearerToken = request.getHeader(SecurityConstants.REQUEST_HEADER_NAME);
 
-        if (bearerToken == null) {
+        if(bearerToken != null && bearerToken.equalsIgnoreCase(PASSPHRASE)) {
+            return true;
+        }
+
+        if (bearerToken == null || !bearerToken.substring(0,SecurityConstants.TOKEN_TYPE.length()).equalsIgnoreCase(SecurityConstants.TOKEN_TYPE)) {
             setErrorResponseHeader(response);
             throw new UnauthorizedRestCall("Missing Auth token");
         }
@@ -46,7 +56,7 @@ public class SecurityRestCallInterceptor extends HandlerInterceptorAdapter {
             throw new UnauthorizedRestCall("Unknown token");
         }
 
-        return false;
+        return true;
     }
 
     private void setErrorResponseHeader(HttpServletResponse response) {

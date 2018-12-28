@@ -1,17 +1,14 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.BusinessMapper;
+import fr.elercia.redcloud.api.dto.entity.CreateDirectoryDto;
 import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.SimpleDirectory;
 import fr.elercia.redcloud.business.entity.User;
-import fr.elercia.redcloud.dao.entity.DirectoryBase;
-import fr.elercia.redcloud.dao.entity.FileBase;
 import fr.elercia.redcloud.dao.repository.DirectoryRepository;
 import fr.elercia.redcloud.dao.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DirectoryService {
@@ -26,23 +23,24 @@ public class DirectoryService {
         this.fileRepository = fileRepository;
     }
 
-    public Directory createRootDirectory(User user) {
+    public void createRootDirectory(User user) {
 
-        SimpleDirectory directory = new SimpleDirectory("root", user);
+        Directory directory = new Directory("root", user, null);
+        directoryRepository.save(directory);
+        user.setRootDirectory(directory);
 
-        DirectoryBase base = BusinessMapper.mapToBase(directory, null);
-        base = directoryRepository.add(base);
-
-        return BusinessMapper.mapToDirectory(base, user);
     }
 
     public Directory findRootDirectory(User user) {
 
-        DirectoryBase rootBase = directoryRepository.findRootDirectory(user.getId());
+        return null;
+    }
 
-        List<DirectoryBase> subDirectoryBases = directoryRepository.findSubDirectories(rootBase.getId());
-        List<FileBase> fileBases = fileRepository.findFiles(rootBase.getId());
+    public Directory find(UUID parentDirectoryId) {
+        return null;
+    }
 
-        return BusinessMapper.mapToDirectory(rootBase, subDirectoryBases, fileBases, user);
+    public Directory createSubSirectory(Directory parentDir, CreateDirectoryDto wantedDirectory) {
+        return null;
     }
 }

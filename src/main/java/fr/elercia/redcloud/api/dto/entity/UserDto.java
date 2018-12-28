@@ -10,16 +10,18 @@ public class UserDto extends SimpleUserDto {
     private UUID resourceId;
     private Date createdDate;
     private UserType userType;
+    private DirectoryDto rootDirectory;
 
     public UserDto() {
 
     }
 
-    public UserDto(String name, UUID resourceId, UserType userType, Date createdDate) {
+    public UserDto(String name, UUID resourceId, UserType userType, Date createdDate, DirectoryDto rootDirectory) {
         super(name);
         this.resourceId = resourceId;
         this.createdDate = createdDate;
         this.userType = userType;
+        this.rootDirectory = rootDirectory;
     }
 
     public UUID getResourceId() {
@@ -32,5 +34,9 @@ public class UserDto extends SimpleUserDto {
 
     public UserType getUserType() {
         return userType;
+    }
+
+    public DirectoryDto getRootDirectory() {
+        return rootDirectory;
     }
 }

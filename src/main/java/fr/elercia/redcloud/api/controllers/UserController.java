@@ -2,6 +2,7 @@ package fr.elercia.redcloud.api.controllers;
 
 import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
+import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UserDto;
 import fr.elercia.redcloud.api.route.QueryParam;
 import fr.elercia.redcloud.api.route.Route;
@@ -9,9 +10,10 @@ import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.service.UserService;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
-import fr.elercia.redcloud.logging.LoggerWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ import java.util.UUID;
 @RequestMapping("/")
 public class UserController {
 
-    private static final LoggerWrapper LOG = new LoggerWrapper(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     private UserService userService;
 
@@ -74,7 +76,7 @@ public class UserController {
         return DtoMapper.entityToDto(userService.findByResourceId(userId));
     }
 
-    @ApiOperation(value = "Get one user")
+    @ApiOperation(value = "Delete user")
     @DeleteMapping(Route.USER)
     public void deleteUser(@RequestParam(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
 
@@ -83,5 +85,16 @@ public class UserController {
        User user = userService.findByResourceId(userId);
 
        userService.deleteUser(user);
+    }
+
+    @ApiOperation(value = "Update user")
+    @PutMapping(Route.USER)
+    public UserDto updateUser(@RequestParam(QueryParam.USER_ID) UUID userId, @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException {
+
+        LOG.info("updateUser", "userId", userId);
+
+        User user = userService.findByResourceId(userId);
+
+        return DtoMapper.entityToDto(userService.updateUser(user, updateUserDto));
     }
 }

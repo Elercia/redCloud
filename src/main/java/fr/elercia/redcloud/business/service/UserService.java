@@ -1,19 +1,17 @@
 package fr.elercia.redcloud.business.service;
 
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
-import fr.elercia.redcloud.business.entity.BusinessMapper;
+import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
-import fr.elercia.redcloud.dao.entity.UserBase;
 import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
+import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,50 +29,36 @@ public class UserService {
 
     public User findByResourceId(UUID userResourceId) throws UserNotFoundException {
 
-        UserBase userBase = userRepository.findByResourceId(userResourceId);
+        User user = userRepository.findByResourceId(userResourceId);
 
-        if (userBase == null) {
+        if (user == null) {
             throw new UserNotFoundException("User not found with this resource Id");
         }
-
-        User user = BusinessMapper.mapToUser(userBase);
-        Directory directory = directoryService.findRootDirectory(user);
-        user.setRootDirectory(directory);
 
         return user;
     }
 
     public User findByName(String name) throws UserNotFoundException {
 
-        UserBase userBase = userRepository.findByName(name);
+        User user = userRepository.findByName(name);
 
-        if (userBase == null) {
+        if (user == null) {
             throw new UserNotFoundException();
         }
-
-        User user = BusinessMapper.mapToUser(userBase);
-        user.setRootDirectory(directoryService.findRootDirectory(user));
 
         return user;
     }
 
     public List<User> getAllUsers() {
 
-        List<User> users = new ArrayList<>();
-        List<UserBase> bases = userRepository.findAll();
-
-        for (UserBase base : bases) {
-            User user = BusinessMapper.mapToUser(base);
-            user.setRootDirectory(directoryService.findRootDirectory(user));
-            users.add(user);
-        }
+        List<User> users = IteratorUtils.toList(userRepository.findAll().iterator());
 
         return users;
     }
 
     public User createUser(CreateUserDto wantedUser) throws InvalidUserCreationException {
 
-        UserBase userBase = userRepository.findByName(wantedUser.getName());
+        User userBase = userRepository.findByName(wantedUser.getName());
 
         if (userBase != null) {
             throw new InvalidUserCreationException("User with this name already exists");
@@ -82,19 +66,26 @@ public class UserService {
 
         String hashedPassword = PasswordEncoder.encode(wantedUser.getUnHashedPassword());
 
-        UserBase newUserBase = new UserBase(wantedUser.getName(), new Date(), hashedPassword, UserType.USER);
-        newUserBase = userRepository.add(newUserBase);
 
-        User newUser = BusinessMapper.mapToUser(newUserBase);
+        User newUser = new User(wantedUser.getName(), hashedPassword, UserType.USER);
 
-        Directory directory = directoryService.createRootDirectory(newUser);
-        newUser.setRootDirectory(directory);
+        userRepository.save(newUser);
+        directoryService.createRootDirectory(newUser);
+
 
         return newUser;
     }
 
     public void deleteUser(User user) {
 
-        userRepository.delete(user.getId());
+        userRepository.delete(user);
+    }
+
+    public User updateUser(User user, UpdateUserDto updateUserDto) {
+
+        user.updateName(updateUserDto.getName());
+        user.updateUnhashedPassword(updateUserDto.getPassword());
+
+        return userRepository.save(user);
     }
 }
