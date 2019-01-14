@@ -3,7 +3,7 @@ package fr.elercia.redcloud.api.controllers;
 import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.LoginDto;
 import fr.elercia.redcloud.api.dto.entity.TokenDto;
-import fr.elercia.redcloud.api.route.Route;
+import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.business.entity.Token;
 import fr.elercia.redcloud.business.service.AuthenticationService;
 import fr.elercia.redcloud.api.security.PermitAll;
@@ -39,7 +39,7 @@ public class LoginController extends ControllerUtils {
 
     @GetMapping(Route.LOGOUT)
     @ApiOperation(value = "Revoke a token")
-    public void logout() throws TokenNotFoundException {
+    public void logout() {
 
         authenticationService.logout(getAuthToken());
     }

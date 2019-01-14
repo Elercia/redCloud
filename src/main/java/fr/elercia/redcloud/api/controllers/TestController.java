@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.api.controllers;
 
-import fr.elercia.redcloud.api.route.Route;
+import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.api.security.PermitAll;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

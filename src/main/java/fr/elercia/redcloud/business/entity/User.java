@@ -4,6 +4,7 @@ import fr.elercia.redcloud.business.service.PasswordEncoder;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -103,6 +104,11 @@ public class User {
 
 
     public void setRootDirectory(Directory rootDirectory) {
+
+        if (directories == null) {
+            directories = new ArrayList<>();
+        }
+
         this.directories.add(rootDirectory);
     }
 

@@ -20,11 +20,13 @@ public class UserService {
 
     private UserRepository userRepository;
     private DirectoryService directoryService;
+    private FileSystemService fileSystemService;
 
     @Autowired
-    public UserService(UserRepository userRepository, DirectoryService directoryService) {
+    public UserService(UserRepository userRepository, DirectoryService directoryService, FileSystemService fileSystemService) {
         this.userRepository = userRepository;
         this.directoryService = directoryService;
+        this.fileSystemService = fileSystemService;
     }
 
     public User findByResourceId(UUID userResourceId) throws UserNotFoundException {
@@ -58,20 +60,19 @@ public class UserService {
 
     public User createUser(CreateUserDto wantedUser) throws InvalidUserCreationException {
 
-        User userBase = userRepository.findByName(wantedUser.getName());
+        User oldUser = userRepository.findByName(wantedUser.getName());
 
-        if (userBase != null) {
+        if (oldUser != null) {
             throw new InvalidUserCreationException("User with this name already exists");
         }
 
         String hashedPassword = PasswordEncoder.encode(wantedUser.getUnHashedPassword());
 
-
         User newUser = new User(wantedUser.getName(), hashedPassword, UserType.USER);
 
         userRepository.save(newUser);
         directoryService.createRootDirectory(newUser);
-
+        fileSystemService.createUserFileSystemSpace(newUser);
 
         return newUser;
     }
@@ -79,6 +80,7 @@ public class UserService {
     public void deleteUser(User user) {
 
         userRepository.delete(user);
+        fileSystemService.deleteUserFileSystem(user);
     }
 
     public User updateUser(User user, UpdateUserDto updateUserDto) {

@@ -1,15 +1,17 @@
 package fr.elercia.redcloud.api.controllers;
 
+import fr.elercia.redcloud.api.controllers.params.Parameters;
 import fr.elercia.redcloud.api.dto.DtoMapper;
-import fr.elercia.redcloud.api.dto.entity.CreateDirectoryDto;
-import fr.elercia.redcloud.api.dto.entity.DirectoryDto;
-import fr.elercia.redcloud.api.dto.entity.MoveDirectoryDto;
-import fr.elercia.redcloud.api.dto.entity.UpdateDirectoryDto;
-import fr.elercia.redcloud.api.route.QueryParam;
-import fr.elercia.redcloud.api.route.Route;
+import fr.elercia.redcloud.api.dto.entity.*;
+import fr.elercia.redcloud.api.controllers.params.QueryParam;
+import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.business.entity.Directory;
+import fr.elercia.redcloud.business.entity.File;
 import fr.elercia.redcloud.business.service.DirectoryService;
+import fr.elercia.redcloud.business.service.FileService;
 import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
+import fr.elercia.redcloud.exceptions.FileNameFormatException;
+import fr.elercia.redcloud.exceptions.FileStorageException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -18,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.UUID;
 
@@ -29,16 +33,20 @@ public class DirectoryController {
     private static final Logger LOG = LoggerFactory.getLogger(DirectoryController.class);
 
     private DirectoryService directoryService;
+    private FileService fileService;
 
     @Autowired
-    public DirectoryController(DirectoryService directoryService) {
+    public DirectoryController(DirectoryService directoryService, FileService fileService) {
 
         this.directoryService = directoryService;
+        this.fileService = fileService;
     }
 
     @ApiOperation(value = "Create a directory")
     @PostMapping(Route.DIRECTORY)
-    public ResponseEntity<DirectoryDto> addSubDirectory(@RequestParam(QueryParam.DIRECTORY_ID) UUID parentDirectoryId, @RequestBody CreateDirectoryDto wantedDirectory) throws DirectoryNotFoundException {
+    public ResponseEntity<DirectoryDto> addSubDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID parentDirectoryId,
+                                                        @RequestBody CreateDirectoryDto wantedDirectory)
+            throws DirectoryNotFoundException {
 
         LOG.info("create directory for parent {} ", parentDirectoryId);
 
@@ -50,8 +58,8 @@ public class DirectoryController {
     }
 
     @ApiOperation(value = "Get a directory")
-    @GetMapping(Route.DIRECTORY)
-    public DirectoryDto findDirectory(@RequestParam(QueryParam.DIRECTORY_ID) UUID directoryId) throws DirectoryNotFoundException {
+    @GetMapping(value = Route.DIRECTORY)
+    public DirectoryDto findDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId) throws DirectoryNotFoundException {
 
         LOG.info("Find directory id:{}", directoryId);
 
@@ -60,7 +68,7 @@ public class DirectoryController {
 
     @ApiOperation(value = "Delete a directory")
     @DeleteMapping(Route.DIRECTORY)
-    public void deleteDirectory(@RequestParam(QueryParam.DIRECTORY_ID) UUID directoryId) throws DirectoryNotFoundException {
+    public void deleteDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId) throws DirectoryNotFoundException {
 
         LOG.info("delete directory id:{}", directoryId);
 
@@ -71,7 +79,7 @@ public class DirectoryController {
 
     @ApiOperation(value = "Delete a directory")
     @PutMapping(Route.DIRECTORY)
-    public void updateDirectory(@RequestParam(QueryParam.DIRECTORY_ID) UUID directoryId, UpdateDirectoryDto updateDirectoryDto) throws DirectoryNotFoundException {
+    public void updateDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestBody UpdateDirectoryDto updateDirectoryDto) throws DirectoryNotFoundException {
 
         LOG.info("update directory id:{}", directoryId);
 
@@ -82,7 +90,7 @@ public class DirectoryController {
 
     @ApiOperation(value = "Delete a directory")
     @PutMapping(Route.DIRECTORY_MOVE)
-    public void moveDirectory(@RequestParam(QueryParam.DIRECTORY_ID) UUID directoryId, MoveDirectoryDto moveDirectoryDto) throws DirectoryNotFoundException {
+    public void moveDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestBody MoveDirectoryDto moveDirectoryDto) throws DirectoryNotFoundException {
 
         LOG.info("move directory from:{} - to:{}", directoryId, moveDirectoryDto.getMoveToDirectoryId());
 
@@ -90,5 +98,15 @@ public class DirectoryController {
         Directory moveToDirectory = directoryService.find(moveDirectoryDto.getMoveToDirectoryId());
 
         directoryService.move(directory, moveToDirectory);
+    }
+
+    @PostMapping(Route.DIRECTORY_UPLOAD_FILE)
+    public FileDto uploadFile(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestParam(Parameters.UPLOAD_FILE) MultipartFile file) throws DirectoryNotFoundException, FileNameFormatException, FileStorageException {
+
+        Directory directory = directoryService.find(directoryId);
+
+        File storedFile = fileService.storeFile(directory, file);
+
+        return DtoMapper.entityToDto(storedFile);
     }
 }

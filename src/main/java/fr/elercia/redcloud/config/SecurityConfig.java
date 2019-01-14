@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.config;
 
-import fr.elercia.redcloud.api.route.Route;
+import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.api.security.SecurityRestCallConnectionInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

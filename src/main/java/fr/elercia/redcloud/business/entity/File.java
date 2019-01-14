@@ -13,9 +13,6 @@ public class File {
     @GeneratedValue
     private int id;
 
-    @Column
-    private String name;
-
     @Column(unique = true)
     @Type(type = "uuid-char")
     private UUID resourceId;
@@ -26,12 +23,19 @@ public class File {
     @ManyToOne
     private Directory directory;
 
+    @Column
+    private String fileName;
+
+    @Column
+    private long size;
+
     public File() {
 
     }
 
-    public File(String name, Directory parenDirectory) {
-        this.name = name;
+    public File(String fileName, Directory parenDirectory, long size) {
+        this.fileName = fileName;
+        this.size = size;
         this.resourceId = UUID.randomUUID();
         this.creationDate = new Date();
         this.directory = parenDirectory;
@@ -41,12 +45,12 @@ public class File {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public UUID getResourceId() {
@@ -67,5 +71,13 @@ public class File {
 
     public void setDirectory(Directory directory) {
         this.directory = directory;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 }

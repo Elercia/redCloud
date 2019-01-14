@@ -1,14 +1,7 @@
 package fr.elercia.redcloud.api.controllers;
 
-import fr.elercia.redcloud.api.dto.DtoMapper;
-import fr.elercia.redcloud.api.dto.entity.LoginDto;
-import fr.elercia.redcloud.api.dto.entity.TokenDto;
-import fr.elercia.redcloud.api.route.Route;
+import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.api.security.PermitAll;
-import fr.elercia.redcloud.business.entity.Token;
-import fr.elercia.redcloud.business.service.AuthenticationService;
-import fr.elercia.redcloud.exceptions.InvalidLoginException;
-import fr.elercia.redcloud.exceptions.TokenNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

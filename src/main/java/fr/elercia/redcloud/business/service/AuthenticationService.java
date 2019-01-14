@@ -2,21 +2,26 @@ package fr.elercia.redcloud.business.service;
 
 import fr.elercia.redcloud.business.entity.Token;
 import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.config.SecurityConstants;
+import fr.elercia.redcloud.dao.repository.TokenRepository;
 import fr.elercia.redcloud.exceptions.InvalidLoginException;
 import fr.elercia.redcloud.exceptions.TokenNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.UUID;
+
 @Service
 public class AuthenticationService {
 
-    private TokenStore tokenStore;
+    private TokenRepository tokenRepository;
     private UserService userService;
 
     @Autowired
-    public AuthenticationService(TokenStore tokenStore, UserService userService) {
+    public AuthenticationService(TokenRepository tokenRepository, UserService userService) {
 
-        this.tokenStore = tokenStore;
+        this.tokenRepository = tokenRepository;
         this.userService = userService;
     }
 
@@ -30,20 +35,52 @@ public class AuthenticationService {
             throw new InvalidLoginException("No User found for this username", e);
         }
 
-        if(!PasswordEncoder.matches(password, user.getHashedPassword())) {
+        if (!PasswordEncoder.matches(password, user.getHashedPassword())) {
             throw new InvalidLoginException("Password don't matches");
         }
 
-        return tokenStore.fabricToken(user);
+        return createToken(user);
     }
 
-    public void logout(String token) throws TokenNotFoundException {
+    public void logout(String token) {
 
-        tokenStore.revokeAccessToken(token);
+        tokenRepository.deleteByAccessToken(token);
     }
 
-    public Token findByToken(String token) throws TokenNotFoundException {
+    public Token findByToken(String tokenString) throws TokenNotFoundException {
 
-        return tokenStore.retrieveFromAccessToken(token);
+        Token token = tokenRepository.findByAccessToken(tokenString);
+        if(token == null) {
+            throw new TokenNotFoundException();
+        }
+
+        if(!isValidToken(token)){
+            throw new TokenNotFoundException();
+        }
+
+        refreshToken(token);
+
+        return token;
+    }
+
+    private void refreshToken(Token token) {
+        token.setExpiringDate(new Date(new Date().getTime() + SecurityConstants.EXPIRATION_TIME));
+        tokenRepository.save(token);
+    }
+
+    private boolean isValidToken(Token token) {
+        if(token.getExpiringDate().before(new Date())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private Token createToken(User user) {
+        return new Token(createTokenString(), createTokenString(), user);
+    }
+
+    private String createTokenString() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 }

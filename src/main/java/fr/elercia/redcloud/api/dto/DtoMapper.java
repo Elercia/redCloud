@@ -1,7 +1,11 @@
 package fr.elercia.redcloud.api.dto;
 
 import fr.elercia.redcloud.api.dto.entity.*;
-import fr.elercia.redcloud.business.entity.*;
+import fr.elercia.redcloud.business.entity.Directory;
+import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.entity.Token;
+import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.config.SecurityConstants;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +21,7 @@ public class DtoMapper {
     }
 
     public static List<FileDto> fileEntitiesToDto(List<File> files) {
-        return files.stream().map(f -> new FileDto(f.getName(), f.getResourceId(), f.getCreationDate())).collect(Collectors.toList());
+        return files.stream().map(DtoMapper::entityToDto).collect(Collectors.toList());
     }
 
     public static List<SimpleDirectoryDto> simpleDirectoryEntitiesToDto(List<Directory> directories) {
@@ -29,6 +33,10 @@ public class DtoMapper {
     }
 
     public static TokenDto map(Token token) {
-        return new TokenDto(token.getAccessToken(), token.getTokenType(), token.getExpireIn(), token.getRefreshToken());
+        return new TokenDto(token.getAccessToken(), SecurityConstants.TOKEN_TYPE, SecurityConstants.EXPIRATION_TIME, token.getRefreshToken());
+    }
+
+    public static FileDto entityToDto(File file) {
+        return new FileDto(file.getFileName(), file.getResourceId(), file.getCreationDate(), file.getSize());
     }
 }

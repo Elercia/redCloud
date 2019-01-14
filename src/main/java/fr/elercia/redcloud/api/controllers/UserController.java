@@ -1,17 +1,19 @@
 package fr.elercia.redcloud.api.controllers;
 
+import fr.elercia.redcloud.api.controllers.params.Parameters;
 import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UserDto;
-import fr.elercia.redcloud.api.route.QueryParam;
-import fr.elercia.redcloud.api.route.Route;
+import fr.elercia.redcloud.api.controllers.params.QueryParam;
+import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.service.UserService;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javafx.print.PageRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +59,8 @@ public class UserController {
     }
 
     @ApiOperation(value = "Find user by name")
-    @GetMapping(Route.USERS_NAME)
-    public UserDto findByName(@RequestParam String researchedName) throws UserNotFoundException {
+    @GetMapping(Route.USERS_SEARCH)
+    public UserDto findByName(@RequestParam(Parameters.USER_SEARCH_NAME) String researchedName) throws UserNotFoundException {
 
         LOG.info("findByName", "name", researchedName);
 
@@ -69,7 +71,7 @@ public class UserController {
 
     @ApiOperation(value = "Get one user")
     @GetMapping(Route.USER)
-    public UserDto getUser(@RequestParam(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
+    public UserDto getUser(@PathVariable(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
 
         LOG.info("getUser", "userId", userId);
 
@@ -78,7 +80,7 @@ public class UserController {
 
     @ApiOperation(value = "Delete user")
     @DeleteMapping(Route.USER)
-    public void deleteUser(@RequestParam(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
+    public void deleteUser(@PathVariable(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
 
         LOG.info("deleteUser", "userId", userId);
 
@@ -89,7 +91,7 @@ public class UserController {
 
     @ApiOperation(value = "Update user")
     @PutMapping(Route.USER)
-    public UserDto updateUser(@RequestParam(QueryParam.USER_ID) UUID userId, @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException {
+    public UserDto updateUser(@PathVariable(QueryParam.USER_ID) UUID userId, @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException {
 
         LOG.info("updateUser", "userId", userId);
 
