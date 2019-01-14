@@ -53,7 +53,7 @@ public class FileService {
 
         //Check if a file with this name already exist in this directory
         Optional<File> any = directory.getFiles().stream().filter(f -> f.getFileName().equals(file.getFileName())).findAny();
-        if(any.isPresent()){
+        if (any.isPresent()) {
             throw new FileOperationException();
         }
 
@@ -63,7 +63,10 @@ public class FileService {
 
     public File storeFile(Directory directory, MultipartFile multipartFile) throws FileNameFormatException, FileStorageException {
 
-        String fileName = multipartFile.getName();
+        String fileName = multipartFile.getOriginalFilename();
+        if (fileName == null) {
+            fileName = multipartFile.getName();
+        }
 
         if (!isValidFileName(fileName)) {
             throw new FileNameFormatException();

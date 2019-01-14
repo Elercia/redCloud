@@ -40,7 +40,7 @@ public class FileController {
         this.directoryService = directoryService;
     }
 
-    @ApiOperation(value = "Get a file")
+    @ApiOperation(value = "Download a file")
     @GetMapping(Route.FILE)
     public ResponseEntity<Resource> download(@RequestParam(QueryParam.FILE_ID) UUID fileId) throws FileNotFoundException {
 
@@ -57,7 +57,7 @@ public class FileController {
                 .body(resource);
     }
 
-    @ApiOperation(value = "Get a file")
+    @ApiOperation(value = "Delete a file")
     @DeleteMapping(Route.FILE)
     public void deleteFile(@RequestParam(QueryParam.FILE_ID) UUID fileId) throws FileNotFoundException {
 
@@ -66,7 +66,7 @@ public class FileController {
         fileService.delete(file);
     }
 
-    @ApiOperation(value = "Get a file")
+    @ApiOperation(value = "Move a file")
     @PutMapping(Route.FILE)
     public void moveFile(@RequestParam(QueryParam.FILE_ID) UUID fileId, MoveFileDto moveFileDto) throws FileNotFoundException, DirectoryNotFoundException, FileOperationException {
 

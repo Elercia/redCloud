@@ -22,10 +22,17 @@ public class FileSystemService {
     }
 
     public void uploadFile(MultipartFile multipartFile, File file) throws FileStorageException {
-        try {
-            multipartFile.transferTo(new java.io.File(FileSystemUtils.getPathToFile(file)));
-        } catch (IOException e) {
+        java.io.File ioFile = new java.io.File(FileSystemUtils.getPathToFile(file));
+
+        if (ioFile.exists()) {
             throw new FileStorageException();
+        }
+
+        try {
+            ioFile.createNewFile();
+            multipartFile.transferTo(ioFile);
+        } catch (IOException e) {
+            throw new FileStorageException(e);
         }
     }
 

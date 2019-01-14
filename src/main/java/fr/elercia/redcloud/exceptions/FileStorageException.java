@@ -12,4 +12,8 @@ public class FileStorageException extends ResourceNotFoundException {
     public FileStorageException(String message) {
         super(message);
     }
+
+    public FileStorageException(Throwable cause) {
+        super(cause);
+    }
 }
