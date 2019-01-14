@@ -18,8 +18,6 @@ import java.lang.reflect.Method;
 @Component
 public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAdapter {
 
-    private static final String PASSPHRASE = "pass";
-
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -37,10 +35,6 @@ public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAda
         }
 
         String bearerToken = request.getHeader(SecurityConstants.REQUEST_HEADER_NAME);
-
-        if(bearerToken != null && bearerToken.equalsIgnoreCase(PASSPHRASE)) {
-            return true;
-        }
 
         if (bearerToken == null || !bearerToken.substring(0,SecurityConstants.TOKEN_TYPE.length()).equalsIgnoreCase(SecurityConstants.TOKEN_TYPE)) {
             setErrorResponseHeader(response);
