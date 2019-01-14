@@ -55,6 +55,7 @@ public class AuthenticationService {
         }
 
         if(!isValidToken(token)){
+            tokenRepository.delete(token);
             throw new TokenNotFoundException();
         }
 
