@@ -18,6 +18,6 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(securityRestCallInterceptor()).addPathPatterns(Route.BASE+"/**");
+        registry.addInterceptor(securityRestCallInterceptor()).addPathPatterns(Route.BASE + "/**");
     }
 } 
