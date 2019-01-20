@@ -34,7 +34,7 @@ public class User {
     private Date creationDate;
 
     @OneToMany(mappedBy = "user")
-    private List<Directory> directories;
+    private List<Directory> directories = new ArrayList<>();
 
     public User() {
 
@@ -104,10 +104,6 @@ public class User {
 
 
     public void setRootDirectory(Directory rootDirectory) {
-
-        if (directories == null) {
-            directories = new ArrayList<>();
-        }
 
         this.directories.add(rootDirectory);
     }
