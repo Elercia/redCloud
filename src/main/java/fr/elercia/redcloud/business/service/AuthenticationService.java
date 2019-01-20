@@ -78,7 +78,11 @@ public class AuthenticationService {
     }
 
     private Token createToken(User user) {
-        return new Token(createTokenString(), createTokenString(), user);
+        Token token = new Token(createTokenString(), createTokenString(), user);
+
+        tokenRepository.save(token);
+
+        return token;
     }
 
     private String createTokenString() {

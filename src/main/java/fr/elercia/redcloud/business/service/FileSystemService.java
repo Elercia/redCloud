@@ -65,5 +65,14 @@ public class FileSystemService {
     }
 
     public void deleteUserFileSystem(User user) {
+        java.io.File userDirectory = new java.io.File(FileSystemUtils.getUserDirectoryPath(user));
+
+        if (!userDirectory.exists() || !userDirectory.isDirectory()) {
+            throw new RuntimeException("Impossible to delete user directory (wrong directory) user:" + user.getResourceId());
+        }
+
+        if(!userDirectory.delete()) {
+            throw new RuntimeException("Unable to delete user directory (delete error) user:" + user.getResourceId());
+        }
     }
 }

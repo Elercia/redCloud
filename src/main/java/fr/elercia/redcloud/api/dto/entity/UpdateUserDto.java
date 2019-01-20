@@ -8,6 +8,11 @@ public class UpdateUserDto extends SimpleUserDto{
 
     }
 
+    public UpdateUserDto(String name, String password) {
+        super(name);
+        this.password = password;
+    }
+
     @Override
     public String getName() {
         return super.getName();
