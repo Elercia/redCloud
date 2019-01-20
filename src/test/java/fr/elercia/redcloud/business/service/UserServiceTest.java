@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.UserTestUtils;
+import fr.elercia.redcloud.utils.UserTestUtils;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.business.entity.User;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static fr.elercia.redcloud.TestUtils.userRootDirectoryCreated;
+import static fr.elercia.redcloud.utils.TestUtils.userRootDirectoryCreated;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest

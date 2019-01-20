@@ -1,4 +1,4 @@
-package fr.elercia.redcloud;
+package fr.elercia.redcloud.utils;
 
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.service.FileSystemUtils;
