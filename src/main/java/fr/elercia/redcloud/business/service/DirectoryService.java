@@ -16,13 +16,11 @@ import java.util.UUID;
 public class DirectoryService {
 
     private DirectoryRepository directoryRepository;
-    private FileRepository fileRepository;
 
     @Autowired
-    public DirectoryService(DirectoryRepository directoryRepository, FileRepository fileRepository) {
+    public DirectoryService(DirectoryRepository directoryRepository) {
 
         this.directoryRepository = directoryRepository;
-        this.fileRepository = fileRepository;
     }
 
     public void createRootDirectory(User user) {
@@ -30,7 +28,6 @@ public class DirectoryService {
         Directory directory = new Directory("root", user, null);
         directoryRepository.save(directory);
         user.setRootDirectory(directory);
-
     }
 
     public Directory findRootDirectory(User user) throws DirectoryNotFoundException {
@@ -74,7 +71,6 @@ public class DirectoryService {
         directory.updateName(updateDirectoryDto.getName());
 
         directoryRepository.save(directory);
-
     }
 
     public void move(Directory directory, Directory moveToDirectory) {

@@ -51,4 +51,12 @@ class AuthenticationServiceTest {
             authenticationService.login("dededefejbrkbgrkjbrjkgb", "password");
         });
     }
+
+    @Test
+    void login_loginNull_exceptionThrown() {
+
+        assertThrows(InvalidLoginException.class, () -> {
+            authenticationService.login(null, null);
+        });
+    }
 }

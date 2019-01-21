@@ -2,9 +2,9 @@ package fr.elercia.redcloud.business.service;
 
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
-import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
+import fr.elercia.redcloud.business.service.utils.StringUtils;
 import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
@@ -60,11 +60,7 @@ public class UserService {
 
     public User createUser(CreateUserDto wantedUser) throws InvalidUserCreationException {
 
-        User oldUser = userRepository.findByName(wantedUser.getName());
-
-        if (oldUser != null) {
-            throw new InvalidUserCreationException("User with this name already exists");
-        }
+        checkUserCreationValidity(wantedUser);
 
         String hashedPassword = PasswordEncoder.encode(wantedUser.getUnHashedPassword());
 
@@ -75,6 +71,19 @@ public class UserService {
         fileSystemService.createUserFileSystemSpace(newUser);
 
         return newUser;
+    }
+
+    private void checkUserCreationValidity(CreateUserDto wantedUser) throws InvalidUserCreationException {
+
+        if (StringUtils.isNullOrEmpty(wantedUser.getName()) || StringUtils.isNullOrEmpty(wantedUser.getUnHashedPassword())) {
+            throw new InvalidUserCreationException("User request is invalid");
+        }
+
+        User oldUser = userRepository.findByName(wantedUser.getName());
+
+        if (oldUser != null) {
+            throw new InvalidUserCreationException("User with this name already exists");
+        }
     }
 
     public void deleteUser(User user) {
