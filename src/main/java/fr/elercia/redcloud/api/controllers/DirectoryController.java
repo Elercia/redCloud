@@ -9,6 +9,7 @@ import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.File;
 import fr.elercia.redcloud.business.service.DirectoryService;
 import fr.elercia.redcloud.business.service.FileService;
+import fr.elercia.redcloud.business.service.SecurityUtils;
 import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
 import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @Api(value = "Operations about directories.")
 @RestController
 @RequestMapping("/")
-public class DirectoryController {
+public class DirectoryController extends AbstractController{
 
     private static final Logger LOG = LoggerFactory.getLogger(DirectoryController.class);
 
@@ -50,6 +51,9 @@ public class DirectoryController {
 
         Directory parentDir = directoryService.find(parentDirectoryId);
 
+        SecurityUtils.checkUserRightOn(getConnectedUser(), parentDir);
+
+
         DirectoryDto directory = DtoMapper.entityToDto(directoryService.createSubDirectory(parentDir, wantedDirectory));
 
         return new ResponseEntity<>(directory, HttpStatus.CREATED);
@@ -61,7 +65,11 @@ public class DirectoryController {
 
         LOG.info("Find directory id:{}", directoryId);
 
-        return DtoMapper.entityToDto(directoryService.find(directoryId));
+        Directory directory = directoryService.find(directoryId);
+
+        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
+
+        return DtoMapper.entityToDto(directory);
     }
 
     @ApiOperation(value = "Delete a directory")
@@ -71,6 +79,8 @@ public class DirectoryController {
         LOG.info("delete directory id:{}", directoryId);
 
         Directory directory = directoryService.find(directoryId);
+
+        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
 
         directoryService.deleteDirectory(directory);
     }
@@ -82,6 +92,8 @@ public class DirectoryController {
         LOG.info("update directory id:{}", directoryId);
 
         Directory directory = directoryService.find(directoryId);
+
+        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
 
         directoryService.update(directory, updateDirectoryDto);
     }
@@ -95,6 +107,9 @@ public class DirectoryController {
         Directory directory = directoryService.find(directoryId);
         Directory moveToDirectory = directoryService.find(moveDirectoryDto.getMoveToDirectoryId());
 
+        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), moveToDirectory);
+
         directoryService.move(directory, moveToDirectory);
     }
 
@@ -102,6 +117,8 @@ public class DirectoryController {
     public FileDto uploadFile(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestParam(Parameters.UPLOAD_FILE) MultipartFile file) throws DirectoryNotFoundException, FileNameFormatException, FileStorageException {
 
         Directory directory = directoryService.find(directoryId);
+
+        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
 
         File storedFile = fileService.storeFile(directory, file);
 

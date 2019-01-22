@@ -8,6 +8,7 @@ import fr.elercia.redcloud.business.entity.File;
 import fr.elercia.redcloud.business.service.DirectoryService;
 import fr.elercia.redcloud.business.service.FileService;
 import fr.elercia.redcloud.business.service.FileSystemUtils;
+import fr.elercia.redcloud.business.service.SecurityUtils;
 import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileOperationException;
@@ -26,7 +27,7 @@ import java.util.UUID;
 @Api(value = "Operations about files.")
 @RestController
 @RequestMapping("/")
-public class FileController {
+public class FileController extends AbstractController{
 
     private static final Logger LOG = LoggerFactory.getLogger(FileController.class);
 
@@ -48,6 +49,8 @@ public class FileController {
 
         File file = fileService.find(fileId);
 
+        SecurityUtils.checkUserRightOn(getConnectedUser(), file);
+
         // Load file as Resource
         Resource resource = fileService.downloadFile(file);
 
@@ -63,6 +66,8 @@ public class FileController {
 
         File file = fileService.find(fileId);
 
+        SecurityUtils.checkUserRightOn(getConnectedUser(), file);
+
         fileService.delete(file);
     }
 
@@ -72,6 +77,9 @@ public class FileController {
 
         File file = fileService.find(fileId);
         Directory directory = directoryService.find(moveFileDto.getDirectoryId());
+
+        SecurityUtils.checkUserRightOn(getConnectedUser(), file);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
 
         fileService.move(file, directory);
     }

@@ -14,7 +14,7 @@ import java.util.Enumeration;
 @Api(value = "Test operations", description = "Contains all server test")
 @RestController
 @RequestMapping("/")
-public class TestController extends ControllerUtils{
+public class TestController extends AbstractController {
 
     @Autowired
     public TestController() {

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "Operations to monitor the REST server")
 @RestController
 @RequestMapping("/")
-public class MonitoringController extends ControllerUtils {
+public class MonitoringController extends AbstractController {
 
     @Autowired
     public MonitoringController() {

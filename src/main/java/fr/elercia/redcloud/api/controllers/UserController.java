@@ -7,9 +7,11 @@ import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UserDto;
+import fr.elercia.redcloud.api.security.PermitAll;
 import fr.elercia.redcloud.api.security.RequireUserType;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
+import fr.elercia.redcloud.business.service.SecurityUtils;
 import fr.elercia.redcloud.business.service.UserService;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
@@ -28,7 +30,7 @@ import java.util.UUID;
 @Api(value = "Operations about users.")
 @RestController
 @RequestMapping("/")
-public class UserController {
+public class UserController extends AbstractController {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
@@ -48,6 +50,7 @@ public class UserController {
         return DtoMapper.entityToDto(userService.findAllUsers());
     }
 
+    @PermitAll
     @ApiOperation(value = "Create a user")
     @PostMapping(Route.USERS)
     public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto wantedUser) throws InvalidUserCreationException {
@@ -61,7 +64,7 @@ public class UserController {
 
     @ApiOperation(value = "Find user by name")
     @GetMapping(Route.USERS_SEARCH)
-    public UserDto findByName(@RequestParam(Parameters.USER_SEARCH_NAME) String researchedName) throws UserNotFoundException {
+    public UserDto search(@RequestParam(Parameters.USER_SEARCH_NAME) String researchedName) throws UserNotFoundException {
 
         LOG.info("findByName {}", researchedName);
 
@@ -98,6 +101,8 @@ public class UserController {
         LOG.info("updateUser {}", userId);
 
         User user = userService.findByResourceId(userId);
+
+        SecurityUtils.checkUserRightOn(getConnectedUser(), user);
 
         return DtoMapper.entityToDto(userService.updateUser(user, updateUserDto));
     }

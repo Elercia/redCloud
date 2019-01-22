@@ -35,14 +35,12 @@ public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAda
             return true;
         }
 
-        String bearerToken = request.getHeader(SecurityConstants.REQUEST_HEADER_NAME);
+        String accessToken = AuthorizationUtils.getAccessToken(request);
 
-        if (bearerToken == null || !bearerToken.substring(0,SecurityConstants.TOKEN_TYPE.length()).equalsIgnoreCase(SecurityConstants.TOKEN_TYPE)) {
+        if(accessToken == null) {
             setErrorResponseHeader(response);
             throw new UnauthorizedRestCall("Missing Auth token");
         }
-
-        String accessToken = bearerToken.substring(SecurityConstants.TOKEN_TYPE.length() + 1);
 
         try {
             Token token = authenticationService.findByToken(accessToken);
