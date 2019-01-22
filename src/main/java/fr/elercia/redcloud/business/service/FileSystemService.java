@@ -4,6 +4,7 @@ import fr.elercia.redcloud.business.entity.File;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
+import fr.elercia.redcloud.exceptions.UnexpectedFileSystemException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,13 @@ public class FileSystemService {
 
     @Autowired
     public FileSystemService() {
-
+        // Default constructor
     }
 
     public void uploadFile(MultipartFile multipartFile, File file) throws FileStorageException {
 
         String filePath = FileSystemUtils.getPathToFile(file);
+
         LOG.info("Upload file [path {}]", filePath);
 
         java.io.File ioFile = new java.io.File(filePath);
@@ -38,7 +40,10 @@ public class FileSystemService {
         }
 
         try {
-            ioFile.createNewFile();
+            if (!ioFile.createNewFile()) {
+                throw new FileStorageException("Cannot create the file");
+            }
+
             multipartFile.transferTo(ioFile);
         } catch (IOException e) {
             throw new FileStorageException(e);
@@ -71,11 +76,11 @@ public class FileSystemService {
         java.io.File userDirectory = new java.io.File(FileSystemUtils.getUserDirectoryPath(user));
 
         if (userDirectory.exists()) {
-            throw new RuntimeException("New user directory already exists user:" + user.getResourceId());
+            throw new UnexpectedFileSystemException("New user directory already exists user:" + user.getResourceId());
         }
 
         if (!userDirectory.mkdirs()) {
-            throw new RuntimeException("Unable to create user directory user:" + user.getResourceId());
+            throw new UnexpectedFileSystemException("Unable to create user directory user:" + user.getResourceId());
         }
     }
 
@@ -86,12 +91,12 @@ public class FileSystemService {
         java.io.File userDirectory = new java.io.File(FileSystemUtils.getUserDirectoryPath(user));
 
         if (!userDirectory.exists() || !userDirectory.isDirectory()) {
-            throw new RuntimeException("Impossible to delete user directory (wrong directory) user:" + user.getResourceId());
+            throw new UnexpectedFileSystemException("Impossible to delete user directory (wrong directory) user:" + user.getResourceId());
         }
         try {
             FileUtils.deleteDirectory(userDirectory);
         } catch (IOException e) {
-            throw new RuntimeException("Unable to delete user directory (delete error) user:" + user.getResourceId(), e);
+            throw new UnexpectedFileSystemException("Unable to delete user directory (delete error) user:" + user.getResourceId(), e);
         }
     }
 }

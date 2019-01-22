@@ -9,6 +9,8 @@ import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import org.apache.commons.collections4.IteratorUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import java.util.UUID;
 
 @Service
 public class UserService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
     private DirectoryService directoryService;
@@ -37,6 +41,8 @@ public class UserService {
             throw new UserNotFoundException("User not found with this resource Id");
         }
 
+        LOG.info("findByResourceId user {}", user.getResourceId());
+
         return user;
     }
 
@@ -48,12 +54,16 @@ public class UserService {
             throw new UserNotFoundException();
         }
 
+        LOG.info("findByName user {}", user.getResourceId());
+
         return user;
     }
 
-    public List<User> getAllUsers() {
+    public List<User> findAllUsers() {
 
         List<User> users = IteratorUtils.toList(userRepository.findAll().iterator());
+
+        LOG.info("findAllUsers users size {}", users.size());
 
         return users;
     }
@@ -65,6 +75,8 @@ public class UserService {
         String hashedPassword = PasswordEncoder.encode(wantedUser.getUnHashedPassword());
 
         User newUser = new User(wantedUser.getName(), hashedPassword, UserType.USER);
+
+        LOG.info("createUser user {}", newUser.getResourceId());
 
         userRepository.save(newUser);
         directoryService.createRootDirectory(newUser);
@@ -88,11 +100,15 @@ public class UserService {
 
     public void deleteUser(User user) {
 
+        LOG.info("deleteUser user {}", user.getResourceId());
+
         userRepository.delete(user);
         fileSystemService.deleteUserFileSystem(user);
     }
 
     public User updateUser(User user, UpdateUserDto updateUserDto) {
+
+        LOG.info("updateUser user {}", user.getResourceId());
 
         user.updateName(updateUserDto.getName());
         user.updateUnhashedPassword(updateUserDto.getPassword());

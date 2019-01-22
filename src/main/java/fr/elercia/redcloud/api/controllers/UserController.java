@@ -1,19 +1,18 @@
 package fr.elercia.redcloud.api.controllers;
 
 import fr.elercia.redcloud.api.controllers.params.Parameters;
+import fr.elercia.redcloud.api.controllers.params.QueryParam;
+import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UserDto;
-import fr.elercia.redcloud.api.controllers.params.QueryParam;
-import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.service.UserService;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javafx.print.PageRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Api(value = "Operations about users.", description = "Manage user and get info about them.")
+@Api(value = "Operations about users.")
 @RestController
 @RequestMapping("/")
 public class UserController {
@@ -44,14 +43,14 @@ public class UserController {
 
         LOG.info("getAllUser");
 
-        return DtoMapper.entityToDto(userService.getAllUsers());
+        return DtoMapper.entityToDto(userService.findAllUsers());
     }
 
     @ApiOperation(value = "Create a user")
     @PostMapping(Route.USERS)
     public ResponseEntity<UserDto> createUser(@RequestBody CreateUserDto wantedUser) throws InvalidUserCreationException {
 
-        LOG.info("createUser", "name", wantedUser.getName());
+        LOG.info("createUser {}", wantedUser.getName());
 
         UserDto createdUser = DtoMapper.entityToDto(userService.createUser(wantedUser));
 
@@ -62,7 +61,7 @@ public class UserController {
     @GetMapping(Route.USERS_SEARCH)
     public UserDto findByName(@RequestParam(Parameters.USER_SEARCH_NAME) String researchedName) throws UserNotFoundException {
 
-        LOG.info("findByName", "name", researchedName);
+        LOG.info("findByName {}", researchedName);
 
         User user = userService.findByName(researchedName);
 
@@ -73,7 +72,7 @@ public class UserController {
     @GetMapping(Route.USER)
     public UserDto getUser(@PathVariable(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
 
-        LOG.info("getUser", "userId", userId);
+        LOG.info("getUser {}", userId);
 
         return DtoMapper.entityToDto(userService.findByResourceId(userId));
     }
@@ -82,7 +81,7 @@ public class UserController {
     @DeleteMapping(Route.USER)
     public void deleteUser(@PathVariable(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
 
-        LOG.info("deleteUser", "userId", userId);
+        LOG.info("deleteUser {}", userId);
 
        User user = userService.findByResourceId(userId);
 
@@ -93,7 +92,7 @@ public class UserController {
     @PutMapping(Route.USER)
     public UserDto updateUser(@PathVariable(QueryParam.USER_ID) UUID userId, @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException {
 
-        LOG.info("updateUser", "userId", userId);
+        LOG.info("updateUser {}", userId);
 
         User user = userService.findByResourceId(userId);
 

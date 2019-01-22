@@ -7,6 +7,8 @@ import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileOperationException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class FileService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FileService.class);
 
     //a-z A-Z 0-9 spaces(like [\r\n\t\f\v ]) _ . - ( ) :
     private static final Pattern FILE_NAME_PATTERN = Pattern.compile("^([a-zA-Z0-9\\s_.\\-\\(\\):])+$");
@@ -41,10 +45,14 @@ public class FileService {
             throw new FileNotFoundException();
         }
 
+        LOG.info("Find file {}", file.getResourceId());
+
         return file;
     }
 
     public void delete(File file) {
+
+        LOG.info("Delete file {}", file.getResourceId());
 
         fileRepository.delete(file);
     }
@@ -57,6 +65,8 @@ public class FileService {
             throw new FileOperationException();
         }
 
+        LOG.info("Move file from {} to {}", file.getDirectory().getResourceId(), directory.getResourceId());
+
         file.setDirectory(directory);
         fileRepository.save(file);
     }
@@ -64,6 +74,7 @@ public class FileService {
     public File storeFile(Directory directory, MultipartFile multipartFile) throws FileNameFormatException, FileStorageException {
 
         String fileName = multipartFile.getOriginalFilename();
+
         if (fileName == null) {
             fileName = multipartFile.getName();
         }
@@ -78,6 +89,8 @@ public class FileService {
 
         fileRepository.save(file);
 
+        LOG.info("StoreFile file {}", file.getResourceId());
+
         return file;
     }
 
@@ -85,14 +98,12 @@ public class FileService {
 
         Matcher matcher = FILE_NAME_PATTERN.matcher(fileName);
 
-        if (!matcher.matches()) {
-            return false;
-        }
-
-        return true;
+        return matcher.matches();
     }
 
     public Resource downloadFile(File file) throws FileNotFoundException {
+
+        LOG.info("DownloadFile file {}", file.getResourceId());
 
         return fileSystemService.download(file);
     }

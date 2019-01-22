@@ -2,6 +2,10 @@ package fr.elercia.redcloud.api.controllers.params;
 
 public class QueryParam {
 
+    private QueryParam() {
+
+    }
+
     public static final String USER_ID = "user_id";
     public static final String USER_ID_URL = "{" + USER_ID + "}";
     public static final String DIRECTORY_ID = "directory_id";

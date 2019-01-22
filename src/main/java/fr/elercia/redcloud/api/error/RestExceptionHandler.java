@@ -20,9 +20,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public final ResponseEntity<ErrorDetails> handleAllExceptions(Throwable ex, WebRequest request) {
 
-        ex.printStackTrace();
-
-        LOG.debug("Handle rest exception", "exception", ex.getClass().getSimpleName(), "Message", ex.getMessage(), "Throws at", (ex.getStackTrace().length > 0 ? ex.getStackTrace()[0] : "none"));
+        LOG.debug("Handle rest exception exception {} Message {} Throws at {}", ex.getClass().getSimpleName(), ex.getMessage(), (ex.getStackTrace().length > 0 ? ex.getStackTrace()[0] : "none"));
 
         HttpStatus status;
         String message;

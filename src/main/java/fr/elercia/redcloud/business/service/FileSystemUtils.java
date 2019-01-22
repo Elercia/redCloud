@@ -1,12 +1,15 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.File;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.config.SaveConfig;
 import org.springframework.http.MediaType;
 
 public class FileSystemUtils {
+
+    private FileSystemUtils() {
+
+    }
 
     public static String getPathToFile(File file) {
         return SaveConfig.PATH_TO_FILES + "/" + getUserPath(file) + "/" + getFilePath(file);
@@ -28,26 +31,10 @@ public class FileSystemUtils {
         return getUserPath(file.getDirectory().getUser());
     }
 
-    @Deprecated
-    private static String getDirectoryPath(File file) {
-
-        StringBuilder path = new StringBuilder();
-        Directory dir = file.getDirectory();
-        do {
-            path.append(dir.getResourceId().toString()).append("/").append(path);
-            dir = dir.getParentDirectory();
-
-        } while (dir != null);
-
-        path.deleteCharAt(path.length() - 1);
-
-        return path.toString();
-    }
-
     public static MediaType getMediaTypeFromExtension(String fileName) {
 
         String ext = null;
-        int dotIndex = fileName.lastIndexOf(".");
+        int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex != -1) {
             ext = fileName.substring(dotIndex + 1);
         }

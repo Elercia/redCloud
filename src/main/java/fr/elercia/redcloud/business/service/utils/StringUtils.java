@@ -2,6 +2,10 @@ package fr.elercia.redcloud.business.service.utils;
 
 public class StringUtils {
 
+    private StringUtils() {
+
+    }
+
     public static boolean isNullOrEmpty(String str) {
         return isNull(str) || isEmpty(str);
     }

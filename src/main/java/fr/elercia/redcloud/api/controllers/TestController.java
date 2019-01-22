@@ -18,7 +18,7 @@ public class TestController extends ControllerUtils{
 
     @Autowired
     public TestController() {
-
+        // Add all test dependencies
     }
 
     @ApiOperation(value = "Realise a ping on the redcloud api")

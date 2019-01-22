@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class PasswordEncoder {
 
+    private PasswordEncoder() {
+
+    }
+
     public static String encode(String rawPassword) {
         return DigestUtils.sha256Hex(rawPassword);
     }

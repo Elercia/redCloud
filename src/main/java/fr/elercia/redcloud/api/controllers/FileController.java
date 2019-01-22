@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@Api(value = "Operations about files.", description = "Manage files and get info about them.")
+@Api(value = "Operations about files.")
 @RestController
 @RequestMapping("/")
 public class FileController {

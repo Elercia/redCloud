@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 
 public class DtoMapper {
 
+    private DtoMapper() {
+
+    }
+
     public static UserDto entityToDto(User user) {
         return new UserDto(user.getName(), user.getResourceId(), user.getUserType(), user.getCreationDate(), entityToDto(user.getRootDirectory()));
     }

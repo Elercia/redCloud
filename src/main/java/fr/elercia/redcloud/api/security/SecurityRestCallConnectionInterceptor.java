@@ -1,6 +1,5 @@
 package fr.elercia.redcloud.api.security;
 
-import fr.elercia.redcloud.business.entity.Token;
 import fr.elercia.redcloud.business.service.AuthenticationService;
 import fr.elercia.redcloud.config.SecurityConstants;
 import fr.elercia.redcloud.exceptions.TokenNotFoundException;
@@ -44,7 +43,7 @@ public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAda
         String accessToken = bearerToken.substring(SecurityConstants.TOKEN_TYPE.length() + 1);
 
         try {
-            Token token = authenticationService.findByToken(accessToken);
+            authenticationService.findByToken(accessToken);
         } catch (TokenNotFoundException e) {
             setErrorResponseHeader(response);
             throw new UnauthorizedRestCall("Unknown token");

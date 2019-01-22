@@ -117,6 +117,11 @@ public class User {
 
         User other = (User) obj;
 
-        return this.id == other.id;
+        return this.resourceId.equals(other.resourceId);
+    }
+
+    @Override
+    public int hashCode() {
+        return resourceId.hashCode();
     }
 }
