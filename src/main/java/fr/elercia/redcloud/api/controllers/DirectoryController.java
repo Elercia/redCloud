@@ -1,10 +1,10 @@
 package fr.elercia.redcloud.api.controllers;
 
 import fr.elercia.redcloud.api.controllers.params.Parameters;
-import fr.elercia.redcloud.api.dto.DtoMapper;
-import fr.elercia.redcloud.api.dto.entity.*;
 import fr.elercia.redcloud.api.controllers.params.QueryParam;
 import fr.elercia.redcloud.api.controllers.params.Route;
+import fr.elercia.redcloud.api.dto.DtoMapper;
+import fr.elercia.redcloud.api.dto.entity.*;
 import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.File;
 import fr.elercia.redcloud.business.service.DirectoryService;
@@ -12,6 +12,7 @@ import fr.elercia.redcloud.business.service.FileService;
 import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
 import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
+import fr.elercia.redcloud.exceptions.UnauthorizedDirectoryActionException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.UUID;
 
 @Api(value = "Operations about directories.")
@@ -42,9 +44,7 @@ public class DirectoryController {
 
     @ApiOperation(value = "Create a directory")
     @PostMapping(Route.DIRECTORY)
-    public ResponseEntity<DirectoryDto> addSubDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID parentDirectoryId,
-                                                        @RequestBody CreateDirectoryDto wantedDirectory)
-            throws DirectoryNotFoundException {
+    public ResponseEntity<DirectoryDto> addSubDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID parentDirectoryId, @RequestBody CreateDirectoryDto wantedDirectory) throws DirectoryNotFoundException {
 
         LOG.info("create directory for parent {} ", parentDirectoryId);
 
@@ -88,7 +88,7 @@ public class DirectoryController {
 
     @ApiOperation(value = "Delete a directory")
     @PutMapping(Route.DIRECTORY_MOVE)
-    public void moveDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestBody MoveDirectoryDto moveDirectoryDto) throws DirectoryNotFoundException {
+    public void moveDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestBody MoveDirectoryDto moveDirectoryDto) throws DirectoryNotFoundException, UnauthorizedDirectoryActionException {
 
         LOG.info("move directory from:{} - to:{}", directoryId, moveDirectoryDto.getMoveToDirectoryId());
 

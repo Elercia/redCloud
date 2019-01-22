@@ -6,6 +6,7 @@ import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.dao.repository.DirectoryRepository;
 import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
+import fr.elercia.redcloud.exceptions.UnauthorizedDirectoryActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,9 +89,11 @@ public class DirectoryService {
         directoryRepository.save(directory);
     }
 
-    public void move(Directory directory, Directory moveToDirectory) {
+    public void move(Directory directory, Directory moveToDirectory) throws UnauthorizedDirectoryActionException {
 
-        //TODO Can't move root directory
+        if(moveToDirectory == null || directory.getParentDirectory() == null) {
+            throw new UnauthorizedDirectoryActionException("Can't move root direcotry");
+        }
 
         LOG.info("Move directory from {} to {}", directory.getResourceId(), moveToDirectory.getResourceId());
 
