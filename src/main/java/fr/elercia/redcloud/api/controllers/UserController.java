@@ -7,7 +7,9 @@ import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UserDto;
+import fr.elercia.redcloud.api.security.RequireUserType;
 import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.business.service.UserService;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
@@ -79,6 +81,7 @@ public class UserController {
 
     @ApiOperation(value = "Delete user")
     @DeleteMapping(Route.USER)
+    @RequireUserType(UserType.ADMIN)
     public void deleteUser(@PathVariable(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
 
         LOG.info("deleteUser {}", userId);
