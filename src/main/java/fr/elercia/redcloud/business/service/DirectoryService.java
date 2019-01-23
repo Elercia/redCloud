@@ -36,19 +36,6 @@ public class DirectoryService {
         user.setRootDirectory(directory);
     }
 
-    public Directory findRootDirectory(User user) throws DirectoryNotFoundException {
-
-        Directory directory = directoryRepository.findByParentDirectoryIsNullAndUser(user);
-
-        if (directory == null) {
-            throw new DirectoryNotFoundException();
-        }
-
-        LOG.info("findRootDirectory directory {}", directory.getResourceId());
-
-        return directory;
-    }
-
     public Directory find(UUID directoryId) throws DirectoryNotFoundException {
 
         Directory directory = directoryRepository.findByResourceId(directoryId);
@@ -92,7 +79,7 @@ public class DirectoryService {
     public void move(Directory directory, Directory moveToDirectory) throws UnauthorizedDirectoryActionException {
 
         if(moveToDirectory == null || directory.getParentDirectory() == null) {
-            throw new UnauthorizedDirectoryActionException("Can't move root direcotry");
+            throw new UnauthorizedDirectoryActionException("Can't move root directory");
         }
 
         LOG.info("Move directory from {} to {}", directory.getResourceId(), moveToDirectory.getResourceId());

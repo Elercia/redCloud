@@ -53,6 +53,14 @@ class AuthenticationServiceTest {
     }
 
     @Test
+    void login_wrongPassword_exceptionThrown() {
+
+        assertThrows(InvalidLoginException.class, () -> {
+            authenticationService.login("testUser1", "jfejfbejfejf");
+        });
+    }
+
+    @Test
     void login_loginNull_exceptionThrown() {
 
         assertThrows(InvalidLoginException.class, () -> {

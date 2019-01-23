@@ -25,4 +25,6 @@ public class MonitoringController extends AbstractController {
     public ResponseEntity<Void> login() {
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //TODO Add something like CheckSystemIntegrity (check database and file system coherence)
 }

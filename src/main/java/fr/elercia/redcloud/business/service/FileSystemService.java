@@ -44,7 +44,8 @@ public class FileSystemService {
                 throw new FileStorageException("Cannot create the file");
             }
 
-            multipartFile.transferTo(ioFile);
+            //multipartFile.transferTo(ioFile);
+            FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), ioFile);
         } catch (IOException e) {
             throw new FileStorageException(e);
         }
