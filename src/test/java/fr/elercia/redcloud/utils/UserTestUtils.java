@@ -3,7 +3,6 @@ package fr.elercia.redcloud.utils;
 import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
-import fr.elercia.redcloud.business.service.PasswordEncoder;
 import org.mockito.Mockito;
 
 import java.util.Date;
@@ -22,6 +21,10 @@ public class UserTestUtils {
         assertEquals(expected.getUserType(), actual.getUserType());
         assertEquals(expected.getCreationDate(), actual.getCreationDate());
         assertEquals(expected.getDirectories().size(), actual.getDirectories().size());
+    }
+
+    public static User mockUser() {
+        return Mockito.mock(User.class);
     }
 
     public static User mockUser(String name, UUID resourceId, String password, UserType userType, Date creationDate, List<Directory> directories) {

@@ -29,7 +29,7 @@ import java.util.UUID;
 @Api(value = "Operations about directories.")
 @RestController
 @RequestMapping("/")
-public class DirectoryController extends AbstractController{
+public class DirectoryController extends AbstractController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DirectoryController.class);
 
@@ -45,14 +45,13 @@ public class DirectoryController extends AbstractController{
 
     @ApiOperation(value = "Create a directory")
     @PostMapping(Route.DIRECTORY)
-    public ResponseEntity<DirectoryDto> addSubDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID parentDirectoryId, @RequestBody CreateDirectoryDto wantedDirectory) throws DirectoryNotFoundException {
+    public ResponseEntity<DirectoryDto> addSubDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID parentDirectoryId, @RequestBody CreateDirectoryDto wantedDirectory) throws DirectoryNotFoundException, UnauthorizedDirectoryActionException {
 
         LOG.info("create directory for parent {} ", parentDirectoryId);
 
         Directory parentDir = directoryService.find(parentDirectoryId);
 
         SecurityUtils.checkUserRightOn(getConnectedUser(), parentDir);
-
 
         DirectoryDto directory = DtoMapper.entityToDto(directoryService.createSubDirectory(parentDir, wantedDirectory));
 
@@ -74,7 +73,7 @@ public class DirectoryController extends AbstractController{
 
     @ApiOperation(value = "Delete a directory")
     @DeleteMapping(Route.DIRECTORY)
-    public void deleteDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId) throws DirectoryNotFoundException {
+    public void deleteDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId) throws DirectoryNotFoundException, UnauthorizedDirectoryActionException {
 
         LOG.info("delete directory id:{}", directoryId);
 
@@ -87,7 +86,7 @@ public class DirectoryController extends AbstractController{
 
     @ApiOperation(value = "Delete a directory")
     @PutMapping(Route.DIRECTORY)
-    public void updateDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestBody UpdateDirectoryDto updateDirectoryDto) throws DirectoryNotFoundException {
+    public void updateDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestBody UpdateDirectoryDto updateDirectoryDto) throws DirectoryNotFoundException, UnauthorizedDirectoryActionException {
 
         LOG.info("update directory id:{}", directoryId);
 

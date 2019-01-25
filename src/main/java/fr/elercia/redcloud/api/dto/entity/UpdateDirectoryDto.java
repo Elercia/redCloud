@@ -7,6 +7,10 @@ public class UpdateDirectoryDto {
     public UpdateDirectoryDto() {
     }
 
+    public UpdateDirectoryDto(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

@@ -49,7 +49,11 @@ public class DirectoryService {
         return directory;
     }
 
-    public Directory createSubDirectory(Directory parentDir, CreateDirectoryDto wantedDirectory) {
+    public Directory createSubDirectory(Directory parentDir, CreateDirectoryDto wantedDirectory) throws UnauthorizedDirectoryActionException {
+
+        if (!isNameValid(parentDir, wantedDirectory.getName())) {
+            throw new UnauthorizedDirectoryActionException();
+        }
 
         Directory subDirectory = new Directory(wantedDirectory.getName(), parentDir.getUser(), parentDir);
 
@@ -60,16 +64,25 @@ public class DirectoryService {
         return subDirectory;
     }
 
-    public void deleteDirectory(Directory directory) {
+    public void deleteDirectory(Directory directory) throws UnauthorizedDirectoryActionException {
 
         LOG.info("Delete directory {}", directory.getResourceId());
+
+        // Deleting a root directory is forbidden
+        if(directory.getParentDirectory() == null) {
+            throw new UnauthorizedDirectoryActionException();
+        }
 
         directoryRepository.delete(directory);
     }
 
-    public void update(Directory directory, UpdateDirectoryDto updateDirectoryDto) {
+    public void update(Directory directory, UpdateDirectoryDto updateDirectoryDto) throws UnauthorizedDirectoryActionException {
 
         LOG.info("Update directory {}", directory.getResourceId());
+
+        if (directory.getParentDirectory() == null || !isNameValid(directory, updateDirectoryDto.getName())) {
+            throw new UnauthorizedDirectoryActionException();
+        }
 
         directory.updateName(updateDirectoryDto.getName());
 
@@ -78,8 +91,12 @@ public class DirectoryService {
 
     public void move(Directory directory, Directory moveToDirectory) throws UnauthorizedDirectoryActionException {
 
-        if(moveToDirectory == null || directory.getParentDirectory() == null) {
+        if (moveToDirectory == null || directory.getParentDirectory() == null) {
             throw new UnauthorizedDirectoryActionException("Can't move root directory");
+        }
+
+        if (!isNameValid(moveToDirectory, directory.getName())) {
+            throw new UnauthorizedDirectoryActionException();
         }
 
         LOG.info("Move directory from {} to {}", directory.getResourceId(), moveToDirectory.getResourceId());
@@ -87,5 +104,15 @@ public class DirectoryService {
         directory.setParentDirectory(moveToDirectory);
 
         directoryRepository.save(directory);
+    }
+
+    private boolean isNameValid(Directory container, String wantedDirectoryName) {
+
+        for (Directory directory : container.getSubFolders()) {
+            if (directory.getName().equalsIgnoreCase(wantedDirectoryName)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
