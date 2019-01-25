@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 @SpringBootTest
 @Transactional(rollbackFor = Throwable.class)
-@TransactionConfiguration(defaultRollback = true)
 class FileSystemServiceTest {
 
     @Autowired

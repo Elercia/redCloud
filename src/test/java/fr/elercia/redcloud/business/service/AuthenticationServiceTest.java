@@ -1,20 +1,18 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.utils.TokenTestUtils;
 import fr.elercia.redcloud.business.entity.Token;
 import fr.elercia.redcloud.exceptions.InvalidLoginException;
 import fr.elercia.redcloud.exceptions.TokenNotFoundException;
+import fr.elercia.redcloud.utils.TokenTestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional(rollbackFor = Throwable.class)
-@TransactionConfiguration(defaultRollback = true)
 class AuthenticationServiceTest {
 
     @Autowired

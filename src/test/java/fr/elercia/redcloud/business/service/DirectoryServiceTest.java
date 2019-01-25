@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -24,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional(rollbackFor = Throwable.class)
-@TransactionConfiguration(defaultRollback = true)
 class DirectoryServiceTest {
 
     @Mock
@@ -152,8 +150,12 @@ class DirectoryServiceTest {
     }
 
     @Test
-    void moveDirectory_dirToAnother_done() {
+    void moveDirectory_dirToAnother_done() throws UnauthorizedDirectoryActionException {
 
+        Directory directory = DirectoryTestUtils.mockDirectory("dir1", Mockito.mock(Directory.class));
+        Directory moveTo = DirectoryTestUtils.mockDirectory("dir2", Mockito.mock(Directory.class));
+
+        directoryService.move(directory, moveTo);
     }
 
     @Test
