@@ -7,12 +7,14 @@ import fr.elercia.redcloud.exceptions.TokenNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
+@TransactionConfiguration(defaultRollback = true)
 class AuthenticationServiceTest {
 
     @Autowired

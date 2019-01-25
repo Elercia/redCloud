@@ -13,12 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
+@TransactionConfiguration(defaultRollback = true)
 class UserServiceTest {
 
     @Mock
@@ -56,13 +58,17 @@ class UserServiceTest {
     @Test
     void userCreate_sameName_expectException() {
 
-        assertThrows(InvalidUserCreationException.class, () -> {
-            User user = new User("dedede", "password", UserType.USER);
-            user = userRepository.save(user);
+        User user = new User("dedede", "password", UserType.USER);
+        user = userRepository.save(user);
+
+        try {
 
             CreateUserDto wantedUser = new CreateUserDto(user.getName(), "password");
             userService.createUser(wantedUser);
-        });
+            fail("Mathod create didn't throw exception");
+        } catch (InvalidUserCreationException ignored) {
+        }
+        userRepository.delete(user);
     }
 
     @Test

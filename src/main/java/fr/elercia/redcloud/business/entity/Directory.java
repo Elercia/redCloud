@@ -31,10 +31,10 @@ public class Directory {
     @ManyToOne
     Directory parentDirectory;
 
-    @OneToMany(mappedBy = "parentDirectory")
+    @OneToMany(mappedBy = "parentDirectory", cascade = CascadeType.REMOVE)
     private List<Directory> subFolders;
 
-    @OneToMany(mappedBy = "directory")
+    @OneToMany(mappedBy = "directory", cascade = CascadeType.REMOVE)
     private List<File> files;
 
     public Directory() {

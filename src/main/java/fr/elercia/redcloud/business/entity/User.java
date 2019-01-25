@@ -33,7 +33,7 @@ public class User {
     @Column
     private Date creationDate;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Directory> directories = new ArrayList<>();
 
     public User() {
