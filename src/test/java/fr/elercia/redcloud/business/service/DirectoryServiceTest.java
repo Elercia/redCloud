@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -161,15 +162,33 @@ class DirectoryServiceTest {
     @Test
     void moveDirectory_dirToSame_throw() {
 
+        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
+            Directory directory = DirectoryTestUtils.mockDirectory("dir1", UUID.randomUUID(), Mockito.mock(Directory.class));
+
+            directoryService.move(directory, directory);
+        });
     }
 
     @Test
     void moveDirectory_rootDir_throw() {
+        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
+            Directory directory = DirectoryTestUtils.mockDirectory("dir1", UUID.randomUUID(), null);
+            Directory moveTo = DirectoryTestUtils.mockDirectory("dir2", Mockito.mock(Directory.class));
 
+            directoryService.move(directory, moveTo);
+        });
     }
 
     @Test
     void moveDirectory_dirToWithSubFoldersName_throw() {
+        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
+            Directory directory = DirectoryTestUtils.mockDirectory("dir1", UUID.randomUUID(), Mockito.mock(Directory.class));
+            Directory moveTo = DirectoryTestUtils.mockDirectory("dir2", Mockito.mock(Directory.class));
 
+            List<Directory> subFolder = Arrays.asList(DirectoryTestUtils.mockDirectory("dir1", null));
+            Mockito.when(moveTo.getSubFolders()).thenReturn(subFolder);
+
+            directoryService.move(directory, moveTo);
+        });
     }
 }

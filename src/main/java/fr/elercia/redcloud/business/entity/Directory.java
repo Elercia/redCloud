@@ -95,4 +95,21 @@ public class Directory {
         if (name != null)
             this.name = name;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (!(obj instanceof Directory)) {
+            return false;
+        }
+
+        Directory other = (Directory) obj;
+
+        return this.resourceId.equals(other.resourceId);
+    }
+
+    @Override
+    public int hashCode() {
+        return resourceId.hashCode();
+    }
 }

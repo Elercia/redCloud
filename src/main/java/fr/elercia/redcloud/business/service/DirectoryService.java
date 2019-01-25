@@ -95,7 +95,7 @@ public class DirectoryService {
             throw new UnauthorizedDirectoryActionException("Can't move root directory");
         }
 
-        if (!isNameValid(moveToDirectory, directory.getName())) {
+        if (!isNameValid(moveToDirectory, directory.getName()) || directory.equals(moveToDirectory)) {
             throw new UnauthorizedDirectoryActionException();
         }
 
