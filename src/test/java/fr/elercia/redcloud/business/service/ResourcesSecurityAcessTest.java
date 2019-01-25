@@ -6,4 +6,5 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional(rollbackFor = Throwable.class)
 public class ResourcesSecurityAcessTest {
+    // TODO Implements tests
 }
