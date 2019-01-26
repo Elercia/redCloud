@@ -23,13 +23,12 @@ class UserServiceTest {
 
     @Mock
     private FileSystemService fileSystemService;
+    @Mock
+    private UserRepository userRepository;
 
     @Autowired
     @InjectMocks
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -45,28 +44,31 @@ class UserServiceTest {
 
         assertNotNull(createdUser);
 
+        Mockito.verify(userRepository, Mockito.times(1)).save(ArgumentMatchers.any());
         Mockito.verify(fileSystemService, Mockito.times(1)).createUserFileSystemSpace(ArgumentMatchers.any());
         assertEquals(createdUser.getName(), wantedUser.getName());
         assertEquals(createdUser.getHashedPassword(), PasswordEncoder.encode(wantedUser.getUnHashedPassword()));
 
         userService.deleteUser(createdUser);
         Mockito.verify(fileSystemService, Mockito.times(1)).deleteUserFileSystem(ArgumentMatchers.any());
+        Mockito.verify(userRepository, Mockito.times(1)).delete(ArgumentMatchers.any());
     }
 
     @Test
     void userCreate_sameName_expectException() {
 
         User user = new User("dedede", "password", UserType.USER);
-        user = userRepository.save(user);
+        Mockito.when(userRepository.findByName(user.getName())).thenReturn(user);
 
         try {
-
             CreateUserDto wantedUser = new CreateUserDto(user.getName(), "password");
             userService.createUser(wantedUser);
             fail("Mathod create didn't throw exception");
         } catch (InvalidUserCreationException ignored) {
+        } catch (Throwable t) {
+            fail("Unexpected throw");
+            t.printStackTrace();
         }
-        userRepository.delete(user);
     }
 
     @Test
@@ -79,35 +81,35 @@ class UserServiceTest {
         });
     }
 
-    /**
-     * This test require one createdUser with the name testUser1
-     */
     @Test
-    void fetchUser_updateUser_userUpdated() throws UserNotFoundException {
+    void updateUser_validData_userUpdated() {
 
-        User user = userService.findByName("testUser1");
-
-        assertNotNull(user);
+        User user = new User("name1", "password", UserType.USER);
+        ArgumentCaptor<User> argument = ArgumentCaptor.forClass(User.class);
 
         UpdateUserDto updateUserDto = new UpdateUserDto("somename1", "jefhehfefh");
-        User updatedUser = userService.updateUser(user, updateUserDto);
+        userService.updateUser(user, updateUserDto);
+
+        Mockito.verify(userRepository).save(argument.capture());
+        User updatedUser = argument.getValue();
 
         User mockedUser = UserTestUtils.mockUser(updateUserDto.getName(), user.getResourceId(), PasswordEncoder.encode(updateUserDto.getPassword()), user.getUserType(), user.getCreationDate(), user.getDirectories());
         UserTestUtils.checkEquals(mockedUser, updatedUser);
     }
 
-    /**
-     * This test require one createdUser with the name testUser1
-     */
     @Test
-    void fetchUser_updateWithNull_notUpdated() throws UserNotFoundException {
+    void updateUser_validData_notUpdated() {
 
-        User user = userService.findByName("testUser1");
+        User user = new User("name1", "password", UserType.USER);
+        ArgumentCaptor<User> argument = ArgumentCaptor.forClass(User.class);
 
         assertNotNull(user);
 
         UpdateUserDto updateUserDto = new UpdateUserDto(null, null);
-        User updatedUser = userService.updateUser(user, updateUserDto);
+        userService.updateUser(user, updateUserDto);
+
+        Mockito.verify(userRepository).save(argument.capture());
+        User updatedUser = argument.getValue();
 
         User mockedUser = UserTestUtils.mockUser(user.getName(), user.getResourceId(), user.getHashedPassword(), user.getUserType(), user.getCreationDate(), user.getDirectories());
         UserTestUtils.checkEquals(mockedUser, updatedUser);

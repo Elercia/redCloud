@@ -80,7 +80,10 @@ class FileServiceTest {
 
     private static Stream<String> createInvalidParametersForStoreFile() {
         return Stream.of(
-
+                "file",
+                "file-",
+                "file-file.jpg",
+                "sss"
         );
     }
 }
