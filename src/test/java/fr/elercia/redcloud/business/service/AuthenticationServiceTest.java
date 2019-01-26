@@ -1,13 +1,23 @@
 package fr.elercia.redcloud.business.service;
 
 import fr.elercia.redcloud.business.entity.Token;
+import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.UserType;
+import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.exceptions.InvalidLoginException;
 import fr.elercia.redcloud.exceptions.TokenNotFoundException;
 import fr.elercia.redcloud.utils.TokenTestUtils;
+import fr.elercia.redcloud.utils.UserTestUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,13 +26,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class AuthenticationServiceTest {
 
     @Autowired
+    @InjectMocks
     private AuthenticationService authenticationService;
 
-    /**
-     * This test require a user
-     * name : testUser1
-     * password : password
-     */
+    @Mock
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+        User mockUser = UserTestUtils.mockUser("name", UUID.randomUUID(), PasswordEncoder.encode("password"), UserType.USER, new Date(), new ArrayList<>());
+        Mockito.when(userRepository.findByName(ArgumentMatchers.eq("testUser1"))).thenReturn(mockUser);
+    }
+
     @Test
     void token_lifeCycle() throws InvalidLoginException, TokenNotFoundException {
 
