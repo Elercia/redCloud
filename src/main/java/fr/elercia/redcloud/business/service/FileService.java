@@ -94,17 +94,17 @@ public class FileService {
         return file;
     }
 
-    private boolean isValidFileName(String fileName) {
-
-        Matcher matcher = FILE_NAME_PATTERN.matcher(fileName);
-
-        return matcher.matches();
-    }
-
     public Resource downloadFile(File file) throws FileNotFoundException {
 
         LOG.info("DownloadFile file {}", file.getResourceId());
 
         return fileSystemService.download(file);
+    }
+
+    private boolean isValidFileName(String fileName) {
+
+        Matcher matcher = FILE_NAME_PATTERN.matcher(fileName);
+
+        return matcher.matches();
     }
 }
