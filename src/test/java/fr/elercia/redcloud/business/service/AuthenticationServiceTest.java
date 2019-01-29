@@ -3,9 +3,10 @@ package fr.elercia.redcloud.business.service;
 import fr.elercia.redcloud.business.entity.Token;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
-import fr.elercia.redcloud.dao.repository.UserRepository;
+import fr.elercia.redcloud.dao.repository.TokenRepository;
 import fr.elercia.redcloud.exceptions.InvalidLoginException;
 import fr.elercia.redcloud.exceptions.TokenNotFoundException;
+import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import fr.elercia.redcloud.utils.TokenTestUtils;
 import fr.elercia.redcloud.utils.UserTestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional(rollbackFor = Throwable.class)
+//@Transactional(rollbackFor = Throwable.class)
 class AuthenticationServiceTest {
 
     @Autowired
@@ -30,13 +31,16 @@ class AuthenticationServiceTest {
     private AuthenticationService authenticationService;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
+
+    @Mock
+    private TokenRepository tokenRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws UserNotFoundException {
         MockitoAnnotations.initMocks(this);
         User mockUser = UserTestUtils.mockUser("name", UUID.randomUUID(), PasswordEncoder.encode("password"), UserType.USER, new Date(), new ArrayList<>());
-        Mockito.when(userRepository.findByName(ArgumentMatchers.eq("testUser1"))).thenReturn(mockUser);
+        Mockito.when(userService.findByName(ArgumentMatchers.eq("testUser1"))).thenReturn(mockUser);
     }
 
     @Test
@@ -44,20 +48,16 @@ class AuthenticationServiceTest {
 
         Token token = authenticationService.login("testUser1", "password");
 
+        Mockito.verify(tokenRepository, Mockito.times(1)).save(ArgumentMatchers.any());
         assertNotNull(token);
 
+        Mockito.when(tokenRepository.findByAccessToken(token.getAccessToken())).thenReturn(token);
         Token foundToken = authenticationService.findByToken(token.getAccessToken());
 
         TokenTestUtils.checkEquals(token, foundToken);
 
         authenticationService.logout(token.getAccessToken());
-
-        try {
-            authenticationService.findByToken(token.getAccessToken());
-            fail("Found a revoked Token");
-        } catch (TokenNotFoundException ignored) {
-
-        }
+        Mockito.verify(tokenRepository, Mockito.times(1)).deleteByAccessToken(token.getAccessToken());
     }
 
     @Test
