@@ -5,6 +5,7 @@ import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class UserTestUtils {
     }
 
     public static User mockUser() {
-        return Mockito.mock(User.class);
+        return mockUser("name2", UUID.randomUUID(), "pass", UserType.USER, new Date(), new ArrayList<>());
     }
 
     public static User mockUser(String name, UUID resourceId, String password, UserType userType, Date creationDate, List<Directory> directories) {
