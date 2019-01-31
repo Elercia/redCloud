@@ -22,7 +22,7 @@ public class MonitoringController extends AbstractController {
     @GetMapping(Route.MONITORING_STATUS)
     @ApiOperation(value = "Monitoring API")
     @PermitAll
-    public ResponseEntity<Void> login() {
+    public ResponseEntity<Void> monitor() {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
