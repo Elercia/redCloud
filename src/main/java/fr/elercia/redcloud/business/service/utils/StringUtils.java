@@ -1,5 +1,7 @@
 package fr.elercia.redcloud.business.service.utils;
 
+import java.util.UUID;
+
 public class StringUtils {
 
     private StringUtils() {
@@ -18,4 +20,7 @@ public class StringUtils {
         return str.trim().isEmpty();
     }
 
+    public static String randomString() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
 }

@@ -2,6 +2,7 @@ package fr.elercia.redcloud.business.service;
 
 import fr.elercia.redcloud.business.entity.Directory;
 import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.service.utils.StringUtils;
 import fr.elercia.redcloud.dao.repository.FileRepository;
 import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
@@ -75,7 +76,7 @@ public class FileService {
 
         String fileName = multipartFile.getOriginalFilename();
 
-        if (fileName == null) {
+        if (StringUtils.isNullOrEmpty(fileName)) {
             fileName = multipartFile.getName();
         }
 
