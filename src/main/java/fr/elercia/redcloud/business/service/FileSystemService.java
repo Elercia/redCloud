@@ -1,5 +1,6 @@
 package fr.elercia.redcloud.business.service;
 
+import fr.elercia.redcloud.business.entity.DynamicConfig;
 import fr.elercia.redcloud.business.entity.File;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,15 +23,16 @@ import java.net.MalformedURLException;
 public class FileSystemService {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileSystemService.class);
+    private DynamicConfigService dynamicConfigService;
 
     @Autowired
-    public FileSystemService() {
-        // Default constructor
+    public FileSystemService(DynamicConfigService dynamicConfigService) {
+        this.dynamicConfigService = dynamicConfigService;
     }
 
     public void uploadFile(MultipartFile multipartFile, File file) throws FileStorageException {
 
-        String filePath = FileSystemUtils.getPathToFile(file);
+        String filePath = getPathToFile(file);
 
         LOG.info("Upload file [path {}]", filePath);
 
@@ -44,8 +47,8 @@ public class FileSystemService {
                 throw new FileStorageException("Cannot create the file");
             }
 
-            //multipartFile.transferTo(ioFile);
             FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), ioFile);
+
         } catch (IOException e) {
             throw new FileStorageException(e);
         }
@@ -53,7 +56,7 @@ public class FileSystemService {
 
     public Resource download(File file) throws FileNotFoundException {
         try {
-            String filePath = FileSystemUtils.getPathToFile(file);
+            String filePath = getPathToFile(file);
 
             LOG.info("Download file [path {}]", filePath);
 
@@ -74,7 +77,7 @@ public class FileSystemService {
 
         LOG.info("Create user directory [user {}]", user.getResourceId());
 
-        java.io.File userDirectory = new java.io.File(FileSystemUtils.getUserDirectoryPath(user));
+        java.io.File userDirectory = new java.io.File(getUserDirectoryPath(user));
 
         if (userDirectory.exists()) {
             throw new UnexpectedFileSystemException("New user directory already exists user:" + user.getResourceId());
@@ -89,7 +92,7 @@ public class FileSystemService {
 
         LOG.info("Delete user directory [user {}]", user.getResourceId());
 
-        java.io.File userDirectory = new java.io.File(FileSystemUtils.getUserDirectoryPath(user));
+        java.io.File userDirectory = new java.io.File(getUserDirectoryPath(user));
 
         if (!userDirectory.exists() || !userDirectory.isDirectory()) {
             throw new UnexpectedFileSystemException("Impossible to delete user directory (wrong directory) user:" + user.getResourceId());
@@ -99,5 +102,29 @@ public class FileSystemService {
         } catch (IOException e) {
             throw new UnexpectedFileSystemException("Unable to delete user directory (delete error) user:" + user.getResourceId(), e);
         }
+    }
+
+    private String getPathToFile(File file) {
+        return getConfiguredPathToFiles() + "/" + getUserPath(file) + "/" + getFilePath(file);
+    }
+
+    private String getFilePath(File file) {
+        return file.getResourceId().toString();
+    }
+
+    private String getUserDirectoryPath(User user) {
+        return getConfiguredPathToFiles() + "/" + getUserPath(user) + "/";
+    }
+
+    private String getUserPath(User user) {
+        return user.getResourceId().toString();
+    }
+
+    private String getUserPath(File file) {
+        return getUserPath(file.getDirectory().getUser());
+    }
+
+    private String getConfiguredPathToFiles() {
+        return dynamicConfigService.getString(DynamicConfig.DynamicConfigName.STORAGE_PATH);
     }
 }
