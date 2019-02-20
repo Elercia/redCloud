@@ -49,7 +49,7 @@ public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAda
                 RequireUserType annotation = handlerMethod.getMethod().getAnnotation(RequireUserType.class);
                 UserType userType = annotation.value();
 
-                if(token.getStoredUser().getUserType().equals(userType)) {
+                if(!token.getStoredUser().getUserType().equals(userType)) {
                     setErrorResponseHeader(response);
                     throw new UnauthorizedRestCall("Unknown token");
                 }

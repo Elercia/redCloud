@@ -91,6 +91,8 @@ public class UserController extends AbstractController {
 
        User user = userService.findByResourceId(userId);
 
+        SecurityUtils.checkUserRightOn(getConnectedUser(), user);
+
        userService.deleteUser(user);
     }
 
