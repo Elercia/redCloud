@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 @Component
 public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAdapter {
@@ -47,9 +48,9 @@ public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAda
 
             if(isAnnotationPresent(RequireUserType.class, handlerMethod.getMethod())) {
                 RequireUserType annotation = handlerMethod.getMethod().getAnnotation(RequireUserType.class);
-                UserType userType = annotation.value();
+                UserType[] requiredUserTypes = annotation.value();
 
-                if(!token.getStoredUser().getUserType().equals(userType)) {
+                if(!Arrays.asList(requiredUserTypes).contains(token.getStoredUser().getUserType())) {
                     setErrorResponseHeader(response);
                     throw new UnauthorizedRestCall("Unknown token");
                 }
