@@ -32,10 +32,10 @@ public class Directory {
     Directory parentDirectory;
 
     @OneToMany(mappedBy = "parentDirectory", cascade = CascadeType.REMOVE)
-    private List<Directory> subFolders;
+    private List<Directory> subFolders = new ArrayList<>();
 
     @OneToMany(mappedBy = "directory", cascade = CascadeType.REMOVE)
-    private List<File> files;
+    private List<File> files = new ArrayList<>();
 
     public Directory() {
 
