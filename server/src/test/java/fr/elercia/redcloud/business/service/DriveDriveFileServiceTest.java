@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.entity.DriveFolder;
+import fr.elercia.redcloud.business.entity.DriveFile;
 import fr.elercia.redcloud.dao.repository.FileRepository;
 import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
@@ -29,17 +29,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional(rollbackFor = Throwable.class)
-class FileServiceTest {
+class DriveDriveFileServiceTest {
 
     @Mock
-    private FileSystemService fileSystemService;
+    private DriveFileSystemService driveFileSystemService;
 
     @Mock
     private FileRepository fileRepository;
 
     @Autowired
     @InjectMocks
-    private FileService fileService;
+    private DriveFileService driveFileService;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -51,12 +51,12 @@ class FileServiceTest {
     void find_knownId_returnExpected() throws FileNotFoundException {
 
         UUID fileId = UUID.randomUUID();
-        File expectedFile = FileTestUtils.mockFile(fileId);
-        Mockito.when(fileRepository.findByResourceId(fileId)).thenReturn(expectedFile);
+        DriveFile expectedDriveFile = FileTestUtils.mockFile(fileId);
+        Mockito.when(fileRepository.findByResourceId(fileId)).thenReturn(expectedDriveFile);
 
-        File returnedFile = fileService.find(fileId);
+        DriveFile returnedDriveFile = driveFileService.find(fileId);
 
-        FileTestUtils.checkEquals(expectedFile, returnedFile);
+        FileTestUtils.checkEquals(expectedDriveFile, returnedDriveFile);
     }
 
     @Test
@@ -65,38 +65,38 @@ class FileServiceTest {
         assertThrows(FileNotFoundException.class, () -> {
             UUID fileId = UUID.randomUUID();
 
-            fileService.find(fileId);
+            driveFileService.find(fileId);
         });
     }
 
     @Test
     void delete_expectDeleteCall() {
-        File file = FileTestUtils.mockFile();
+        DriveFile driveFile = FileTestUtils.mockFile();
 
-        fileService.delete(file);
+        driveFileService.delete(driveFile);
 
-        Mockito.verify(fileRepository, Mockito.times(1)).delete(file);
+        Mockito.verify(fileRepository, Mockito.times(1)).delete(driveFile);
     }
 
     @Test
     void move_validDirectory_moveDone() throws FileOperationException {
 
-        File file = FileTestUtils.mockFile();
-        Directory directory = DirectoryTestUtils.mockDirectoryWithSubFolders("name", null, new ArrayList<>());
+        DriveFile driveFile = FileTestUtils.mockFile();
+        DriveFolder driveFolder = DirectoryTestUtils.mockDirectoryWithSubFolders("name", null, new ArrayList<>());
 
-        fileService.move(file, directory);
+        driveFileService.move(driveFile, driveFolder);
 
-        ArgumentCaptor<Directory> directoryArgumentCaptor = ArgumentCaptor.forClass(Directory.class);
-        ArgumentCaptor<File> fileArgumentCaptor = ArgumentCaptor.forClass(File.class);
+        ArgumentCaptor<DriveFolder> directoryArgumentCaptor = ArgumentCaptor.forClass(DriveFolder.class);
+        ArgumentCaptor<DriveFile> fileArgumentCaptor = ArgumentCaptor.forClass(DriveFile.class);
 
-        Mockito.verify(file, Mockito.times(1)).setDirectory(directoryArgumentCaptor.capture());
+        Mockito.verify(driveFile, Mockito.times(1)).setParent(directoryArgumentCaptor.capture());
         Mockito.verify(fileRepository, Mockito.times(1)).save(fileArgumentCaptor.capture());
 
-        Directory actualDirectory = directoryArgumentCaptor.getValue();
-        File actualFile = fileArgumentCaptor.getValue();
+        DriveFolder actualDriveFolder = directoryArgumentCaptor.getValue();
+        DriveFile actualDriveFile = fileArgumentCaptor.getValue();
 
-        assertEquals(directory.getResourceId(), actualDirectory.getResourceId());
-        assertSame(file, actualFile);
+        assertEquals(driveFolder.getResourceId(), actualDriveFolder.getResourceId());
+        assertSame(driveFile, actualDriveFile);
     }
 
     @Test
@@ -104,10 +104,10 @@ class FileServiceTest {
 
         assertThrows(FileOperationException.class, () -> {
 
-            File file = FileTestUtils.mockFile("filename1");
-            Directory directory = DirectoryTestUtils.mockDirectoryWithFiles("name", null, Arrays.asList(FileTestUtils.mockFile(file.getFileName())));
+            DriveFile driveFile = FileTestUtils.mockFile("filename1");
+            DriveFolder driveFolder = DirectoryTestUtils.mockDirectoryWithFiles("name", null, Arrays.asList(FileTestUtils.mockFile(driveFile.getFileName())));
 
-            fileService.move(file, directory);
+            driveFileService.move(driveFile, driveFolder);
         });
     }
 
@@ -115,12 +115,12 @@ class FileServiceTest {
     @MethodSource("createValidParametersForStoreFile")
     void storeFile_withNameParameter_valid(String fileName) throws FileNameFormatException, FileStorageException {
 
-        Directory parent = DirectoryTestUtils.mockDirectory();
+        DriveFolder parent = DirectoryTestUtils.mockDirectory();
         MultipartFile multipartFile = new MockMultipartFile(fileName, new byte[0]);
 
-        fileService.storeFile(parent, multipartFile);
+        driveFileService.storeFile(parent, multipartFile);
 
-        Mockito.verify(fileSystemService, Mockito.times(1)).uploadFile(ArgumentMatchers.any(), ArgumentMatchers.any());
+        Mockito.verify(driveFileSystemService, Mockito.times(1)).uploadFile(ArgumentMatchers.any(), ArgumentMatchers.any());
         Mockito.verify(fileRepository, Mockito.times(1)).save(ArgumentMatchers.any());
     }
 
@@ -144,10 +144,10 @@ class FileServiceTest {
     void storeFile_withNameParameter_invalid(String fileName) {
 
         assertThrows(FileNameFormatException.class, () -> {
-            Directory parent = DirectoryTestUtils.mockDirectory();
+            DriveFolder parent = DirectoryTestUtils.mockDirectory();
             MultipartFile multipartFile = new MockMultipartFile(fileName, new byte[0]);
 
-            fileService.storeFile(parent, multipartFile);
+            driveFileService.storeFile(parent, multipartFile);
         });
     }
 

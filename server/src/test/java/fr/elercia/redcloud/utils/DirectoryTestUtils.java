@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.utils;
 
-import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.entity.DriveFolder;
+import fr.elercia.redcloud.business.entity.DriveFile;
 import fr.elercia.redcloud.business.entity.User;
 import org.mockito.Mockito;
 
@@ -10,60 +10,60 @@ import java.util.UUID;
 
 public class DirectoryTestUtils {
 
-    public static void checkEquals(Directory expected, Directory actual) {
+    public static void checkEquals(DriveFolder expected, DriveFolder actual) {
 
     }
 
-    public static Directory mockDirectory() {
-        return Mockito.mock(Directory.class);
+    public static DriveFolder mockDirectory() {
+        return Mockito.mock(DriveFolder.class);
     }
 
-    public static Directory mockDirectoryWithFiles(String name, Directory parent, List<File> files) {
-        Directory directory = mockDirectoryWithUser(name, parent);
+    public static DriveFolder mockDirectoryWithFiles(String name, DriveFolder parent, List<DriveFile> driveFiles) {
+        DriveFolder driveFolder = mockDirectoryWithUser(name, parent);
 
-        Mockito.when(directory.getFiles()).thenReturn(files);
+        Mockito.when(driveFolder.getDriveFiles()).thenReturn(driveFiles);
 
-        return directory;
+        return driveFolder;
     }
 
-    public static Directory mockDirectoryWithSubFolders(String name, Directory parent, List<Directory> subFolders) {
-        Directory directory = mockDirectoryWithUser(name, parent);
+    public static DriveFolder mockDirectoryWithSubFolders(String name, DriveFolder parent, List<DriveFolder> subFolders) {
+        DriveFolder driveFolder = mockDirectoryWithUser(name, parent);
 
-        Mockito.when(directory.getSubFolders()).thenReturn(subFolders);
+        Mockito.when(driveFolder.getSubFolders()).thenReturn(subFolders);
         subFolders.forEach(sb -> {
-            Mockito.when(sb.getParentDirectory()).thenReturn(directory);
+            Mockito.when(sb.getParentDriveFolder()).thenReturn(driveFolder);
         });
 
-        return directory;
+        return driveFolder;
     }
 
-    public static Directory mockDirectoryWithUser(String name, Directory parent) {
-        Directory directory = mockDirectory(name, parent);
+    public static DriveFolder mockDirectoryWithUser(String name, DriveFolder parent) {
+        DriveFolder driveFolder = mockDirectory(name, parent);
 
-        Mockito.when(directory.getUser()).thenReturn(Mockito.mock(User.class));
+        Mockito.when(driveFolder.getUser()).thenReturn(Mockito.mock(User.class));
 
-        return directory;
+        return driveFolder;
     }
 
-    public static Directory mockDirectoryWithUser(User user) {
-        Directory directory = mockDirectory("dir1", UUID.randomUUID(), null);
+    public static DriveFolder mockDirectoryWithUser(User user) {
+        DriveFolder driveFolder = mockDirectory("dir1", UUID.randomUUID(), null);
 
-        Mockito.when(directory.getUser()).thenReturn(user);
+        Mockito.when(driveFolder.getUser()).thenReturn(user);
 
-        return directory;
+        return driveFolder;
     }
 
-    public static Directory mockDirectory(String name, Directory parent) {
+    public static DriveFolder mockDirectory(String name, DriveFolder parent) {
         return mockDirectory(name, UUID.randomUUID(), parent);
     }
 
-    public static Directory mockDirectory(String name, UUID resourceId, Directory parent) {
-        Directory directory = Mockito.mock(Directory.class);
+    public static DriveFolder mockDirectory(String name, UUID resourceId, DriveFolder parent) {
+        DriveFolder driveFolder = Mockito.mock(DriveFolder.class);
 
-        Mockito.when(directory.getName()).thenReturn(name);
-        Mockito.when(directory.getResourceId()).thenReturn(resourceId);
-        Mockito.when(directory.getParentDirectory()).thenReturn(parent);
+        Mockito.when(driveFolder.getName()).thenReturn(name);
+        Mockito.when(driveFolder.getResourceId()).thenReturn(resourceId);
+        Mockito.when(driveFolder.getParentDriveFolder()).thenReturn(parent);
 
-        return directory;
+        return driveFolder;
     }
 }

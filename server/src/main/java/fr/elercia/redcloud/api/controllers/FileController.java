@@ -3,11 +3,11 @@ package fr.elercia.redcloud.api.controllers;
 import fr.elercia.redcloud.api.controllers.params.QueryParam;
 import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.api.dto.entity.MoveFileDto;
-import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.File;
-import fr.elercia.redcloud.business.service.DirectoryService;
-import fr.elercia.redcloud.business.service.FileService;
-import fr.elercia.redcloud.business.service.FileSystemUtils;
+import fr.elercia.redcloud.business.entity.DriveFolder;
+import fr.elercia.redcloud.business.entity.DriveFile;
+import fr.elercia.redcloud.business.service.DriveFolderService;
+import fr.elercia.redcloud.business.service.DriveFileService;
+import fr.elercia.redcloud.business.service.DriveFileSystemUtils;
 import fr.elercia.redcloud.business.service.SecurityUtils;
 import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
@@ -31,32 +31,32 @@ public class FileController extends AbstractController{
 
     private static final Logger LOG = LoggerFactory.getLogger(FileController.class);
 
-    private FileService fileService;
-    private DirectoryService directoryService;
+    private DriveFileService driveFileService;
+    private DriveFolderService driveFolderService;
 
     @Autowired
-    public FileController(FileService fileService, DirectoryService directoryService) {
+    public FileController(DriveFileService driveFileService, DriveFolderService driveFolderService) {
 
-        this.fileService = fileService;
-        this.directoryService = directoryService;
+        this.driveFileService = driveFileService;
+        this.driveFolderService = driveFolderService;
     }
 
     @ApiOperation(value = "Download a file")
     @GetMapping(Route.FILE)
     public ResponseEntity<Resource> download(@RequestParam(QueryParam.FILE_ID) UUID fileId) throws FileNotFoundException {
 
-        LOG.info("download file id:{}", fileId);
+        LOG.info("download driveFile id:{}", fileId);
 
-        File file = fileService.find(fileId);
+        DriveFile driveFile = driveFileService.find(fileId);
 
-        SecurityUtils.checkUserRightOn(getConnectedUser(), file);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFile);
 
-        // Load file as Resource
-        Resource resource = fileService.downloadFile(file);
+        // Load driveFile as Resource
+        Resource resource = driveFileService.downloadFile(driveFile);
 
         return ResponseEntity.ok()
-                .contentType(FileSystemUtils.getMediaTypeFromExtension(file.getFileName()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                .contentType(DriveFileSystemUtils.getMediaTypeFromExtension(driveFile.getFileName()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + driveFile.getFileName() + "\"")
                 .body(resource);
     }
 
@@ -64,23 +64,23 @@ public class FileController extends AbstractController{
     @DeleteMapping(Route.FILE)
     public void deleteFile(@RequestParam(QueryParam.FILE_ID) UUID fileId) throws FileNotFoundException {
 
-        File file = fileService.find(fileId);
+        DriveFile driveFile = driveFileService.find(fileId);
 
-        SecurityUtils.checkUserRightOn(getConnectedUser(), file);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFile);
 
-        fileService.delete(file);
+        driveFileService.delete(driveFile);
     }
 
     @ApiOperation(value = "Move a file")
     @PutMapping(Route.FILE)
     public void moveFile(@RequestParam(QueryParam.FILE_ID) UUID fileId, MoveFileDto moveFileDto) throws FileNotFoundException, DirectoryNotFoundException, FileOperationException {
 
-        File file = fileService.find(fileId);
-        Directory directory = directoryService.find(moveFileDto.getDirectoryId());
+        DriveFile driveFile = driveFileService.find(fileId);
+        DriveFolder driveFolder = driveFolderService.find(moveFileDto.getDirectoryId());
 
-        SecurityUtils.checkUserRightOn(getConnectedUser(), file);
-        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFile);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFolder);
 
-        fileService.move(file, directory);
+        driveFileService.move(driveFile, driveFolder);
     }
 }

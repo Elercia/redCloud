@@ -34,7 +34,7 @@ public class User {
     private Date creationDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Directory> directories = new ArrayList<>();
+    private List<DriveFolder> driveFolders = new ArrayList<>();
 
     public User() {
 
@@ -74,17 +74,17 @@ public class User {
         return hashedPassword;
     }
 
-    public Directory getRootDirectory() {
-        for (Directory d : directories) {
-            if (d.getParentDirectory() == null) {
+    public DriveFolder getRootDirectory() {
+        for (DriveFolder d : driveFolders) {
+            if (d.getParentDriveFolder() == null) {
                 return d;
             }
         }
         return null;
     }
 
-    public List<Directory> getDirectories() {
-        return directories;
+    public List<DriveFolder> getDriveFolders() {
+        return driveFolders;
     }
 
     public void updateUserType(UserType userType) {
@@ -103,9 +103,9 @@ public class User {
     }
 
 
-    public void setRootDirectory(Directory rootDirectory) {
+    public void setRootDriveFolder(DriveFolder rootDriveFolder) {
 
-        this.directories.add(rootDirectory);
+        this.driveFolders.add(rootDriveFolder);
     }
 
     @Override

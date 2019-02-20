@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Directory {
+public class DriveFolder {
 
     @Id
     @GeneratedValue
@@ -29,25 +29,25 @@ public class Directory {
     private User user;
 
     @ManyToOne
-    Directory parentDirectory;
+    private DriveFolder parentDriveFolder;
 
-    @OneToMany(mappedBy = "parentDirectory", cascade = CascadeType.REMOVE)
-    private List<Directory> subFolders = new ArrayList<>();
+    @OneToMany(mappedBy = "parentDriveFolder", cascade = CascadeType.REMOVE)
+    private List<DriveFolder> subFolders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "directory", cascade = CascadeType.REMOVE)
-    private List<File> files = new ArrayList<>();
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    private List<DriveFile> driveFiles = new ArrayList<>();
 
-    public Directory() {
+    public DriveFolder() {
 
     }
 
-    public Directory(String name, User user, Directory parentDirectory) {
+    public DriveFolder(String name, User user, DriveFolder parentDriveFolder) {
         this.name = name;
         this.resourceId = UUID.randomUUID();
         this.creationDate = new Date();
         this.user = user;
-        this.parentDirectory = parentDirectory;
-        this.files = new ArrayList<>();
+        this.parentDriveFolder = parentDriveFolder;
+        this.driveFiles = new ArrayList<>();
         this.subFolders = new ArrayList<>();
     }
 
@@ -75,20 +75,20 @@ public class Directory {
         this.user = user;
     }
 
-    public List<Directory> getSubFolders() {
+    public List<DriveFolder> getSubFolders() {
         return subFolders;
     }
 
-    public List<File> getFiles() {
-        return files;
+    public List<DriveFile> getDriveFiles() {
+        return driveFiles;
     }
 
-    public Directory getParentDirectory() {
-        return parentDirectory;
+    public DriveFolder getParentDriveFolder() {
+        return parentDriveFolder;
     }
 
-    public void setParentDirectory(Directory parentDirectory) {
-        this.parentDirectory = parentDirectory;
+    public void setParentDriveFolder(DriveFolder parentDriveFolder) {
+        this.parentDriveFolder = parentDriveFolder;
     }
 
     public void updateName(String name) {
@@ -99,11 +99,11 @@ public class Directory {
     @Override
     public boolean equals(Object obj) {
 
-        if (!(obj instanceof Directory)) {
+        if (!(obj instanceof DriveFolder)) {
             return false;
         }
 
-        Directory other = (Directory) obj;
+        DriveFolder other = (DriveFolder) obj;
 
         return this.resourceId.equals(other.resourceId);
     }

@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.entity.DriveFile;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
 import fr.elercia.redcloud.utils.FileTestUtils;
@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 @SpringBootTest
 @Transactional(rollbackFor = Throwable.class)
-class FileSystemServiceTest {
+class DriveDriveFileSystemServiceTest {
 
     @Autowired
-    private FileSystemService fileSystemService;
+    private DriveFileSystemService driveFileSystemService;
 
     @Test
     void uploadDownload_assertSameContent() throws IOException, FileStorageException, FileNotFoundException, MalformedObjectNameException {
@@ -36,13 +36,13 @@ class FileSystemServiceTest {
 
         MultipartFile multipartFile = new MockMultipartFile(fileName, originalFileName, contentType, content);
 
-        File fileEntity = FileTestUtils.mockFile();
+        DriveFile driveFileEntity = FileTestUtils.mockFile();
 
-        fileSystemService.createUserFileSystemSpace(fileEntity.getDirectory().getUser());
+        driveFileSystemService.createUserFileSystemSpace(driveFileEntity.getParent().getUser());
 
-        fileSystemService.uploadFile(multipartFile, fileEntity);
+        driveFileSystemService.uploadFile(multipartFile, driveFileEntity);
 
-        Resource resource = fileSystemService.download(fileEntity);
+        Resource resource = driveFileSystemService.download(driveFileEntity);
         byte[] downloadedContent = resource.getInputStream().readAllBytes();
 
         assertArrayEquals(content, downloadedContent);
@@ -51,6 +51,6 @@ class FileSystemServiceTest {
         resource = null;
         System.gc();
 
-        fileSystemService.deleteUserFileSystem(fileEntity.getDirectory().getUser());
+        driveFileSystemService.deleteUserFileSystem(driveFileEntity.getParent().getUser());
     }
 }

@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.entity.DriveFolder;
+import fr.elercia.redcloud.business.entity.DriveFile;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.exceptions.UnauthorizedActionException;
 
@@ -10,12 +10,12 @@ public class SecurityUtils {
 
     }
 
-    public static void checkUserRightOn(User connectedUser, File file) {
-        checkUserRightOn(connectedUser, file.getDirectory());
+    public static void checkUserRightOn(User connectedUser, DriveFile driveFile) {
+        checkUserRightOn(connectedUser, driveFile.getParent());
     }
 
-    public static void checkUserRightOn(User connectedUser, Directory directory) {
-        checkUserRightOn(connectedUser, directory.getUser());
+    public static void checkUserRightOn(User connectedUser, DriveFolder driveFolder) {
+        checkUserRightOn(connectedUser, driveFolder.getUser());
     }
 
     public static void checkUserRightOn(User connectedUser, User user) {

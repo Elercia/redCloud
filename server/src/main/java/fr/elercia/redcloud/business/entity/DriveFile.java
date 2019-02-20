@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-public class File {
+public class DriveFile {
 
     @Id
     @GeneratedValue
@@ -21,7 +21,7 @@ public class File {
     private Date creationDate;
 
     @ManyToOne
-    private Directory directory;
+    private DriveFolder parent;
 
     @Column
     private String fileName;
@@ -29,16 +29,16 @@ public class File {
     @Column
     private long size;
 
-    public File() {
+    public DriveFile() {
 
     }
 
-    public File(String fileName, Directory parenDirectory, long size) {
+    public DriveFile(String fileName, DriveFolder parenDriveFolder, long size) {
         this.fileName = fileName;
         this.size = size;
         this.resourceId = UUID.randomUUID();
         this.creationDate = new Date();
-        this.directory = parenDirectory;
+        this.parent = parenDriveFolder;
     }
 
     public int getId() {
@@ -65,12 +65,12 @@ public class File {
         this.creationDate = creationDate;
     }
 
-    public Directory getDirectory() {
-        return directory;
+    public DriveFolder getParent() {
+        return parent;
     }
 
-    public void setDirectory(Directory directory) {
-        this.directory = directory;
+    public void setParent(DriveFolder parent) {
+        this.parent = parent;
     }
 
     public long getSize() {

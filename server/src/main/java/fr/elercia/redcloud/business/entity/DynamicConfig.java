@@ -17,6 +17,10 @@ public class DynamicConfig {
     @Column
     private String value;
 
+    public DynamicConfig() {
+        // Default constructor for Hibernate
+    }
+
     public DynamicConfig(DynamicConfigName name, String value) {
         this.name = name;
         this.value = value;

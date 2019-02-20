@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.entity.DriveFile;
+import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.exceptions.UnauthorizedActionException;
@@ -21,8 +21,8 @@ public class ResourcesSecurityAccessTest {
         User owner = UserTestUtils.mockUser();
         Mockito.when(owner.getUserType()).thenReturn(UserType.USER);
 
-        File file = FileTestUtils.mockFile(owner);
-        SecurityUtils.checkUserRightOn(owner, file);
+        DriveFile driveFile = FileTestUtils.mockFile(owner);
+        SecurityUtils.checkUserRightOn(owner, driveFile);
     }
 
     @Test
@@ -34,8 +34,8 @@ public class ResourcesSecurityAccessTest {
             User other = UserTestUtils.mockUser();
             Mockito.when(other.getUserType()).thenReturn(UserType.USER);
 
-            File file = FileTestUtils.mockFile(owner);
-            SecurityUtils.checkUserRightOn(other, file);
+            DriveFile driveFile = FileTestUtils.mockFile(owner);
+            SecurityUtils.checkUserRightOn(other, driveFile);
         });
     }
 
@@ -45,8 +45,8 @@ public class ResourcesSecurityAccessTest {
         User owner = UserTestUtils.mockUser();
         Mockito.when(owner.getUserType()).thenReturn(UserType.USER);
 
-        Directory directory = DirectoryTestUtils.mockDirectoryWithUser(owner);
-        SecurityUtils.checkUserRightOn(owner, directory);
+        DriveFolder driveFolder = DirectoryTestUtils.mockDirectoryWithUser(owner);
+        SecurityUtils.checkUserRightOn(owner, driveFolder);
     }
 
     @Test
@@ -59,8 +59,8 @@ public class ResourcesSecurityAccessTest {
 
             Mockito.when(other.getUserType()).thenReturn(UserType.USER);
 
-            Directory directory = DirectoryTestUtils.mockDirectoryWithUser(owner);
-            SecurityUtils.checkUserRightOn(other, directory);
+            DriveFolder driveFolder = DirectoryTestUtils.mockDirectoryWithUser(owner);
+            SecurityUtils.checkUserRightOn(other, driveFolder);
         });
     }
 
@@ -96,11 +96,11 @@ public class ResourcesSecurityAccessTest {
 
         Mockito.when(owner.getUserType()).thenReturn(UserType.ADMIN);
 
-        File file = FileTestUtils.mockFile(owner);
-        Directory directory = DirectoryTestUtils.mockDirectoryWithUser(owner);
+        DriveFile driveFile = FileTestUtils.mockFile(owner);
+        DriveFolder driveFolder = DirectoryTestUtils.mockDirectoryWithUser(owner);
 
         SecurityUtils.checkUserRightOn(owner, other);
-        SecurityUtils.checkUserRightOn(owner, file);
-        SecurityUtils.checkUserRightOn(owner, directory);
+        SecurityUtils.checkUserRightOn(owner, driveFile);
+        SecurityUtils.checkUserRightOn(owner, driveFolder);
     }
 }

@@ -1,8 +1,8 @@
 package fr.elercia.redcloud.api.dto;
 
 import fr.elercia.redcloud.api.dto.entity.*;
-import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.entity.DriveFolder;
+import fr.elercia.redcloud.business.entity.DriveFile;
 import fr.elercia.redcloud.business.entity.Token;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.config.SecurityConstants;
@@ -20,15 +20,15 @@ public class DtoMapper {
         return new UserDto(user.getName(), user.getResourceId(), user.getUserType(), user.getCreationDate(), entityToDto(user.getRootDirectory()));
     }
 
-    public static DirectoryDto entityToDto(Directory directory) {
-        return new DirectoryDto(directory.getName(), directory.getResourceId(), directory.getCreationDate(), simpleDirectoryEntitiesToDto(directory.getSubFolders()), fileEntitiesToDto(directory.getFiles()));
+    public static DirectoryDto entityToDto(DriveFolder driveFolder) {
+        return new DirectoryDto(driveFolder.getName(), driveFolder.getResourceId(), driveFolder.getCreationDate(), simpleDirectoryEntitiesToDto(driveFolder.getSubFolders()), fileEntitiesToDto(driveFolder.getDriveFiles()));
     }
 
-    public static List<FileDto> fileEntitiesToDto(List<File> files) {
-        return files.stream().map(DtoMapper::entityToDto).collect(Collectors.toList());
+    public static List<FileDto> fileEntitiesToDto(List<DriveFile> driveFiles) {
+        return driveFiles.stream().map(DtoMapper::entityToDto).collect(Collectors.toList());
     }
 
-    public static List<SimpleDirectoryDto> simpleDirectoryEntitiesToDto(List<Directory> directories) {
+    public static List<SimpleDirectoryDto> simpleDirectoryEntitiesToDto(List<DriveFolder> directories) {
         return directories.stream().map(d -> new SimpleDirectoryDto(d.getName(), d.getResourceId(), d.getCreationDate())).collect(Collectors.toList());
     }
 
@@ -40,7 +40,7 @@ public class DtoMapper {
         return new TokenDto(token.getAccessToken(), SecurityConstants.TOKEN_TYPE, SecurityConstants.EXPIRATION_TIME, token.getRefreshToken());
     }
 
-    public static FileDto entityToDto(File file) {
-        return new FileDto(file.getFileName(), file.getResourceId(), file.getCreationDate(), file.getSize());
+    public static FileDto entityToDto(DriveFile driveFile) {
+        return new FileDto(driveFile.getFileName(), driveFile.getResourceId(), driveFile.getCreationDate(), driveFile.getSize());
     }
 }

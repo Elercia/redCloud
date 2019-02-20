@@ -2,7 +2,7 @@ package fr.elercia.redcloud.business.service;
 
 import org.springframework.http.MediaType;
 
-public class FileSystemUtils {
+public class DriveFileSystemUtils {
     public static MediaType getMediaTypeFromExtension(String fileName) {
 
         String ext = null;

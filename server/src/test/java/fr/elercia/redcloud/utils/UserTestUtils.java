@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.utils;
 
-import fr.elercia.redcloud.business.entity.Directory;
+import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
 import org.mockito.Mockito;
@@ -21,14 +21,14 @@ public class UserTestUtils {
         assertEquals(expected.getHashedPassword(), actual.getHashedPassword());
         assertEquals(expected.getUserType(), actual.getUserType());
         assertEquals(expected.getCreationDate(), actual.getCreationDate());
-        assertEquals(expected.getDirectories().size(), actual.getDirectories().size());
+        assertEquals(expected.getDriveFolders().size(), actual.getDriveFolders().size());
     }
 
     public static User mockUser() {
         return mockUser("name2", UUID.randomUUID(), "pass", UserType.USER, new Date(), new ArrayList<>());
     }
 
-    public static User mockUser(String name, UUID resourceId, String password, UserType userType, Date creationDate, List<Directory> directories) {
+    public static User mockUser(String name, UUID resourceId, String password, UserType userType, Date creationDate, List<DriveFolder> directories) {
         User user = Mockito.mock(User.class);
 
         Mockito.when(user.getName()).thenReturn(name);
@@ -36,7 +36,7 @@ public class UserTestUtils {
         Mockito.when(user.getHashedPassword()).thenReturn(password);
         Mockito.when(user.getUserType()).thenReturn(userType);
         Mockito.when(user.getCreationDate()).thenReturn(creationDate);
-        Mockito.when(user.getDirectories()).thenReturn(directories);
+        Mockito.when(user.getDriveFolders()).thenReturn(directories);
 
         return user;
     }

@@ -6,7 +6,6 @@ import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
-import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import fr.elercia.redcloud.utils.UserTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
 
     @Mock
-    private FileSystemService fileSystemService;
+    private DriveFileSystemService driveFileSystemService;
     @Mock
     private UserRepository userRepository;
 
@@ -45,12 +44,12 @@ class UserServiceTest {
         assertNotNull(createdUser);
 
         Mockito.verify(userRepository, Mockito.times(1)).save(ArgumentMatchers.any());
-        Mockito.verify(fileSystemService, Mockito.times(1)).createUserFileSystemSpace(ArgumentMatchers.any());
+        Mockito.verify(driveFileSystemService, Mockito.times(1)).createUserFileSystemSpace(ArgumentMatchers.any());
         assertEquals(createdUser.getName(), wantedUser.getName());
         assertEquals(createdUser.getHashedPassword(), PasswordEncoder.encode(wantedUser.getUnHashedPassword()));
 
         userService.deleteUser(createdUser);
-        Mockito.verify(fileSystemService, Mockito.times(1)).deleteUserFileSystem(ArgumentMatchers.any());
+        Mockito.verify(driveFileSystemService, Mockito.times(1)).deleteUserFileSystem(ArgumentMatchers.any());
         Mockito.verify(userRepository, Mockito.times(1)).delete(ArgumentMatchers.any());
     }
 
@@ -93,7 +92,7 @@ class UserServiceTest {
         Mockito.verify(userRepository).save(argument.capture());
         User updatedUser = argument.getValue();
 
-        User mockedUser = UserTestUtils.mockUser(updateUserDto.getName(), user.getResourceId(), PasswordEncoder.encode(updateUserDto.getPassword()), user.getUserType(), user.getCreationDate(), user.getDirectories());
+        User mockedUser = UserTestUtils.mockUser(updateUserDto.getName(), user.getResourceId(), PasswordEncoder.encode(updateUserDto.getPassword()), user.getUserType(), user.getCreationDate(), user.getDriveFolders());
         UserTestUtils.checkEquals(mockedUser, updatedUser);
     }
 
@@ -111,7 +110,7 @@ class UserServiceTest {
         Mockito.verify(userRepository).save(argument.capture());
         User updatedUser = argument.getValue();
 
-        User mockedUser = UserTestUtils.mockUser(user.getName(), user.getResourceId(), user.getHashedPassword(), user.getUserType(), user.getCreationDate(), user.getDirectories());
+        User mockedUser = UserTestUtils.mockUser(user.getName(), user.getResourceId(), user.getHashedPassword(), user.getUserType(), user.getCreationDate(), user.getDriveFolders());
         UserTestUtils.checkEquals(mockedUser, updatedUser);
     }
 }

@@ -5,10 +5,10 @@ import fr.elercia.redcloud.api.controllers.params.QueryParam;
 import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.*;
-import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.File;
-import fr.elercia.redcloud.business.service.DirectoryService;
-import fr.elercia.redcloud.business.service.FileService;
+import fr.elercia.redcloud.business.entity.DriveFolder;
+import fr.elercia.redcloud.business.entity.DriveFile;
+import fr.elercia.redcloud.business.service.DriveFolderService;
+import fr.elercia.redcloud.business.service.DriveFileService;
 import fr.elercia.redcloud.business.service.SecurityUtils;
 import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
 import fr.elercia.redcloud.exceptions.FileNameFormatException;
@@ -33,14 +33,14 @@ public class DirectoryController extends AbstractController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DirectoryController.class);
 
-    private DirectoryService directoryService;
-    private FileService fileService;
+    private DriveFolderService driveFolderService;
+    private DriveFileService driveFileService;
 
     @Autowired
-    public DirectoryController(DirectoryService directoryService, FileService fileService) {
+    public DirectoryController(DriveFolderService driveFolderService, DriveFileService driveFileService) {
 
-        this.directoryService = directoryService;
-        this.fileService = fileService;
+        this.driveFolderService = driveFolderService;
+        this.driveFileService = driveFileService;
     }
 
     @ApiOperation(value = "Create a directory")
@@ -49,11 +49,11 @@ public class DirectoryController extends AbstractController {
 
         LOG.info("create directory for parent {} ", parentDirectoryId);
 
-        Directory parentDir = directoryService.find(parentDirectoryId);
+        DriveFolder parentDir = driveFolderService.find(parentDirectoryId);
 
         SecurityUtils.checkUserRightOn(getConnectedUser(), parentDir);
 
-        DirectoryDto directory = DtoMapper.entityToDto(directoryService.createSubDirectory(parentDir, wantedDirectory));
+        DirectoryDto directory = DtoMapper.entityToDto(driveFolderService.createSubDirectory(parentDir, wantedDirectory));
 
         return new ResponseEntity<>(directory, HttpStatus.CREATED);
     }
@@ -62,65 +62,65 @@ public class DirectoryController extends AbstractController {
     @GetMapping(value = Route.DIRECTORY)
     public DirectoryDto findDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId) throws DirectoryNotFoundException {
 
-        LOG.info("Find directory id:{}", directoryId);
+        LOG.info("Find driveFolder id:{}", directoryId);
 
-        Directory directory = directoryService.find(directoryId);
+        DriveFolder driveFolder = driveFolderService.find(directoryId);
 
-        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFolder);
 
-        return DtoMapper.entityToDto(directory);
+        return DtoMapper.entityToDto(driveFolder);
     }
 
     @ApiOperation(value = "Delete a directory")
     @DeleteMapping(Route.DIRECTORY)
     public void deleteDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId) throws DirectoryNotFoundException, UnauthorizedDirectoryActionException {
 
-        LOG.info("delete directory id:{}", directoryId);
+        LOG.info("delete driveFolder id:{}", directoryId);
 
-        Directory directory = directoryService.find(directoryId);
+        DriveFolder driveFolder = driveFolderService.find(directoryId);
 
-        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFolder);
 
-        directoryService.deleteDirectory(directory);
+        driveFolderService.deleteDirectory(driveFolder);
     }
 
     @ApiOperation(value = "Delete a directory")
     @PutMapping(Route.DIRECTORY)
     public void updateDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestBody UpdateDirectoryDto updateDirectoryDto) throws DirectoryNotFoundException, UnauthorizedDirectoryActionException {
 
-        LOG.info("update directory id:{}", directoryId);
+        LOG.info("update driveFolder id:{}", directoryId);
 
-        Directory directory = directoryService.find(directoryId);
+        DriveFolder driveFolder = driveFolderService.find(directoryId);
 
-        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFolder);
 
-        directoryService.update(directory, updateDirectoryDto);
+        driveFolderService.update(driveFolder, updateDirectoryDto);
     }
 
     @ApiOperation(value = "Delete a directory")
     @PutMapping(Route.DIRECTORY_MOVE)
     public void moveDirectory(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestBody MoveDirectoryDto moveDirectoryDto) throws DirectoryNotFoundException, UnauthorizedDirectoryActionException {
 
-        LOG.info("move directory from:{} - to:{}", directoryId, moveDirectoryDto.getMoveToDirectoryId());
+        LOG.info("move driveFolder from:{} - to:{}", directoryId, moveDirectoryDto.getMoveToDirectoryId());
 
-        Directory directory = directoryService.find(directoryId);
-        Directory moveToDirectory = directoryService.find(moveDirectoryDto.getMoveToDirectoryId());
+        DriveFolder driveFolder = driveFolderService.find(directoryId);
+        DriveFolder moveToDriveFolder = driveFolderService.find(moveDirectoryDto.getMoveToDirectoryId());
 
-        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
-        SecurityUtils.checkUserRightOn(getConnectedUser(), moveToDirectory);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFolder);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), moveToDriveFolder);
 
-        directoryService.move(directory, moveToDirectory);
+        driveFolderService.move(driveFolder, moveToDriveFolder);
     }
 
     @PostMapping(Route.DIRECTORY_UPLOAD_FILE)
     public FileDto uploadFile(@PathVariable(QueryParam.DIRECTORY_ID) UUID directoryId, @RequestParam(Parameters.UPLOAD_FILE) MultipartFile file) throws DirectoryNotFoundException, FileNameFormatException, FileStorageException {
 
-        Directory directory = directoryService.find(directoryId);
+        DriveFolder driveFolder = driveFolderService.find(directoryId);
 
-        SecurityUtils.checkUserRightOn(getConnectedUser(), directory);
+        SecurityUtils.checkUserRightOn(getConnectedUser(), driveFolder);
 
-        File storedFile = fileService.storeFile(directory, file);
+        DriveFile storedDriveFile = driveFileService.storeFile(driveFolder, file);
 
-        return DtoMapper.entityToDto(storedFile);
+        return DtoMapper.entityToDto(storedDriveFile);
     }
 }

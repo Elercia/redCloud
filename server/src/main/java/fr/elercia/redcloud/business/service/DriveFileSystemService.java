@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.business.service;
 
+import fr.elercia.redcloud.business.entity.DriveFile;
 import fr.elercia.redcloud.business.entity.DynamicConfig;
-import fr.elercia.redcloud.business.entity.File;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,21 +19,21 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 @Service
-public class FileSystemService {
+public class DriveFileSystemService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FileSystemService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DriveFileSystemService.class);
     private DynamicConfigService dynamicConfigService;
 
     @Autowired
-    public FileSystemService(DynamicConfigService dynamicConfigService) {
+    public DriveFileSystemService(DynamicConfigService dynamicConfigService) {
         this.dynamicConfigService = dynamicConfigService;
     }
 
-    public void uploadFile(MultipartFile multipartFile, File file) throws FileStorageException {
+    public void uploadFile(MultipartFile multipartFile, DriveFile driveFile) throws FileStorageException {
 
-        String filePath = getPathToFile(file);
+        String filePath = getPathToFile(driveFile);
 
-        LOG.info("Upload file [path {}]", filePath);
+        LOG.info("Upload driveFile [path {}]", filePath);
 
         java.io.File ioFile = new java.io.File(filePath);
 
@@ -44,7 +43,7 @@ public class FileSystemService {
 
         try {
             if (!ioFile.createNewFile()) {
-                throw new FileStorageException("Cannot create the file");
+                throw new FileStorageException("Cannot create the driveFile");
             }
 
             FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), ioFile);
@@ -54,22 +53,22 @@ public class FileSystemService {
         }
     }
 
-    public Resource download(File file) throws FileNotFoundException {
+    public Resource download(DriveFile driveFile) throws FileNotFoundException {
         try {
-            String filePath = getPathToFile(file);
+            String filePath = getPathToFile(driveFile);
 
-            LOG.info("Download file [path {}]", filePath);
+            LOG.info("Download driveFile [path {}]", filePath);
 
             Resource resource = new UrlResource(new java.io.File(filePath).toURI());
 
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new FileNotFoundException("File not found " + file.getFileName());
+                throw new FileNotFoundException("DriveFile not found " + driveFile.getFileName());
             }
 
         } catch (MalformedURLException ex) {
-            throw new FileNotFoundException("File not found " + file.getFileName(), ex);
+            throw new FileNotFoundException("DriveFile not found " + driveFile.getFileName(), ex);
         }
     }
 
@@ -104,12 +103,12 @@ public class FileSystemService {
         }
     }
 
-    private String getPathToFile(File file) {
-        return getConfiguredPathToFiles() + "/" + getUserPath(file) + "/" + getFilePath(file);
+    private String getPathToFile(DriveFile driveFile) {
+        return getConfiguredPathToFiles() + "/" + getUserPath(driveFile) + "/" + getFilePath(driveFile);
     }
 
-    private String getFilePath(File file) {
-        return file.getResourceId().toString();
+    private String getFilePath(DriveFile driveFile) {
+        return driveFile.getResourceId().toString();
     }
 
     private String getUserDirectoryPath(User user) {
@@ -120,8 +119,8 @@ public class FileSystemService {
         return user.getResourceId().toString();
     }
 
-    private String getUserPath(File file) {
-        return getUserPath(file.getDirectory().getUser());
+    private String getUserPath(DriveFile driveFile) {
+        return getUserPath(driveFile.getParent().getUser());
     }
 
     private String getConfiguredPathToFiles() {

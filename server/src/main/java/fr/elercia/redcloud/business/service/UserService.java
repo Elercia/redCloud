@@ -23,14 +23,14 @@ public class UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
-    private DirectoryService directoryService;
-    private FileSystemService fileSystemService;
+    private DriveFolderService driveFolderService;
+    private DriveFileSystemService driveFileSystemService;
 
     @Autowired
-    public UserService(UserRepository userRepository, DirectoryService directoryService, FileSystemService fileSystemService) {
+    public UserService(UserRepository userRepository, DriveFolderService driveFolderService, DriveFileSystemService driveFileSystemService) {
         this.userRepository = userRepository;
-        this.directoryService = directoryService;
-        this.fileSystemService = fileSystemService;
+        this.driveFolderService = driveFolderService;
+        this.driveFileSystemService = driveFileSystemService;
     }
 
     public User findByResourceId(UUID userResourceId) throws UserNotFoundException {
@@ -79,8 +79,8 @@ public class UserService {
         LOG.info("createUser user {}", newUser.getResourceId());
 
         userRepository.save(newUser);
-        directoryService.createRootDirectory(newUser);
-        fileSystemService.createUserFileSystemSpace(newUser);
+        driveFolderService.createRootDirectory(newUser);
+        driveFileSystemService.createUserFileSystemSpace(newUser);
 
         return newUser;
     }
@@ -103,7 +103,7 @@ public class UserService {
         LOG.info("deleteUser user {}", user.getResourceId());
 
         userRepository.delete(user);
-        fileSystemService.deleteUserFileSystem(user);
+        driveFileSystemService.deleteUserFileSystem(user);
     }
 
     public User updateUser(User user, UpdateUserDto updateUserDto) {

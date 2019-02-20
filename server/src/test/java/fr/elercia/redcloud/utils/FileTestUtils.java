@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.utils;
 
-import fr.elercia.redcloud.business.entity.Directory;
-import fr.elercia.redcloud.business.entity.File;
+import fr.elercia.redcloud.business.entity.DriveFile;
+import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.service.utils.StringUtils;
 import org.mockito.Mockito;
@@ -12,39 +12,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FileTestUtils {
 
-    public static void checkEquals(File expected, File actual) {
+    public static void checkEquals(DriveFile expected, DriveFile actual) {
         assertEquals(expected.getFileName(), actual.getFileName());
         assertEquals(expected.getResourceId(), actual.getResourceId());
         assertEquals(expected.getCreationDate(), actual.getCreationDate());
         assertEquals(expected.getSize(), actual.getSize());
     }
 
-    public static File mockFile() {
+    public static DriveFile mockFile() {
         return mockFile(UUID.randomUUID(), StringUtils.randomString(), UserTestUtils.mockUser());
     }
 
-    public static File mockFile(UUID uuid) {
+    public static DriveFile mockFile(UUID uuid) {
         return mockFile(uuid, "f2", UserTestUtils.mockUser());
     }
 
-    public static File mockFile(String name) {
+    public static DriveFile mockFile(String name) {
         return mockFile(UUID.randomUUID(), name, UserTestUtils.mockUser());
     }
 
-    public static File mockFile(User mockUser) {
+    public static DriveFile mockFile(User mockUser) {
         return mockFile(UUID.randomUUID(), "f2", mockUser);
     }
 
-    public static File mockFile(UUID fileUUID, String name, User mockUser) {
+    public static DriveFile mockFile(UUID fileUUID, String name, User mockUser) {
 
-        Directory directory = Mockito.mock(Directory.class);
-        Mockito.when(directory.getUser()).thenReturn(mockUser);
+        DriveFolder driveFolder = Mockito.mock(DriveFolder.class);
+        Mockito.when(driveFolder.getUser()).thenReturn(mockUser);
 
-        File fileEntity = Mockito.mock(File.class);
-        Mockito.when(fileEntity.getResourceId()).thenReturn(fileUUID);
-        Mockito.when(fileEntity.getDirectory()).thenReturn(directory);
-        Mockito.when(fileEntity.getFileName()).thenReturn(name);
+        DriveFile driveFileEntity = Mockito.mock(DriveFile.class);
+        Mockito.when(driveFileEntity.getResourceId()).thenReturn(fileUUID);
+        Mockito.when(driveFileEntity.getParent()).thenReturn(driveFolder);
+        Mockito.when(driveFileEntity.getFileName()).thenReturn(name);
 
-        return fileEntity;
+        return driveFileEntity;
     }
 }
