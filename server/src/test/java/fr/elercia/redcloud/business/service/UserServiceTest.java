@@ -4,6 +4,9 @@ import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
+import fr.elercia.redcloud.business.events.UserCreationEvent;
+import fr.elercia.redcloud.business.events.UserDeleteEvent;
+import fr.elercia.redcloud.dao.repository.DriveFolderRepository;
 import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.utils.UserTestUtils;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,9 +25,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
 
     @Mock
-    private DriveFileSystemService driveFileSystemService;
-    @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     @InjectMocks
@@ -33,6 +38,7 @@ class UserServiceTest {
     public void setUp() throws Exception {
         // Initialize mocks created above
         MockitoAnnotations.initMocks(this);
+        Mockito.when(userRepository.save(ArgumentMatchers.any())).thenAnswer((invocation) -> invocation.getArguments()[0]);
     }
 
     @Test
@@ -44,13 +50,13 @@ class UserServiceTest {
         assertNotNull(createdUser);
 
         Mockito.verify(userRepository, Mockito.times(1)).save(ArgumentMatchers.any());
-        Mockito.verify(driveFileSystemService, Mockito.times(1)).createUserFileSystemSpace(ArgumentMatchers.any());
+        Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(ArgumentMatchers.any(UserCreationEvent.class));
         assertEquals(createdUser.getName(), wantedUser.getName());
         assertEquals(createdUser.getHashedPassword(), PasswordEncoder.encode(wantedUser.getUnHashedPassword()));
 
         userService.deleteUser(createdUser);
-        Mockito.verify(driveFileSystemService, Mockito.times(1)).deleteUserFileSystem(ArgumentMatchers.any());
         Mockito.verify(userRepository, Mockito.times(1)).delete(ArgumentMatchers.any());
+        Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(ArgumentMatchers.any(UserDeleteEvent.class));
     }
 
     @Test

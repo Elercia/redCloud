@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.MalformedObjectNameException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,13 +33,13 @@ class DriveDriveFileSystemServiceTest {
         String fileName = "testUploadFile.txt";
         String originalFileName = "testUploadFile.txt";
         String contentType = "text/plain";
-        byte[] content = Files.readAllBytes(Paths.get(new java.io.File(this.getClass().getClassLoader().getResource("testUploadFile.txt").getFile()).getAbsolutePath()));
+        byte[] content = Files.readAllBytes(Paths.get(new File(this.getClass().getClassLoader().getResource("testUploadFile.txt").getFile()).getAbsolutePath()));
 
         MultipartFile multipartFile = new MockMultipartFile(fileName, originalFileName, contentType, content);
 
         DriveFile driveFileEntity = FileTestUtils.mockFile();
 
-        driveFileSystemService.createUserFileSystemSpace(driveFileEntity.getParent().getUser());
+        driveFileSystemService.createUserFileSystem(driveFileEntity.getParent().getUser());
 
         driveFileSystemService.uploadFile(multipartFile, driveFileEntity);
 

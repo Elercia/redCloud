@@ -4,18 +4,20 @@ import fr.elercia.redcloud.api.dto.entity.CreateDirectoryDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateDirectoryDto;
 import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.events.UserCreationEvent;
 import fr.elercia.redcloud.dao.repository.DriveFolderRepository;
 import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
 import fr.elercia.redcloud.exceptions.UnauthorizedDirectoryActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class DriveFolderService {
+public class DriveFolderService implements ApplicationListener<UserCreationEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DriveFolderService.class);
 
@@ -114,5 +116,10 @@ public class DriveFolderService {
             }
         }
         return true;
+    }
+
+    @Override
+    public void onApplicationEvent(UserCreationEvent event) {
+        createRootDirectory(event.getUser());
     }
 }

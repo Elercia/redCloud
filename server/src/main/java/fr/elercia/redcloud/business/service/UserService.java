@@ -4,6 +4,8 @@ import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
+import fr.elercia.redcloud.business.events.UserCreationEvent;
+import fr.elercia.redcloud.business.events.UserDeleteEvent;
 import fr.elercia.redcloud.business.service.utils.StringUtils;
 import fr.elercia.redcloud.dao.repository.UserRepository;
 import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
@@ -12,6 +14,7 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +25,13 @@ public class UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
+    private ApplicationEventPublisher applicationEventPublisher;
     private UserRepository userRepository;
-    private DriveFolderService driveFolderService;
-    private DriveFileSystemService driveFileSystemService;
 
     @Autowired
-    public UserService(UserRepository userRepository, DriveFolderService driveFolderService, DriveFileSystemService driveFileSystemService) {
+    public UserService(UserRepository userRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.userRepository = userRepository;
-        this.driveFolderService = driveFolderService;
-        this.driveFileSystemService = driveFileSystemService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public User findByResourceId(UUID userResourceId) throws UserNotFoundException {
@@ -78,9 +79,9 @@ public class UserService {
 
         LOG.info("createUser user {}", newUser.getResourceId());
 
-        userRepository.save(newUser);
-        driveFolderService.createRootDirectory(newUser);
-        driveFileSystemService.createUserFileSystemSpace(newUser);
+        newUser = userRepository.save(newUser);
+
+        applicationEventPublisher.publishEvent(new UserCreationEvent(this, newUser));
 
         return newUser;
     }
@@ -103,7 +104,8 @@ public class UserService {
         LOG.info("deleteUser user {}", user.getResourceId());
 
         userRepository.delete(user);
-        driveFileSystemService.deleteUserFileSystem(user);
+
+        applicationEventPublisher.publishEvent(new UserDeleteEvent(this, user));
     }
 
     public User updateUser(User user, UpdateUserDto updateUserDto) {
