@@ -9,6 +9,7 @@ public class Route {
 
     public static final String MONITORING = BASE + "monitoring/";
     public static final String MONITORING_STATUS = MONITORING + "status/";
+    public static final String MONITORING_INTEGRITY_CHECK = MONITORING + "check/";
 
     public static final String USERS = BASE + "users/";
     public static final String USERS_SEARCH = USERS + "search/";

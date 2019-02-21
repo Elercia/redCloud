@@ -1,11 +1,9 @@
 package fr.elercia.redcloud.api.dto;
 
 import fr.elercia.redcloud.api.dto.entity.*;
-import fr.elercia.redcloud.business.entity.DriveFolder;
-import fr.elercia.redcloud.business.entity.DriveFile;
-import fr.elercia.redcloud.business.entity.Token;
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.*;
 import fr.elercia.redcloud.config.SecurityConstants;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,5 +40,9 @@ public class DtoMapper {
 
     public static FileDto entityToDto(DriveFile driveFile) {
         return new FileDto(driveFile.getFileName(), driveFile.getResourceId(), driveFile.getCreationDate(), driveFile.getSize());
+    }
+
+    public static MonitorIntegrityCheckResultDto entityToDto(MonitorIntegrityCheckResult checkSystemIntegrity) {
+        return new MonitorIntegrityCheckResultDto(checkSystemIntegrity.getActionType());
     }
 }

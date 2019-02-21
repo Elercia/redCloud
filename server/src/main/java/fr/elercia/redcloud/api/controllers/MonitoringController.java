@@ -1,7 +1,15 @@
 package fr.elercia.redcloud.api.controllers;
 
 import fr.elercia.redcloud.api.controllers.params.Route;
-import fr.elercia.redcloud.api.security.PermitAll;
+import fr.elercia.redcloud.api.dto.BusinessMapper;
+import fr.elercia.redcloud.api.dto.DtoMapper;
+import fr.elercia.redcloud.api.dto.entity.MonitorIntegrityCheckRequestDto;
+import fr.elercia.redcloud.api.dto.entity.MonitorIntegrityCheckResultDto;
+import fr.elercia.redcloud.business.entity.MonitorIntegrityCheckRequest;
+import fr.elercia.redcloud.business.entity.MonitorIntegrityCheckResult;
+import fr.elercia.redcloud.api.security.RequireUserType;
+import fr.elercia.redcloud.business.entity.UserType;
+import fr.elercia.redcloud.business.service.MonitoringService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +22,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class MonitoringController extends AbstractController {
 
+    private MonitoringService monitoringService;
+
     @Autowired
-    public MonitoringController() {
-        // Add all monitoring dependencies
+    public MonitoringController(MonitoringService monitoringService) {
+
+        this.monitoringService = monitoringService;
     }
 
     @GetMapping(Route.MONITORING_STATUS)
     @ApiOperation(value = "Monitoring API")
-    @PermitAll
+    @RequireUserType({UserType.ADMIN, UserType.MONITOR})
     public ResponseEntity<Void> monitor() {
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);// TODO Maybe add something like get server version
     }
 
-    //TODO Add something like CheckSystemIntegrity (check database and file system coherence)
+    @GetMapping(Route.MONITORING_INTEGRITY_CHECK)
+    @ApiOperation(value = "Check the system integrity")
+    @RequireUserType({UserType.ADMIN, UserType.MONITOR})
+    public MonitorIntegrityCheckResultDto checkSystemIntegrity(@RequestBody MonitorIntegrityCheckRequestDto monitorIntegrityCheckRequestDto) {
+
+        return DtoMapper.entityToDto(monitoringService.checkSystemIntegrity(BusinessMapper.dtoToEntity(monitorIntegrityCheckRequestDto)));
+    }
 }

@@ -1,4 +1,4 @@
-package fr.elercia.redcloud.business.service;
+package fr.elercia.redcloud.business.service.utils;
 
 import org.springframework.http.MediaType;
 
