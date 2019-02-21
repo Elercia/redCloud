@@ -36,7 +36,7 @@ public class LoginController extends AbstractController {
         return DtoMapper.map(token);
     }
 
-    @GetMapping(Route.LOGOUT)
+    @DeleteMapping(Route.LOGOUT)
     @ApiOperation(value = "Revoke a token")
     public void logout() {
 
