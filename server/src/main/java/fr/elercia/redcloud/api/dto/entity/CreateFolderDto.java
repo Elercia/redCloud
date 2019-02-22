@@ -1,13 +1,14 @@
 package fr.elercia.redcloud.api.dto.entity;
 
-public class UpdateDirectoryDto {
+public class CreateFolderDto {
 
     private String name;
 
-    public UpdateDirectoryDto() {
+    public CreateFolderDto() {
+
     }
 
-    public UpdateDirectoryDto(String name) {
+    public CreateFolderDto(String name) {
         this.name = name;
     }
 

@@ -9,7 +9,7 @@ public class MoveFileDto {
     public MoveFileDto() {
     }
 
-    public UUID getDirectoryId() {
+    public UUID getFolderId() {
         return directoryId;
     }
 }

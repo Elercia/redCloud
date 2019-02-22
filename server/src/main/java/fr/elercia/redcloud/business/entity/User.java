@@ -74,7 +74,7 @@ public class User {
         return hashedPassword;
     }
 
-    public DriveFolder getRootDirectory() {
+    public DriveFolder getRootFolder() {
         for (DriveFolder d : driveFolders) {
             if (d.getParentDriveFolder() == null) {
                 return d;

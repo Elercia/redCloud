@@ -3,15 +3,15 @@ package fr.elercia.redcloud.api.controllers;
 import fr.elercia.redcloud.api.controllers.params.QueryParam;
 import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.api.dto.entity.MoveFileDto;
-import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.DriveFile;
-import fr.elercia.redcloud.business.service.DriveFolderService;
+import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.service.DriveFileService;
-import fr.elercia.redcloud.business.service.utils.DriveFileSystemUtils;
+import fr.elercia.redcloud.business.service.DriveFolderService;
 import fr.elercia.redcloud.business.service.SecurityUtils;
-import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
+import fr.elercia.redcloud.business.service.utils.DriveFileSystemUtils;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileOperationException;
+import fr.elercia.redcloud.exceptions.FolderNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -73,10 +73,10 @@ public class FileController extends AbstractController{
 
     @ApiOperation(value = "Move a file")
     @PutMapping(Route.FILE)
-    public void moveFile(@RequestParam(QueryParam.FILE_ID) UUID fileId, MoveFileDto moveFileDto) throws FileNotFoundException, DirectoryNotFoundException, FileOperationException {
+    public void moveFile(@RequestParam(QueryParam.FILE_ID) UUID fileId, MoveFileDto moveFileDto) throws FileNotFoundException, FolderNotFoundException, FileOperationException {
 
         DriveFile driveFile = driveFileService.find(fileId);
-        DriveFolder driveFolder = driveFolderService.find(moveFileDto.getDirectoryId());
+        DriveFolder driveFolder = driveFolderService.find(moveFileDto.getFolderId());
 
         SecurityUtils.checkUserRightOn(getConnectedUser(), driveFile);
         SecurityUtils.checkUserRightOn(getConnectedUser(), driveFolder);

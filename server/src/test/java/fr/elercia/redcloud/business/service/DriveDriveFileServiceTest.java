@@ -1,14 +1,14 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.DriveFile;
+import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.dao.repository.FileRepository;
 import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileOperationException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
-import fr.elercia.redcloud.utils.DirectoryTestUtils;
 import fr.elercia.redcloud.utils.FileTestUtils;
+import fr.elercia.redcloud.utils.FolderTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -79,10 +79,10 @@ class DriveDriveFileServiceTest {
     }
 
     @Test
-    void move_validDirectory_moveDone() throws FileOperationException {
+    void move_validFolder_moveDone() throws FileOperationException {
 
         DriveFile driveFile = FileTestUtils.mockFile();
-        DriveFolder driveFolder = DirectoryTestUtils.mockDirectoryWithSubFolders("name", null, new ArrayList<>());
+        DriveFolder driveFolder = FolderTestUtils.mockFolderWithSubFolders("name", null, new ArrayList<>());
 
         driveFileService.move(driveFile, driveFolder);
 
@@ -105,7 +105,7 @@ class DriveDriveFileServiceTest {
         assertThrows(FileOperationException.class, () -> {
 
             DriveFile driveFile = FileTestUtils.mockFile("filename1");
-            DriveFolder driveFolder = DirectoryTestUtils.mockDirectoryWithFiles("name", null, Arrays.asList(FileTestUtils.mockFile(driveFile.getFileName())));
+            DriveFolder driveFolder = FolderTestUtils.mockFolderWithFiles("name", null, Arrays.asList(FileTestUtils.mockFile(driveFile.getFileName())));
 
             driveFileService.move(driveFile, driveFolder);
         });
@@ -115,7 +115,7 @@ class DriveDriveFileServiceTest {
     @MethodSource("createValidParametersForStoreFile")
     void storeFile_withNameParameter_valid(String fileName) throws FileNameFormatException, FileStorageException {
 
-        DriveFolder parent = DirectoryTestUtils.mockDirectory();
+        DriveFolder parent = FolderTestUtils.mockFolder();
         MultipartFile multipartFile = new MockMultipartFile(fileName, new byte[0]);
 
         driveFileService.storeFile(parent, multipartFile);
@@ -144,7 +144,7 @@ class DriveDriveFileServiceTest {
     void storeFile_withNameParameter_invalid(String fileName) {
 
         assertThrows(FileNameFormatException.class, () -> {
-            DriveFolder parent = DirectoryTestUtils.mockDirectory();
+            DriveFolder parent = FolderTestUtils.mockFolder();
             MultipartFile multipartFile = new MockMultipartFile(fileName, new byte[0]);
 
             driveFileService.storeFile(parent, multipartFile);

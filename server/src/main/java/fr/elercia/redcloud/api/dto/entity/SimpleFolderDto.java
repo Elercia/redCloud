@@ -3,16 +3,16 @@ package fr.elercia.redcloud.api.dto.entity;
 import java.util.Date;
 import java.util.UUID;
 
-public class SimpleDirectoryDto {
+public class SimpleFolderDto {
     private String name;
     private UUID resourceId;
     private Date creationDate;
 
-    public SimpleDirectoryDto() {
+    public SimpleFolderDto() {
 
     }
 
-    public SimpleDirectoryDto(String name, UUID resourceId, Date creationDate) {
+    public SimpleFolderDto(String name, UUID resourceId, Date creationDate) {
         this.name = name;
         this.resourceId = resourceId;
         this.creationDate = creationDate;

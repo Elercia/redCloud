@@ -1,13 +1,13 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.api.dto.entity.CreateDirectoryDto;
-import fr.elercia.redcloud.api.dto.entity.UpdateDirectoryDto;
+import fr.elercia.redcloud.api.dto.entity.CreateFolderDto;
+import fr.elercia.redcloud.api.dto.entity.UpdateFolderDto;
 import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.dao.repository.DriveFolderRepository;
-import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
-import fr.elercia.redcloud.exceptions.UnauthorizedDirectoryActionException;
-import fr.elercia.redcloud.utils.DirectoryTestUtils;
+import fr.elercia.redcloud.exceptions.FolderNotFoundException;
+import fr.elercia.redcloud.exceptions.UnauthorizedFolderActionException;
+import fr.elercia.redcloud.utils.FolderTestUtils;
 import fr.elercia.redcloud.utils.UserTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class DriveFolderServiceTest {
         // Initialize mocks created above
         MockitoAnnotations.initMocks(this);
 
-        driveFolder1 = DirectoryTestUtils.mockDirectory("blabla", dir1ResourceId, null);
+        driveFolder1 = FolderTestUtils.mockFolder("blabla", dir1ResourceId, null);
 
         dir1ResourceId = UUID.randomUUID();
         Mockito.when(driveFolderRepository.findByResourceId(dir1ResourceId)).thenReturn(driveFolder1);
@@ -49,9 +49,9 @@ class DriveFolderServiceTest {
     }
 
     @Test
-    void createRootDirectory_assertCreated() {
+    void createRootFolder_assertCreated() {
 
-        driveFolderService.createRootDirectory(UserTestUtils.mockUser());
+        driveFolderService.createRootFolder(UserTestUtils.mockUser());
 
         ArgumentCaptor<DriveFolder> argument = ArgumentCaptor.forClass(DriveFolder.class);
         Mockito.verify(driveFolderRepository).save(argument.capture());
@@ -62,7 +62,7 @@ class DriveFolderServiceTest {
     }
 
     @Test
-    void findDirectory_validResourceId_returnDirectory() throws DirectoryNotFoundException {
+    void findFolder_validResourceId_returnFolder() throws FolderNotFoundException {
 
         DriveFolder driveFolder = driveFolderService.find(dir1ResourceId);
 
@@ -71,18 +71,18 @@ class DriveFolderServiceTest {
     }
 
     @Test
-    void findDirectory_invalidResourceId_throwException() {
+    void findFolder_invalidResourceId_throwException() {
 
-        assertThrows(DirectoryNotFoundException.class, () -> driveFolderService.find(UUID.randomUUID()));
+        assertThrows(FolderNotFoundException.class, () -> driveFolderService.find(UUID.randomUUID()));
     }
 
     @Test
-    void createSubDirectory_assertCreated() throws UnauthorizedDirectoryActionException {
+    void createSubFolder_assertCreated() throws UnauthorizedFolderActionException {
 
-        DriveFolder parent = DirectoryTestUtils.mockDirectoryWithUser("root", null);
-        CreateDirectoryDto createDirectoryDto = new CreateDirectoryDto("sub");
+        DriveFolder parent = FolderTestUtils.mockFolderWithUser("root", null);
+        CreateFolderDto createFolderDto = new CreateFolderDto("sub");
 
-        DriveFolder sub = driveFolderService.createSubDirectory(parent, createDirectoryDto);
+        DriveFolder sub = driveFolderService.createSubFolder(parent, createFolderDto);
 
         assertNotNull(sub);
         assertSame(sub.getParentDriveFolder(), parent);
@@ -90,28 +90,13 @@ class DriveFolderServiceTest {
     }
 
     @Test
-    void createSubDirectory_withSameNameAsSubFolder_throwsException() {
+    void createSubFolder_withSameNameAsSubFolder_throwsException() {
 
-        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
-            DriveFolder parent = DirectoryTestUtils.mockDirectoryWithSubFolders("root", null, Arrays.asList(DirectoryTestUtils.mockDirectory("sub", null)));
-            CreateDirectoryDto createDirectoryDto = new CreateDirectoryDto("sub");
+        assertThrows(UnauthorizedFolderActionException.class, () -> {
+            DriveFolder parent = FolderTestUtils.mockFolderWithSubFolders("root", null, Arrays.asList(FolderTestUtils.mockFolder("sub", null)));
+            CreateFolderDto createFolderDto = new CreateFolderDto("sub");
 
-            DriveFolder sub = driveFolderService.createSubDirectory(parent, createDirectoryDto);
-
-            assertNotNull(sub);
-            assertSame(sub.getParentDriveFolder(), parent);
-            assertSame(sub.getUser(), parent.getUser());
-        });
-    }
-
-    @Test
-    void createSubDirectory_withSameNameUpperCaseAsSubFolder_throwsException() {
-
-        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
-            DriveFolder parent = DirectoryTestUtils.mockDirectoryWithSubFolders("root", null, Arrays.asList(DirectoryTestUtils.mockDirectory("SUB", null)));
-            CreateDirectoryDto createDirectoryDto = new CreateDirectoryDto("sub");
-
-            DriveFolder sub = driveFolderService.createSubDirectory(parent, createDirectoryDto);
+            DriveFolder sub = driveFolderService.createSubFolder(parent, createFolderDto);
 
             assertNotNull(sub);
             assertSame(sub.getParentDriveFolder(), parent);
@@ -120,72 +105,87 @@ class DriveFolderServiceTest {
     }
 
     @Test
-    void deleteDirectory_deleteParent_assertThrow() {
-        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
-            DriveFolder parent = DirectoryTestUtils.mockDirectoryWithSubFolders("root", null, Arrays.asList(DirectoryTestUtils.mockDirectory("SUB", null)));
+    void createSubFolder_withSameNameUpperCaseAsSubFolder_throwsException() {
 
-            driveFolderService.deleteDirectory(parent);
+        assertThrows(UnauthorizedFolderActionException.class, () -> {
+            DriveFolder parent = FolderTestUtils.mockFolderWithSubFolders("root", null, Arrays.asList(FolderTestUtils.mockFolder("SUB", null)));
+            CreateFolderDto createFolderDto = new CreateFolderDto("sub");
+
+            DriveFolder sub = driveFolderService.createSubFolder(parent, createFolderDto);
+
+            assertNotNull(sub);
+            assertSame(sub.getParentDriveFolder(), parent);
+            assertSame(sub.getUser(), parent.getUser());
         });
     }
 
     @Test
-    void updateDirectory_validName_assertUpdated() throws UnauthorizedDirectoryActionException {
+    void deleteFolder_deleteParent_assertThrow() {
+        assertThrows(UnauthorizedFolderActionException.class, () -> {
+            DriveFolder parent = FolderTestUtils.mockFolderWithSubFolders("root", null, Arrays.asList(FolderTestUtils.mockFolder("SUB", null)));
+
+            driveFolderService.deleteFolder(parent);
+        });
+    }
+
+    @Test
+    void updateFolder_validName_assertUpdated() throws UnauthorizedFolderActionException {
         DriveFolder driveFolder = new DriveFolder("mechim", Mockito.mock(User.class), Mockito.mock(DriveFolder.class));
-        UpdateDirectoryDto updateDirectoryDto = new UpdateDirectoryDto("testt");
+        UpdateFolderDto updateFolderDto = new UpdateFolderDto("testt");
 
-        driveFolderService.update(driveFolder, updateDirectoryDto);
+        driveFolderService.update(driveFolder, updateFolderDto);
 
-        assertEquals(updateDirectoryDto.getName(), driveFolder.getName());
+        assertEquals(updateFolderDto.getName(), driveFolder.getName());
         Mockito.verify(driveFolderRepository, Mockito.times(1)).save(ArgumentMatchers.any(DriveFolder.class));
     }
 
     @Test
-    void updateDirectory_rootDir_assertThrow() {
-        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
+    void updateFolder_rootDir_assertThrow() {
+        assertThrows(UnauthorizedFolderActionException.class, () -> {
 
-            DriveFolder driveFolder = DirectoryTestUtils.mockDirectoryWithUser("root", null);
-            UpdateDirectoryDto updateDirectoryDto = new UpdateDirectoryDto("testt");
+            DriveFolder driveFolder = FolderTestUtils.mockFolderWithUser("root", null);
+            UpdateFolderDto updateFolderDto = new UpdateFolderDto("testt");
 
-            driveFolderService.update(driveFolder, updateDirectoryDto);
+            driveFolderService.update(driveFolder, updateFolderDto);
         });
     }
 
     @Test
-    void moveDirectory_dirToAnother_done() throws UnauthorizedDirectoryActionException {
+    void moveFolder_dirToAnother_done() throws UnauthorizedFolderActionException {
 
-        DriveFolder driveFolder = DirectoryTestUtils.mockDirectory("dir1", Mockito.mock(DriveFolder.class));
-        DriveFolder moveTo = DirectoryTestUtils.mockDirectory("dir2", Mockito.mock(DriveFolder.class));
+        DriveFolder driveFolder = FolderTestUtils.mockFolder("dir1", Mockito.mock(DriveFolder.class));
+        DriveFolder moveTo = FolderTestUtils.mockFolder("dir2", Mockito.mock(DriveFolder.class));
 
         driveFolderService.move(driveFolder, moveTo);
     }
 
     @Test
-    void moveDirectory_dirToSame_throw() {
+    void moveFolder_dirToSame_throw() {
 
-        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
-            DriveFolder driveFolder = DirectoryTestUtils.mockDirectory("dir1", UUID.randomUUID(), Mockito.mock(DriveFolder.class));
+        assertThrows(UnauthorizedFolderActionException.class, () -> {
+            DriveFolder driveFolder = FolderTestUtils.mockFolder("dir1", UUID.randomUUID(), Mockito.mock(DriveFolder.class));
 
             driveFolderService.move(driveFolder, driveFolder);
         });
     }
 
     @Test
-    void moveDirectory_rootDir_throw() {
-        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
-            DriveFolder driveFolder = DirectoryTestUtils.mockDirectory("dir1", UUID.randomUUID(), null);
-            DriveFolder moveTo = DirectoryTestUtils.mockDirectory("dir2", Mockito.mock(DriveFolder.class));
+    void moveFolder_rootDir_throw() {
+        assertThrows(UnauthorizedFolderActionException.class, () -> {
+            DriveFolder driveFolder = FolderTestUtils.mockFolder("dir1", UUID.randomUUID(), null);
+            DriveFolder moveTo = FolderTestUtils.mockFolder("dir2", Mockito.mock(DriveFolder.class));
 
             driveFolderService.move(driveFolder, moveTo);
         });
     }
 
     @Test
-    void moveDirectory_dirToWithSubFoldersName_throw() {
-        assertThrows(UnauthorizedDirectoryActionException.class, () -> {
-            DriveFolder driveFolder = DirectoryTestUtils.mockDirectory("dir1", UUID.randomUUID(), Mockito.mock(DriveFolder.class));
-            DriveFolder moveTo = DirectoryTestUtils.mockDirectory("dir2", Mockito.mock(DriveFolder.class));
+    void moveFolder_dirToWithSubFoldersName_throw() {
+        assertThrows(UnauthorizedFolderActionException.class, () -> {
+            DriveFolder driveFolder = FolderTestUtils.mockFolder("dir1", UUID.randomUUID(), Mockito.mock(DriveFolder.class));
+            DriveFolder moveTo = FolderTestUtils.mockFolder("dir2", Mockito.mock(DriveFolder.class));
 
-            List<DriveFolder> subFolder = Arrays.asList(DirectoryTestUtils.mockDirectory("dir1", null));
+            List<DriveFolder> subFolder = Arrays.asList(FolderTestUtils.mockFolder("dir1", null));
             Mockito.when(moveTo.getSubFolders()).thenReturn(subFolder);
 
             driveFolderService.move(driveFolder, moveTo);

@@ -1,13 +1,13 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.api.dto.entity.CreateDirectoryDto;
-import fr.elercia.redcloud.api.dto.entity.UpdateDirectoryDto;
+import fr.elercia.redcloud.api.dto.entity.CreateFolderDto;
+import fr.elercia.redcloud.api.dto.entity.UpdateFolderDto;
 import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.events.UserCreationEvent;
 import fr.elercia.redcloud.dao.repository.DriveFolderRepository;
-import fr.elercia.redcloud.exceptions.DirectoryNotFoundException;
-import fr.elercia.redcloud.exceptions.UnauthorizedDirectoryActionException;
+import fr.elercia.redcloud.exceptions.FolderNotFoundException;
+import fr.elercia.redcloud.exceptions.UnauthorizedFolderActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class DriveFolderService implements ApplicationListener<UserCreationEvent
         this.driveFolderRepository = driveFolderRepository;
     }
 
-    public void createRootDirectory(User user) {
+    public void createRootFolder(User user) {
 
         LOG.info("Creating root driveFolder for user {}", user.getResourceId());
 
@@ -38,12 +38,12 @@ public class DriveFolderService implements ApplicationListener<UserCreationEvent
         user.setRootDriveFolder(driveFolder);
     }
 
-    public DriveFolder find(UUID directoryId) throws DirectoryNotFoundException {
+    public DriveFolder find(UUID directoryId) throws FolderNotFoundException {
 
         DriveFolder driveFolder = driveFolderRepository.findByResourceId(directoryId);
 
         if (driveFolder == null) {
-            throw new DirectoryNotFoundException();
+            throw new FolderNotFoundException();
         }
 
         LOG.info("find driveFolder {}", driveFolder.getResourceId());
@@ -51,54 +51,54 @@ public class DriveFolderService implements ApplicationListener<UserCreationEvent
         return driveFolder;
     }
 
-    public DriveFolder createSubDirectory(DriveFolder parentDir, CreateDirectoryDto wantedDirectory) throws UnauthorizedDirectoryActionException {
+    public DriveFolder createSubFolder(DriveFolder parentDir, CreateFolderDto wantedFolder) throws UnauthorizedFolderActionException {
 
-        if (!isNameValid(parentDir, wantedDirectory.getName())) {
-            throw new UnauthorizedDirectoryActionException();
+        if (!isNameValid(parentDir, wantedFolder.getName())) {
+            throw new UnauthorizedFolderActionException();
         }
 
-        DriveFolder subDriveFolder = new DriveFolder(wantedDirectory.getName(), parentDir.getUser(), parentDir);
+        DriveFolder subDriveFolder = new DriveFolder(wantedFolder.getName(), parentDir.getUser(), parentDir);
 
         subDriveFolder = driveFolderRepository.save(subDriveFolder);
 
-        LOG.info("createSubDirectory parent {}, children {}", parentDir.getResourceId(), subDriveFolder.getResourceId());
+        LOG.info("createSubFolder parent {}, children {}", parentDir.getResourceId(), subDriveFolder.getResourceId());
 
         return subDriveFolder;
     }
 
-    public void deleteDirectory(DriveFolder driveFolder) throws UnauthorizedDirectoryActionException {
+    public void deleteFolder(DriveFolder driveFolder) throws UnauthorizedFolderActionException {
 
         LOG.info("Delete driveFolder {}", driveFolder.getResourceId());
 
         // Deleting a root driveFolder is forbidden
         if(driveFolder.getParentDriveFolder() == null) {
-            throw new UnauthorizedDirectoryActionException();
+            throw new UnauthorizedFolderActionException();
         }
 
         driveFolderRepository.delete(driveFolder);
     }
 
-    public void update(DriveFolder driveFolder, UpdateDirectoryDto updateDirectoryDto) throws UnauthorizedDirectoryActionException {
+    public void update(DriveFolder driveFolder, UpdateFolderDto updateFolderDto) throws UnauthorizedFolderActionException {
 
         LOG.info("Update driveFolder {}", driveFolder.getResourceId());
 
-        if (driveFolder.getParentDriveFolder() == null || !isNameValid(driveFolder, updateDirectoryDto.getName())) {
-            throw new UnauthorizedDirectoryActionException();
+        if (driveFolder.getParentDriveFolder() == null || !isNameValid(driveFolder, updateFolderDto.getName())) {
+            throw new UnauthorizedFolderActionException();
         }
 
-        driveFolder.updateName(updateDirectoryDto.getName());
+        driveFolder.updateName(updateFolderDto.getName());
 
         driveFolderRepository.save(driveFolder);
     }
 
-    public void move(DriveFolder driveFolder, DriveFolder moveToDriveFolder) throws UnauthorizedDirectoryActionException {
+    public void move(DriveFolder driveFolder, DriveFolder moveToDriveFolder) throws UnauthorizedFolderActionException {
 
         if (moveToDriveFolder == null || driveFolder.getParentDriveFolder() == null) {
-            throw new UnauthorizedDirectoryActionException("Can't move root driveFolder");
+            throw new UnauthorizedFolderActionException("Can't move root driveFolder");
         }
 
         if (!isNameValid(moveToDriveFolder, driveFolder.getName()) || driveFolder.equals(moveToDriveFolder)) {
-            throw new UnauthorizedDirectoryActionException();
+            throw new UnauthorizedFolderActionException();
         }
 
         LOG.info("Move driveFolder from {} to {}", driveFolder.getResourceId(), moveToDriveFolder.getResourceId());
@@ -108,10 +108,10 @@ public class DriveFolderService implements ApplicationListener<UserCreationEvent
         driveFolderRepository.save(driveFolder);
     }
 
-    private boolean isNameValid(DriveFolder container, String wantedDirectoryName) {
+    private boolean isNameValid(DriveFolder container, String wantedFolderName) {
 
         for (DriveFolder driveFolder : container.getSubFolders()) {
-            if (driveFolder.getName().equalsIgnoreCase(wantedDirectoryName)) {
+            if (driveFolder.getName().equalsIgnoreCase(wantedFolderName)) {
                 return false;
             }
         }
@@ -120,6 +120,6 @@ public class DriveFolderService implements ApplicationListener<UserCreationEvent
 
     @Override
     public void onApplicationEvent(UserCreationEvent event) {
-        createRootDirectory(event.getUser());
+        createRootFolder(event.getUser());
     }
 }

@@ -80,13 +80,13 @@ public class DriveFileSystemService {
 
         LOG.info("Create user directory [user {}]", user.getResourceId());
 
-        File userDirectory = new File(getUserDirectoryPath(user));
+        File userFolder = new File(getUserFolderPath(user));
 
-        if (userDirectory.exists()) {
+        if (userFolder.exists()) {
             throw new UnexpectedFileSystemException("New user directory already exists user:" + user.getResourceId());
         }
 
-        if (!userDirectory.mkdirs()) {
+        if (!userFolder.mkdirs()) {
             throw new UnexpectedFileSystemException("Unable to create user directory user:" + user.getResourceId());
         }
     }
@@ -95,13 +95,13 @@ public class DriveFileSystemService {
 
         LOG.info("Delete user directory [user {}]", user.getResourceId());
 
-        File userDirectory = new File(getUserDirectoryPath(user));
+        File userFolder = new File(getUserFolderPath(user));
 
-        if (!userDirectory.exists() || !userDirectory.isDirectory()) {
+        if (!userFolder.exists() || !userFolder.isDirectory()) {
             throw new UnexpectedFileSystemException("Impossible to delete user directory (wrong directory) user:" + user.getResourceId());
         }
         try {
-            FileUtils.deleteDirectory(userDirectory);
+            FileUtils.deleteDirectory(userFolder);
         } catch (IOException e) {
             throw new UnexpectedFileSystemException("Unable to delete user directory (delete error) user:" + user.getResourceId(), e);
         }
@@ -115,7 +115,7 @@ public class DriveFileSystemService {
         return driveFile.getResourceId().toString();
     }
 
-    private String getUserDirectoryPath(User user) {
+    private String getUserFolderPath(User user) {
         return getConfiguredPathToFiles() + "/" + getUserPath(user) + "/";
     }
 

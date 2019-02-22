@@ -15,7 +15,7 @@ public class Route {
     public static final String USERS_SEARCH = USERS + "search/";
     public static final String USER = BASE + "user/" + QueryParam.USER_ID_URL + "/";
 
-    public static final String DIRECTORIES = BASE + "directories/";
+    public static final String DIRECTORIES = BASE + "folders/";
     public static final String DIRECTORY = BASE + "directory/" + QueryParam.DIRECTORY_ID_URL + "/";
     public static final String DIRECTORY_MOVE = DIRECTORY + "move/";
     public static final String DIRECTORY_UPLOAD_FILE = DIRECTORY + "upload_file/";

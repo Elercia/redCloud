@@ -84,7 +84,7 @@ public class StressTestTask implements Callable<Boolean> {
             throw new RuntimeException();
         }
 
-        availableFoldersUuid.add(response.getBody().getRootDirectory().getResourceId());
+        availableFoldersUuid.add(response.getBody().getRootFolder().getResourceId());
     }
 
     private void login() {
@@ -137,9 +137,9 @@ public class StressTestTask implements Callable<Boolean> {
 
     private UUID createSubFolder(UUID folderResourceId) {
 
-        ResponseEntity<DirectoryDto> response = testRestTemplate.postForEntity(StressTest.ROOT_URI + Route.DIRECTORY,
-                new CreateDirectoryDto("somedir" + availableFoldersUuid.size()),
-                DirectoryDto.class, folderResourceId);
+        ResponseEntity<FolderDto> response = testRestTemplate.postForEntity(StressTest.ROOT_URI + Route.DIRECTORY,
+                new CreateFolderDto("somedir" + availableFoldersUuid.size()),
+                FolderDto.class, folderResourceId);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new RuntimeException();

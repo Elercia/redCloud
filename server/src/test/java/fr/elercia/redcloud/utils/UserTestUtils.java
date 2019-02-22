@@ -28,7 +28,7 @@ public class UserTestUtils {
         return mockUser("name2", UUID.randomUUID(), "pass", UserType.USER, new Date(), new ArrayList<>());
     }
 
-    public static User mockUser(String name, UUID resourceId, String password, UserType userType, Date creationDate, List<DriveFolder> directories) {
+    public static User mockUser(String name, UUID resourceId, String password, UserType userType, Date creationDate, List<DriveFolder> folders) {
         User user = Mockito.mock(User.class);
 
         Mockito.when(user.getName()).thenReturn(name);
@@ -36,7 +36,7 @@ public class UserTestUtils {
         Mockito.when(user.getHashedPassword()).thenReturn(password);
         Mockito.when(user.getUserType()).thenReturn(userType);
         Mockito.when(user.getCreationDate()).thenReturn(creationDate);
-        Mockito.when(user.getDriveFolders()).thenReturn(directories);
+        Mockito.when(user.getDriveFolders()).thenReturn(folders);
 
         return user;
     }

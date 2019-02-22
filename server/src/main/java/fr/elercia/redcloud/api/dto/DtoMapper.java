@@ -3,7 +3,6 @@ package fr.elercia.redcloud.api.dto;
 import fr.elercia.redcloud.api.dto.entity.*;
 import fr.elercia.redcloud.business.entity.*;
 import fr.elercia.redcloud.config.SecurityConstants;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,23 +14,23 @@ public class DtoMapper {
     }
 
     public static UserDto entityToDto(User user) {
-        return new UserDto(user.getName(), user.getResourceId(), user.getUserType(), user.getCreationDate(), entityToDto(user.getRootDirectory()));
+        return new UserDto(user.getName(), user.getResourceId(), user.getUserType(), user.getCreationDate(), entityToDto(user.getRootFolder()));
     }
 
-    public static DirectoryDto entityToDto(DriveFolder driveFolder) {
+    public static FolderDto entityToDto(DriveFolder driveFolder) {
 
         if(driveFolder == null)
             return null;
 
-        return new DirectoryDto(driveFolder.getName(), driveFolder.getResourceId(), driveFolder.getCreationDate(), simpleDirectoryEntitiesToDto(driveFolder.getSubFolders()), fileEntitiesToDto(driveFolder.getDriveFiles()));
+        return new FolderDto(driveFolder.getName(), driveFolder.getResourceId(), driveFolder.getCreationDate(), simpleFolderEntitiesToDto(driveFolder.getSubFolders()), fileEntitiesToDto(driveFolder.getDriveFiles()));
     }
 
     public static List<FileDto> fileEntitiesToDto(List<DriveFile> driveFiles) {
         return driveFiles.stream().map(DtoMapper::entityToDto).collect(Collectors.toList());
     }
 
-    public static List<SimpleDirectoryDto> simpleDirectoryEntitiesToDto(List<DriveFolder> directories) {
-        return directories.stream().map(d -> new SimpleDirectoryDto(d.getName(), d.getResourceId(), d.getCreationDate())).collect(Collectors.toList());
+    public static List<SimpleFolderDto> simpleFolderEntitiesToDto(List<DriveFolder> folders) {
+        return folders.stream().map(d -> new SimpleFolderDto(d.getName(), d.getResourceId(), d.getCreationDate())).collect(Collectors.toList());
     }
 
     public static List<UserDto> entityToDto(List<User> user) {

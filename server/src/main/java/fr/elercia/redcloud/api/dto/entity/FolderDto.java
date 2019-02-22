@@ -4,22 +4,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class DirectoryDto extends SimpleDirectoryDto {
+public class FolderDto extends SimpleFolderDto {
 
-    private List<SimpleDirectoryDto> subFolders;
+    private List<SimpleFolderDto> subFolders;
     private List<FileDto> files;
 
-    public DirectoryDto() {
+    public FolderDto() {
 
     }
 
-    public DirectoryDto(String name, UUID resourceId, Date creationDate, List<SimpleDirectoryDto> subFolders, List<FileDto> files) {
+    public FolderDto(String name, UUID resourceId, Date creationDate, List<SimpleFolderDto> subFolders, List<FileDto> files) {
         super(name, resourceId, creationDate);
         this.subFolders = subFolders;
         this.files = files;
     }
 
-    public List<SimpleDirectoryDto> getSubFolders() {
+    public List<SimpleFolderDto> getSubFolders() {
         return subFolders;
     }
 
