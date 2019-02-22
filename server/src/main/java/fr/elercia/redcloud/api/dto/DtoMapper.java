@@ -19,6 +19,10 @@ public class DtoMapper {
     }
 
     public static DirectoryDto entityToDto(DriveFolder driveFolder) {
+
+        if(driveFolder == null)
+            return null;
+
         return new DirectoryDto(driveFolder.getName(), driveFolder.getResourceId(), driveFolder.getCreationDate(), simpleDirectoryEntitiesToDto(driveFolder.getSubFolders()), fileEntitiesToDto(driveFolder.getDriveFiles()));
     }
 
