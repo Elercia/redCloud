@@ -1,14 +1,21 @@
 package fr.elercia.redcloud.stresstest;
 
+import com.google.common.collect.Lists;
 import fr.elercia.redcloud.Application;
-import fr.elercia.redcloud.business.service.UserService;
+import fr.elercia.redcloud.api.controllers.params.Route;
+import fr.elercia.redcloud.api.dto.entity.LoginDto;
+import fr.elercia.redcloud.api.dto.entity.TokenDto;
+import fr.elercia.redcloud.api.dto.entity.UserDto;
+import fr.elercia.redcloud.config.SecurityConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -25,9 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Transactional
 public class StressTest {
 
-    @Autowired
-    private UserService userService;
-
     private static final Logger LOG = LoggerFactory.getLogger(StressTest.class);
 
     public static final String ROOT_URI = "http://localhost:8080";
@@ -38,12 +42,30 @@ public class StressTest {
 
     @BeforeEach
     void setUp() {
-        userService.findAllUsers().stream().filter(u -> u.getName().startsWith(USER_NAME_PREFIX)).forEach(u -> {
-            try {
-                userService.deleteUser(u);
-            } catch (Throwable ignored) {
+        RestTemplate restTemplate = new RestTemplate();
+
+
+        ResponseEntity<TokenDto> response = restTemplate.postForEntity(StressTest.ROOT_URI + Route.LOGIN, new LoginDto("admin", "password"), TokenDto.class);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException();
+        }
+
+        restTemplate.setInterceptors(Lists.newArrayList((ClientHttpRequestInterceptor) (request, body, execution) -> {
+            request.getHeaders().set(SecurityConstants.REQUEST_HEADER_NAME, SecurityConstants.TOKEN_TYPE + " " + response.getBody().getAccessToken());
+            return execution.execute(request, body);
+        }));
+
+        ResponseEntity<UserDto[]> responseEntity = restTemplate.getForEntity(ROOT_URI + Route.USERS, UserDto[].class);
+        for (UserDto user : responseEntity.getBody()) {
+            if (user.getName().startsWith(USER_NAME_PREFIX)) {
+                try {
+                    restTemplate.delete(StressTest.ROOT_URI + Route.USER, user.getResourceId());
+                } catch (Throwable e) {
+
+                }
             }
-        });
+        }
     }
 
     @Test
