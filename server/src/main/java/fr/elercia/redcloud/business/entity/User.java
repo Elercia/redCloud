@@ -108,6 +108,10 @@ public class User {
         this.driveFolders.add(rootDriveFolder);
     }
 
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
     @Override
     public boolean equals(Object obj) {
 
