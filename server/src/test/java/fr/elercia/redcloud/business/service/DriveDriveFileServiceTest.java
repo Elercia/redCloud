@@ -1,7 +1,9 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.DriveFile;
-import fr.elercia.redcloud.business.entity.DriveFolder;
+import fr.elercia.redcloud.business.entity.drive.DriveFile;
+import fr.elercia.redcloud.business.entity.drive.DriveFolder;
+import fr.elercia.redcloud.business.service.drive.DriveFileService;
+import fr.elercia.redcloud.business.service.drive.DriveFileSystemService;
 import fr.elercia.redcloud.dao.repository.FileRepository;
 import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;

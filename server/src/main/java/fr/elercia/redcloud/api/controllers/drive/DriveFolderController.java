@@ -1,15 +1,16 @@
-package fr.elercia.redcloud.api.controllers;
+package fr.elercia.redcloud.api.controllers.drive;
 
+import fr.elercia.redcloud.api.controllers.AbstractController;
 import fr.elercia.redcloud.api.controllers.params.Parameters;
 import fr.elercia.redcloud.api.controllers.params.QueryParam;
 import fr.elercia.redcloud.api.controllers.params.Route;
 import fr.elercia.redcloud.api.dto.DtoMapper;
-import fr.elercia.redcloud.api.dto.entity.*;
-import fr.elercia.redcloud.business.entity.DriveFile;
-import fr.elercia.redcloud.business.entity.DriveFolder;
-import fr.elercia.redcloud.business.service.DriveFileService;
-import fr.elercia.redcloud.business.service.DriveFolderService;
+import fr.elercia.redcloud.api.dto.entity.drive.*;
+import fr.elercia.redcloud.business.entity.drive.DriveFile;
+import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import fr.elercia.redcloud.business.service.SecurityUtils;
+import fr.elercia.redcloud.business.service.drive.DriveFileService;
+import fr.elercia.redcloud.business.service.drive.DriveFolderService;
 import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
 import fr.elercia.redcloud.exceptions.FolderNotFoundException;
@@ -29,15 +30,15 @@ import java.util.UUID;
 @Api(value = "Operations about folders.")
 @RestController
 @RequestMapping("/")
-public class FolderController extends AbstractController {
+public class DriveFolderController extends AbstractController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FolderController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DriveFolderController.class);
 
     private DriveFolderService driveFolderService;
     private DriveFileService driveFileService;
 
     @Autowired
-    public FolderController(DriveFolderService driveFolderService, DriveFileService driveFileService) {
+    public DriveFolderController(DriveFolderService driveFolderService, DriveFileService driveFileService) {
 
         this.driveFolderService = driveFolderService;
         this.driveFileService = driveFileService;

@@ -1,24 +1,21 @@
-package fr.elercia.redcloud.api.dto.entity;
+package fr.elercia.redcloud.api.dto.entity.drive;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class FileDto {
-
+public class SimpleFolderDto {
     private String name;
     private UUID resourceId;
     private Date creationDate;
-    private long size;
 
-    public FileDto() {
+    public SimpleFolderDto() {
 
     }
 
-    public FileDto(String name, UUID resourceId, Date creationDate, long size) {
+    public SimpleFolderDto(String name, UUID resourceId, Date creationDate) {
         this.name = name;
         this.resourceId = resourceId;
         this.creationDate = creationDate;
-        this.size = size;
     }
 
     public String getName() {
@@ -31,9 +28,5 @@ public class FileDto {
 
     public Date getCreationDate() {
         return creationDate;
-    }
-
-    public long getSize() {
-        return size;
     }
 }

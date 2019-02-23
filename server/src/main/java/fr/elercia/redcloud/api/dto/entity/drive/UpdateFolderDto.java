@@ -1,4 +1,4 @@
-package fr.elercia.redcloud.api.dto.entity;
+package fr.elercia.redcloud.api.dto.entity.drive;
 
 public class UpdateFolderDto {
 

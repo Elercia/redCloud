@@ -1,9 +1,10 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.api.dto.entity.CreateFolderDto;
-import fr.elercia.redcloud.api.dto.entity.UpdateFolderDto;
-import fr.elercia.redcloud.business.entity.DriveFolder;
+import fr.elercia.redcloud.api.dto.entity.drive.CreateFolderDto;
+import fr.elercia.redcloud.api.dto.entity.drive.UpdateFolderDto;
 import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.drive.DriveFolder;
+import fr.elercia.redcloud.business.service.drive.DriveFolderService;
 import fr.elercia.redcloud.dao.repository.DriveFolderRepository;
 import fr.elercia.redcloud.exceptions.FolderNotFoundException;
 import fr.elercia.redcloud.exceptions.UnauthorizedFolderActionException;

@@ -1,9 +1,9 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.DriveFile;
-import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
+import fr.elercia.redcloud.business.entity.drive.DriveFile;
+import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import fr.elercia.redcloud.exceptions.UnauthorizedActionException;
 import fr.elercia.redcloud.utils.FileTestUtils;
 import fr.elercia.redcloud.utils.FolderTestUtils;

@@ -1,13 +1,14 @@
-package fr.elercia.redcloud.api.controllers;
+package fr.elercia.redcloud.api.controllers.drive;
 
+import fr.elercia.redcloud.api.controllers.AbstractController;
 import fr.elercia.redcloud.api.controllers.params.QueryParam;
 import fr.elercia.redcloud.api.controllers.params.Route;
-import fr.elercia.redcloud.api.dto.entity.MoveFileDto;
-import fr.elercia.redcloud.business.entity.DriveFile;
-import fr.elercia.redcloud.business.entity.DriveFolder;
-import fr.elercia.redcloud.business.service.DriveFileService;
-import fr.elercia.redcloud.business.service.DriveFolderService;
+import fr.elercia.redcloud.api.dto.entity.drive.MoveFileDto;
+import fr.elercia.redcloud.business.entity.drive.DriveFile;
+import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import fr.elercia.redcloud.business.service.SecurityUtils;
+import fr.elercia.redcloud.business.service.drive.DriveFileService;
+import fr.elercia.redcloud.business.service.drive.DriveFolderService;
 import fr.elercia.redcloud.business.service.utils.DriveFileSystemUtils;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileOperationException;
@@ -27,15 +28,15 @@ import java.util.UUID;
 @Api(value = "Operations about files.")
 @RestController
 @RequestMapping("/")
-public class FileController extends AbstractController{
+public class DriveFileController extends AbstractController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FileController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DriveFileController.class);
 
     private DriveFileService driveFileService;
     private DriveFolderService driveFolderService;
 
     @Autowired
-    public FileController(DriveFileService driveFileService, DriveFolderService driveFolderService) {
+    public DriveFileController(DriveFileService driveFileService, DriveFolderService driveFolderService) {
 
         this.driveFileService = driveFileService;
         this.driveFolderService = driveFolderService;

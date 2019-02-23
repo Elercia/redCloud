@@ -1,5 +1,6 @@
 package fr.elercia.redcloud.api.dto.entity;
 
+import fr.elercia.redcloud.api.dto.entity.drive.FolderDto;
 import fr.elercia.redcloud.business.entity.UserType;
 
 import java.util.Date;

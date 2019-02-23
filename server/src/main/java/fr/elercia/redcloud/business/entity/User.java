@@ -1,5 +1,6 @@
 package fr.elercia.redcloud.business.entity;
 
+import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import fr.elercia.redcloud.business.service.PasswordEncoder;
 import org.hibernate.annotations.Type;
 

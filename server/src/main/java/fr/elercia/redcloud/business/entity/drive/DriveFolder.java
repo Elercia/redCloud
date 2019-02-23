@@ -1,5 +1,6 @@
-package fr.elercia.redcloud.business.entity;
+package fr.elercia.redcloud.business.entity.drive;
 
+import fr.elercia.redcloud.business.entity.User;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;

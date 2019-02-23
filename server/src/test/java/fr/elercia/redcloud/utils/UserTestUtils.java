@@ -1,8 +1,8 @@
 package fr.elercia.redcloud.utils;
 
-import fr.elercia.redcloud.business.entity.DriveFolder;
 import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.UserType;
+import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;

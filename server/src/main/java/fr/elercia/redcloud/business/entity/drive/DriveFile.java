@@ -1,4 +1,4 @@
-package fr.elercia.redcloud.business.entity;
+package fr.elercia.redcloud.business.entity.drive;
 
 import org.hibernate.annotations.Type;
 
