@@ -27,7 +27,7 @@ public class PopulateDB {
     private UserRepository userRepository;
 
     @Autowired
-    DynamicConfigRepository dynamicConfigRepository;
+    private DynamicConfigRepository dynamicConfigRepository;
 
     @Test
     void test() throws InvalidUserCreationException {
