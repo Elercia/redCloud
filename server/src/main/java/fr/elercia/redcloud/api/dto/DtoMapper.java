@@ -13,6 +13,7 @@ import fr.elercia.redcloud.business.entity.drive.DriveFile;
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import fr.elercia.redcloud.config.SecurityConstants;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class DtoMapper {
 
     public static FolderDto entityToDto(DriveFolder driveFolder) {
 
-        if(driveFolder == null)
+        if (driveFolder == null)
             return null;
 
         return new FolderDto(driveFolder.getName(), driveFolder.getResourceId(), driveFolder.getCreationDate(), simpleFolderEntitiesToDto(driveFolder.getSubFolders()), fileEntitiesToDto(driveFolder.getDriveFiles()));
@@ -55,6 +56,12 @@ public class DtoMapper {
     }
 
     public static MonitorIntegrityCheckResultDto entityToDto(MonitorIntegrityCheckResult checkSystemIntegrity) {
-        return new MonitorIntegrityCheckResultDto(checkSystemIntegrity.getActionType());
+        return new MonitorIntegrityCheckResultDto(
+                checkSystemIntegrity.getUnwantedFiles().stream().map(File::getPath).collect(Collectors.toList()),
+                checkSystemIntegrity.getInternalErrorInForFile().stream().map(e -> e.file.getPath()).collect(Collectors.toList()),
+                checkSystemIntegrity.getUnusedFolderOnFileSystem().stream().map(File::getPath).collect(Collectors.toList()),
+                checkSystemIntegrity.getFilesNotInDb().stream().map(File::getPath).collect(Collectors.toList()),
+                checkSystemIntegrity.getFilesNotOnFileSystem().stream().map(d -> d.getResourceId().toString()).collect(Collectors.toList()),
+                checkSystemIntegrity.getActionType());
     }
 }

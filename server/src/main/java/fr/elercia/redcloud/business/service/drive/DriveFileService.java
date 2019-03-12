@@ -8,6 +8,7 @@ import fr.elercia.redcloud.exceptions.FileNameFormatException;
 import fr.elercia.redcloud.exceptions.FileNotFoundException;
 import fr.elercia.redcloud.exceptions.FileOperationException;
 import fr.elercia.redcloud.exceptions.FileStorageException;
+import org.apache.commons.collections4.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -100,6 +102,13 @@ public class DriveFileService {
         LOG.info("DownloadFile driveFile {}", driveFile.getResourceId());
 
         return driveFileSystemService.download(driveFile);
+    }
+
+    public List<DriveFile> findAllFiles() {
+
+        LOG.info("find all files");
+
+        return IteratorUtils.toList(fileRepository.findAll().iterator());
     }
 
     private boolean isValidFileName(String fileName) {

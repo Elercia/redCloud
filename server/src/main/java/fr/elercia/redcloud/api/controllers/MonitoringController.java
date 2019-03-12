@@ -5,11 +5,9 @@ import fr.elercia.redcloud.api.dto.BusinessMapper;
 import fr.elercia.redcloud.api.dto.DtoMapper;
 import fr.elercia.redcloud.api.dto.entity.MonitorIntegrityCheckRequestDto;
 import fr.elercia.redcloud.api.dto.entity.MonitorIntegrityCheckResultDto;
-import fr.elercia.redcloud.business.entity.MonitorIntegrityCheckRequest;
-import fr.elercia.redcloud.business.entity.MonitorIntegrityCheckResult;
 import fr.elercia.redcloud.api.security.RequireUserType;
 import fr.elercia.redcloud.business.entity.UserType;
-import fr.elercia.redcloud.business.service.MonitoringService;
+import fr.elercia.redcloud.business.service.monitoring.MonitoringService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,7 @@ public class MonitoringController extends AbstractController {
         return new ResponseEntity<>(HttpStatus.OK);// TODO Maybe add something like get server version
     }
 
-    @GetMapping(Route.MONITORING_INTEGRITY_CHECK)
+    @PostMapping(Route.MONITORING_INTEGRITY_CHECK)
     @ApiOperation(value = "Check the system integrity")
     @RequireUserType({UserType.ADMIN, UserType.MONITOR})
     public MonitorIntegrityCheckResultDto checkSystemIntegrity(@RequestBody MonitorIntegrityCheckRequestDto monitorIntegrityCheckRequestDto) {

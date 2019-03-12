@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class DriveFileSystemService {
@@ -140,5 +142,10 @@ public class DriveFileSystemService {
     @EventListener
     public void onApplicationEvent(UserDeleteEvent event) {
         deleteUserFileSystem(event.getUser());
+    }
+
+    public List<File> listUsersDirectories() {
+
+        return Arrays.asList(new File(getConfiguredPathToFiles()).listFiles());
     }
 }

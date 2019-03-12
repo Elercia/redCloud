@@ -27,8 +27,8 @@ public class StressTest {
     public static final String ROOT_URI = "http://localhost:8080";
     public static final String USER_NAME_PREFIX = "stressUser";
 
-    private static final int NUMBER_OF_THREADS = 100;
-    public static final int NUMBER_OF_FILES_TO_UPLOAD = 100;
+    private static final int NUMBER_OF_THREADS = 10;
+    public static final int NUMBER_OF_FILES_TO_UPLOAD = 10;
 
     @Test
     void stressTest() throws InterruptedException {
