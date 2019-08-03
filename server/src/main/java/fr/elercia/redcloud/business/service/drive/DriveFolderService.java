@@ -2,7 +2,7 @@ package fr.elercia.redcloud.business.service.drive;
 
 import fr.elercia.redcloud.api.dto.entity.drive.CreateFolderDto;
 import fr.elercia.redcloud.api.dto.entity.drive.UpdateFolderDto;
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import fr.elercia.redcloud.business.events.UserCreationEvent;
 import fr.elercia.redcloud.dao.repository.DriveFolderRepository;
@@ -29,7 +29,7 @@ public class DriveFolderService implements ApplicationListener<UserCreationEvent
         this.driveFolderRepository = driveFolderRepository;
     }
 
-    public void createRootFolder(User user) {
+    public void createRootFolder(AppUser user) {
 
         LOG.info("Creating root driveFolder for user {}", user.getResourceId());
 

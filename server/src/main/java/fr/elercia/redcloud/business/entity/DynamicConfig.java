@@ -7,7 +7,9 @@ public class DynamicConfig {
 
     public enum DynamicConfigName {
         ENVIRONMENT,
-        STORAGE_PATH
+        STORAGE_PATH,
+        OAUTH_ISSUER,
+        OAUTH_SECRET
     }
 
     @Id

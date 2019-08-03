@@ -1,7 +1,7 @@
 package fr.elercia.redcloud.business.service.drive;
 
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.DynamicConfig;
-import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.drive.DriveFile;
 import fr.elercia.redcloud.business.events.UserCreationEvent;
 import fr.elercia.redcloud.business.events.UserDeleteEvent;
@@ -79,7 +79,7 @@ public class DriveFileSystemService {
         }
     }
 
-    public void createUserFileSystem(User user) {
+    public void createUserFileSystem(AppUser user) {
 
         LOG.info("Create user directory [user {}]", user.getResourceId());
 
@@ -94,7 +94,7 @@ public class DriveFileSystemService {
         }
     }
 
-    public void deleteUserFileSystem(User user) {
+    public void deleteUserFileSystem(AppUser user) {
 
         LOG.info("Delete user directory [user {}]", user.getResourceId());
 
@@ -118,11 +118,11 @@ public class DriveFileSystemService {
         return driveFile.getResourceId().toString();
     }
 
-    private String getUserFolderPath(User user) {
+    private String getUserFolderPath(AppUser user) {
         return getConfiguredPathToFiles() + "/" + getUserPath(user) + "/";
     }
 
-    private String getUserPath(User user) {
+    private String getUserPath(AppUser user) {
         return user.getResourceId().toString();
     }
 

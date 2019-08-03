@@ -1,10 +1,10 @@
 package fr.elercia.redcloud.api.security;
 
-import fr.elercia.redcloud.business.entity.Token;
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.business.service.AuthenticationService;
 import fr.elercia.redcloud.config.SecurityConstants;
-import fr.elercia.redcloud.exceptions.TokenNotFoundException;
+import fr.elercia.redcloud.exceptions.InvalidTokenException;
 import fr.elercia.redcloud.exceptions.UnauthorizedRestCall;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAda
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if(!(handler instanceof HandlerMethod)) {
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
 
@@ -38,25 +38,25 @@ public class SecurityRestCallConnectionInterceptor extends HandlerInterceptorAda
 
         String accessToken = AuthorizationUtils.getAccessToken(request);
 
-        if(accessToken == null) {
+        if (accessToken == null) {
             setErrorResponseHeader(response);
             throw new UnauthorizedRestCall("Missing Auth token");
         }
 
         try {
-            Token token = authenticationService.findByToken(accessToken);
+            AppUser connectedUser = authenticationService.getUserConnected(accessToken);
 
-            if(isAnnotationPresent(RequireUserType.class, handlerMethod.getMethod())) {
+            if (isAnnotationPresent(RequireUserType.class, handlerMethod.getMethod())) {
                 RequireUserType annotation = handlerMethod.getMethod().getAnnotation(RequireUserType.class);
                 UserType[] requiredUserTypes = annotation.value();
 
-                if(!Arrays.asList(requiredUserTypes).contains(token.getStoredUser().getUserType())) {
+                if (!Arrays.asList(requiredUserTypes).contains(connectedUser.getUserType())) {
                     setErrorResponseHeader(response);
                     throw new UnauthorizedRestCall("Unknown token");
                 }
             }
 
-        } catch (TokenNotFoundException e) {
+        } catch (InvalidTokenException e) {
             setErrorResponseHeader(response);
             throw new UnauthorizedRestCall("Unknown token");
         }

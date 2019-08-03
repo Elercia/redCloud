@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.business.entity.drive.DriveFile;
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
@@ -18,7 +18,7 @@ public class ResourcesSecurityAccessTest {
     @Test
     void checkUserRightOnFile_rightUser_accept() {
 
-        User owner = UserTestUtils.mockUser();
+        AppUser owner = UserTestUtils.mockUser();
         Mockito.when(owner.getUserType()).thenReturn(UserType.USER);
 
         DriveFile driveFile = FileTestUtils.mockFile(owner);
@@ -30,8 +30,8 @@ public class ResourcesSecurityAccessTest {
 
         assertThrows(UnauthorizedActionException.class, () -> {
 
-            User owner = UserTestUtils.mockUser();
-            User other = UserTestUtils.mockUser();
+            AppUser owner = UserTestUtils.mockUser();
+            AppUser other = UserTestUtils.mockUser();
             Mockito.when(other.getUserType()).thenReturn(UserType.USER);
 
             DriveFile driveFile = FileTestUtils.mockFile(owner);
@@ -42,7 +42,7 @@ public class ResourcesSecurityAccessTest {
     @Test
     void checkUserRightOnFolder_rightUser_accept() {
 
-        User owner = UserTestUtils.mockUser();
+        AppUser owner = UserTestUtils.mockUser();
         Mockito.when(owner.getUserType()).thenReturn(UserType.USER);
 
         DriveFolder driveFolder = FolderTestUtils.mockFolderWithUser(owner);
@@ -54,8 +54,8 @@ public class ResourcesSecurityAccessTest {
 
         assertThrows(UnauthorizedActionException.class, () -> {
 
-            User owner = UserTestUtils.mockUser();
-            User other = UserTestUtils.mockUser();
+            AppUser owner = UserTestUtils.mockUser();
+            AppUser other = UserTestUtils.mockUser();
 
             Mockito.when(other.getUserType()).thenReturn(UserType.USER);
 
@@ -67,7 +67,7 @@ public class ResourcesSecurityAccessTest {
     @Test
     void checkUserRightOnUser_rightUser_accept() {
 
-        User owner = UserTestUtils.mockUser();
+        AppUser owner = UserTestUtils.mockUser();
 
         Mockito.when(owner.getUserType()).thenReturn(UserType.USER);
 
@@ -79,8 +79,8 @@ public class ResourcesSecurityAccessTest {
 
         assertThrows(UnauthorizedActionException.class, () -> {
 
-            User owner = UserTestUtils.mockUser();
-            User other = UserTestUtils.mockUser();
+            AppUser owner = UserTestUtils.mockUser();
+            AppUser other = UserTestUtils.mockUser();
 
             Mockito.when(owner.getUserType()).thenReturn(UserType.USER);
 
@@ -91,8 +91,8 @@ public class ResourcesSecurityAccessTest {
     @Test
     void checkAdminRights_everythingAccepted() {
 
-        User owner = UserTestUtils.mockUser();
-        User other = UserTestUtils.mockUser();
+        AppUser owner = UserTestUtils.mockUser();
+        AppUser other = UserTestUtils.mockUser();
 
         Mockito.when(owner.getUserType()).thenReturn(UserType.ADMIN);
 

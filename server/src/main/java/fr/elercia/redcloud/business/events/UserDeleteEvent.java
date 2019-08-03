@@ -1,18 +1,18 @@
 package fr.elercia.redcloud.business.events;
 
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
 import org.springframework.context.ApplicationEvent;
 
 public class UserDeleteEvent extends ApplicationEvent {
 
-    private User user;
+    private AppUser user;
 
-    public UserDeleteEvent(Object source, User user) {
+    public UserDeleteEvent(Object source, AppUser user) {
         super(source);
         this.user = user;
     }
 
-    public User getUser() {
+    public AppUser getUser() {
         return user;
     }
 }

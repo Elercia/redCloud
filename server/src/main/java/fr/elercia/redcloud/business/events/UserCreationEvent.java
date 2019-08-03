@@ -1,18 +1,18 @@
 package fr.elercia.redcloud.business.events;
 
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
 import org.springframework.context.ApplicationEvent;
 
 public class UserCreationEvent extends ApplicationEvent {
 
-    private User user;
+    private AppUser user;
 
-    public UserCreationEvent(Object source, User user) {
+    public UserCreationEvent(Object source, AppUser user) {
         super(source);
         this.user = user;
     }
 
-    public User getUser() {
+    public AppUser getUser() {
         return user;
     }
 }

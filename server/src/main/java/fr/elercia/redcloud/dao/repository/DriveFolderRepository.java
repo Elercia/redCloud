@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.dao.repository;
 
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -20,5 +20,5 @@ public interface DriveFolderRepository extends CrudRepository<DriveFolder, Integ
      * @param user The user
      * @return The root drive folder
      */
-    DriveFolder findByparentDriveFolderIsNullAndUser(User user);
+    DriveFolder findByparentDriveFolderIsNullAndUser(AppUser user);
 }

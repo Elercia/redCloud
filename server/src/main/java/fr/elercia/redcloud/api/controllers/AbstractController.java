@@ -1,10 +1,10 @@
 package fr.elercia.redcloud.api.controllers;
 
 import fr.elercia.redcloud.api.security.AuthorizationUtils;
-import fr.elercia.redcloud.business.entity.Token;
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
+import fr.elercia.redcloud.business.service.AuthenticationService;
 import fr.elercia.redcloud.config.SecurityConstants;
-import fr.elercia.redcloud.dao.repository.TokenRepository;
+import fr.elercia.redcloud.exceptions.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,22 +15,22 @@ public class AbstractController {
     private HttpServletRequest request;
 
     @Autowired
-    private TokenRepository tokenRepository;
+    private AuthenticationService authenticationService;
 
     public HttpServletRequest getRequest() {
         return request;
     }
 
-    public User getConnectedUser() {
+    public AppUser getConnectedUser() {
         String accessToken = AuthorizationUtils.getAccessToken(request);
 
-        Token token = tokenRepository.findByAccessToken(accessToken);
-
-        if (token == null) {
-            return null;
+        try {
+            return authenticationService.getUserConnected(accessToken);
+        } catch (InvalidTokenException e) {
+            e.printStackTrace();
         }
 
-        return token.getStoredUser();
+        return null;
     }
 
     protected String getAuthToken() {

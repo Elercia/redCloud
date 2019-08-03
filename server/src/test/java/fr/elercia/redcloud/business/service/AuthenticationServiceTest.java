@@ -1,87 +1,86 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.Token;
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
+import fr.elercia.redcloud.business.entity.DynamicConfig;
 import fr.elercia.redcloud.business.entity.UserType;
-import fr.elercia.redcloud.dao.repository.TokenRepository;
-import fr.elercia.redcloud.exceptions.InvalidLoginException;
-import fr.elercia.redcloud.exceptions.TokenNotFoundException;
+import fr.elercia.redcloud.exceptions.InvalidTokenException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
-import fr.elercia.redcloud.utils.TokenTestUtils;
+import fr.elercia.redcloud.utils.TokenUtils;
 import fr.elercia.redcloud.utils.UserTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 //@Transactional(rollbackFor = Throwable.class)
 class AuthenticationServiceTest {
 
-    @Autowired
-    @InjectMocks
-    private AuthenticationService authenticationService;
+    private static final String SECRET = "test";
+    private static final String ISSUER = "test";
+    private static final UUID USER_UID = UUID.fromString("7c115377-c819-4ee7-90e7-3712cf56e57e");
 
     @Mock
     private UserService userService;
 
     @Mock
-    private TokenRepository tokenRepository;
+    private DynamicConfigService dynamicConfigService;
+
+    private AuthenticationService authenticationService;
 
     @BeforeEach
     void setUp() throws UserNotFoundException {
-        MockitoAnnotations.initMocks(this);
-        User mockUser = UserTestUtils.mockUser("name", UUID.randomUUID(), PasswordEncoder.encode("password"), UserType.USER, new Date(), new ArrayList<>());
-        Mockito.when(userService.findByName(ArgumentMatchers.eq("testUser1"))).thenReturn(mockUser);
+        AppUser mockUser = UserTestUtils.mockUser("name", UUID.randomUUID(), UserType.USER, new Date(), new ArrayList<>());
+        Mockito.when(userService.findByResourceId(ArgumentMatchers.eq(USER_UID))).thenReturn(mockUser);
+
+        Mockito.when(dynamicConfigService.getString(ArgumentMatchers.eq(DynamicConfig.DynamicConfigName.OAUTH_ISSUER))).thenReturn("test");
+        Mockito.when(dynamicConfigService.getString(ArgumentMatchers.eq(DynamicConfig.DynamicConfigName.OAUTH_SECRET))).thenReturn("test");
+
+        System.out.println(dynamicConfigService.getString(DynamicConfig.DynamicConfigName.OAUTH_SECRET));
+
+        authenticationService = new AuthenticationService(userService, dynamicConfigService);
     }
 
     @Test
-    void token_lifeCycle() throws InvalidLoginException, TokenNotFoundException {
+    void getConnectedUser_validUser_returnUser() throws InvalidTokenException {
 
-        Token token = authenticationService.login("testUser1", "password");
-
-        Mockito.verify(tokenRepository, Mockito.times(1)).save(ArgumentMatchers.any());
-        assertNotNull(token);
-
-        Mockito.when(tokenRepository.findByAccessToken(token.getAccessToken())).thenReturn(token);
-        Token foundToken = authenticationService.findByToken(token.getAccessToken());
-
-        TokenTestUtils.checkEquals(token, foundToken);
-
-        authenticationService.logout(token.getAccessToken());
-        Mockito.verify(tokenRepository, Mockito.times(1)).deleteByAccessToken(token.getAccessToken());
+        String token = TokenUtils.buildToken(ISSUER, SECRET, USER_UID.toString());
+        assertNotNull(authenticationService.getUserConnected(token));
     }
 
     @Test
-    void login_wrongLogin_exceptionThrown() {
+    void getConnectedUser_invalidUser_throwException() {
 
-        assertThrows(InvalidLoginException.class, () -> {
-            authenticationService.login("dededefejbrkbgrkjbrjkgb", "password");
+        assertThrows(InvalidTokenException.class, () -> {
+            String token = TokenUtils.buildToken(ISSUER, SECRET, UUID.randomUUID().toString());
+            authenticationService.getUserConnected(token);
         });
     }
 
     @Test
-    void login_wrongPassword_exceptionThrown() {
+    void getConnectedUser_invaliTokenSecret_throwException() {
 
-        assertThrows(InvalidLoginException.class, () -> {
-            authenticationService.login("testUser1", "jfejfbejfejf");
+        assertThrows(InvalidTokenException.class, () -> {
+            String token = TokenUtils.buildToken(ISSUER, "fnkfeknfkenf", USER_UID.toString());
+            authenticationService.getUserConnected(token);
         });
     }
 
     @Test
-    void login_loginNull_exceptionThrown() {
+    void getConnectedUser_invaliTokenIssuer_throwException() {
 
-        assertThrows(InvalidLoginException.class, () -> {
-            authenticationService.login(null, null);
+        assertThrows(InvalidTokenException.class, () -> {
+            String token = TokenUtils.buildToken("knkwdnwkdnwkdnwd", SECRET, USER_UID.toString());
+            authenticationService.getUserConnected(token);
         });
     }
 }

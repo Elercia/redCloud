@@ -6,12 +6,10 @@ import fr.elercia.redcloud.api.dto.entity.UserDto;
 import fr.elercia.redcloud.api.dto.entity.drive.FileDto;
 import fr.elercia.redcloud.api.dto.entity.drive.FolderDto;
 import fr.elercia.redcloud.api.dto.entity.drive.SimpleFolderDto;
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.MonitorIntegrityCheckResult;
-import fr.elercia.redcloud.business.entity.Token;
-import fr.elercia.redcloud.business.entity.User;
 import fr.elercia.redcloud.business.entity.drive.DriveFile;
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
-import fr.elercia.redcloud.config.SecurityConstants;
 
 import java.io.File;
 import java.util.List;
@@ -23,7 +21,7 @@ public class DtoMapper {
 
     }
 
-    public static UserDto entityToDto(User user) {
+    public static UserDto entityToDto(AppUser user) {
         return new UserDto(user.getName(), user.getResourceId(), user.getUserType(), user.getCreationDate(), entityToDto(user.getRootFolder()));
     }
 
@@ -43,12 +41,12 @@ public class DtoMapper {
         return folders.stream().map(d -> new SimpleFolderDto(d.getName(), d.getResourceId(), d.getCreationDate())).collect(Collectors.toList());
     }
 
-    public static List<UserDto> entityToDto(List<User> user) {
+    public static List<UserDto> entityToDto(List<AppUser> user) {
         return user.stream().map(DtoMapper::entityToDto).collect(Collectors.toList());
     }
 
-    public static TokenDto map(Token token) {
-        return new TokenDto(token.getAccessToken(), SecurityConstants.TOKEN_TYPE, SecurityConstants.EXPIRATION_TIME, token.getRefreshToken());
+    public static TokenDto mapToToken(String token) {
+        return new TokenDto(token);
     }
 
     public static FileDto entityToDto(DriveFile driveFile) {

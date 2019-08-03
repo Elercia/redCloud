@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.utils;
 
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.drive.DriveFile;
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import org.mockito.Mockito;
@@ -40,12 +40,12 @@ public class FolderTestUtils {
     public static DriveFolder mockFolderWithUser(String name, DriveFolder parent) {
         DriveFolder driveFolder = mockFolder(name, parent);
 
-        Mockito.when(driveFolder.getUser()).thenReturn(Mockito.mock(User.class));
+        Mockito.when(driveFolder.getUser()).thenReturn(Mockito.mock(AppUser.class));
 
         return driveFolder;
     }
 
-    public static DriveFolder mockFolderWithUser(User user) {
+    public static DriveFolder mockFolderWithUser(AppUser user) {
         DriveFolder driveFolder = mockFolder("dir1", UUID.randomUUID(), null);
 
         Mockito.when(driveFolder.getUser()).thenReturn(user);

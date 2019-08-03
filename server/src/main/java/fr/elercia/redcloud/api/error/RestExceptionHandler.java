@@ -31,9 +31,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         } else if (ex instanceof DatabaseRuntimeException) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             message = "Internal server error";
-        } else if (ex instanceof TokenNotFoundException) {
-            status = HttpStatus.BAD_REQUEST;
-            message = "Invalid token";
         } else if (ex instanceof InvalidTokenException) {
             status = HttpStatus.UNAUTHORIZED;
             message = "Invalid token";

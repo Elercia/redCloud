@@ -2,8 +2,8 @@ package fr.elercia.redcloud.stresstest;
 
 import com.google.common.collect.Lists;
 import fr.elercia.redcloud.api.controllers.params.Route;
-import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
 import fr.elercia.redcloud.api.dto.entity.LoginDto;
+import fr.elercia.redcloud.api.dto.entity.SimpleUserDto;
 import fr.elercia.redcloud.api.dto.entity.TokenDto;
 import fr.elercia.redcloud.api.dto.entity.UserDto;
 import fr.elercia.redcloud.api.dto.entity.drive.CreateFolderDto;
@@ -83,7 +83,7 @@ public class StressTestTask implements Callable<Boolean> {
 
     private void createAccount() {
 
-        ResponseEntity<UserDto> response = testRestTemplate.postForEntity(StressTest.ROOT_URI + Route.USERS, new CreateUserDto(accountName, "password"), UserDto.class);
+        ResponseEntity<UserDto> response = testRestTemplate.postForEntity(StressTest.ROOT_URI + Route.USERS, new SimpleUserDto(accountName), UserDto.class);
         LOG.debug("Task {} : Created user", id);
 
         if (!response.getStatusCode().is2xxSuccessful()) {

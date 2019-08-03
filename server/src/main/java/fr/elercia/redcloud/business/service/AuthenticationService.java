@@ -1,17 +1,19 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.business.entity.Token;
-import fr.elercia.redcloud.business.entity.User;
-import fr.elercia.redcloud.config.SecurityConstants;
-import fr.elercia.redcloud.dao.repository.TokenRepository;
-import fr.elercia.redcloud.exceptions.InvalidLoginException;
-import fr.elercia.redcloud.exceptions.TokenNotFoundException;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import fr.elercia.redcloud.business.entity.AppUser;
+import fr.elercia.redcloud.business.entity.DynamicConfig;
+import fr.elercia.redcloud.exceptions.InvalidTokenException;
+import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -19,89 +21,56 @@ public class AuthenticationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationService.class);
 
-    private TokenRepository tokenRepository;
     private UserService userService;
+    private DynamicConfigService dynamicConfigService;
+    private JWTVerifier verifier;
 
     @Autowired
-    public AuthenticationService(TokenRepository tokenRepository, UserService userService) {
+    public AuthenticationService(UserService userService, DynamicConfigService dynamicConfigService) {
 
-        this.tokenRepository = tokenRepository;
         this.userService = userService;
+        this.dynamicConfigService = dynamicConfigService;
+
+        Algorithm algorithm = Algorithm.HMAC256(this.dynamicConfigService.getString(DynamicConfig.DynamicConfigName.OAUTH_SECRET));
+        verifier = JWT.require(algorithm)
+                .withIssuer(this.dynamicConfigService.getString(DynamicConfig.DynamicConfigName.OAUTH_ISSUER))
+                .build();
     }
 
-    public Token login(String username, String password) throws InvalidLoginException {
+    public AppUser getUserConnected(String jwtToken) throws InvalidTokenException {
 
-        User user;
-
-        try {
-            user = userService.findByName(username);
-
-            LOG.info("Login user : {}", user.getResourceId());
-
-        } catch (Exception e) {
-            throw new InvalidLoginException("No User found for this username", e);
-        }
-
-        if (!PasswordEncoder.matches(password, user.getHashedPassword())) {
-            throw new InvalidLoginException("Password don't matches");
-        }
-
-        return createToken(user);
-    }
-
-    public void logout(String token) {
-
-        LOG.info("Logout token : {}", token);
-
-        tokenRepository.deleteByAccessToken(token);
-    }
-
-    public Token findByToken(String tokenString) throws TokenNotFoundException {
-
-        Token token = tokenRepository.findByAccessToken(tokenString);
+        DecodedJWT token = deserializeToken(jwtToken);
 
         if (token == null) {
-            throw new TokenNotFoundException();
+            throw new InvalidTokenException();
         }
 
-        LOG.info("FindByToken user : {}", token.getStoredUser().getResourceId());
+        UUID uuid = UUID.fromString(token.getSubject());
 
-        if (!isValidToken(token)) {
+        try {
+            AppUser user = userService.findByResourceId(uuid);
 
-            LOG.info("Invalid token user : {}", token.getStoredUser().getResourceId());
+            if (user == null) {
+                throw new InvalidTokenException(); // TODO new AppUser ?
+            }
 
-            tokenRepository.delete(token);
-            throw new TokenNotFoundException();
+            return user;
+        } catch (UserNotFoundException e) {
+
+            e.printStackTrace();
+            throw new RuntimeException("error");
         }
-
-        refreshToken(token);
-
-        return token;
     }
 
-    private void refreshToken(Token token) {
+    private DecodedJWT deserializeToken(String token) {
 
-        LOG.debug("Refresh token user : {}", token.getStoredUser().getResourceId());
+        //Reusable verifier instance
+        try {
+            DecodedJWT jwt = verifier.verify(token);
 
-        token.setExpiringDate(new Date(new Date().getTime() + SecurityConstants.EXPIRATION_TIME));
-        tokenRepository.save(token);
-    }
-
-    private boolean isValidToken(Token token) {
-        return !token.getExpiringDate().before(new Date());
-    }
-
-    private Token createToken(User user) {
-        Token token = new Token(createTokenString(), createTokenString(), user);
-
-        LOG.info("Create token user : {}", token.getStoredUser().getResourceId());
-
-        tokenRepository.save(token);
-
-        return token;
-    }
-
-    private String createTokenString() {
-        return UUID.randomUUID().toString().replace("-", "");
+            return jwt;
+        } catch (JWTVerificationException exception) {
+            return null;
+        }
     }
 }

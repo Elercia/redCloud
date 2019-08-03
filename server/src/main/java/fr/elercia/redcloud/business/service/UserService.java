@@ -1,8 +1,7 @@
 package fr.elercia.redcloud.business.service;
 
-import fr.elercia.redcloud.api.dto.entity.CreateUserDto;
-import fr.elercia.redcloud.api.dto.entity.UpdateUserDto;
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.api.dto.entity.SimpleUserDto;
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.business.events.UserCreationEvent;
 import fr.elercia.redcloud.business.events.UserDeleteEvent;
@@ -34,12 +33,12 @@ public class UserService {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public User findByResourceId(UUID userResourceId) throws UserNotFoundException {
+    public AppUser findByResourceId(UUID userResourceId) throws UserNotFoundException {
 
-        User user = userRepository.findByResourceId(userResourceId);
+        AppUser user = userRepository.findByResourceId(userResourceId);
 
         if (user == null) {
-            throw new UserNotFoundException("User not found with this resource Id");
+            throw new UserNotFoundException("AppUser not found with this resource Id");
         }
 
         LOG.info("findByResourceId user {}", user.getResourceId());
@@ -47,9 +46,9 @@ public class UserService {
         return user;
     }
 
-    public User findByName(String name) throws UserNotFoundException {
+    public AppUser findByName(String name) throws UserNotFoundException {
 
-        User user = userRepository.findByName(name);
+        AppUser user = userRepository.findByName(name);
 
         if (user == null) {
             throw new UserNotFoundException();
@@ -60,22 +59,20 @@ public class UserService {
         return user;
     }
 
-    public List<User> findAllUsers() {
+    public List<AppUser> findAllUsers() {
 
-        List<User> users = IteratorUtils.toList(userRepository.findAll().iterator());
+        List<AppUser> users = IteratorUtils.toList(userRepository.findAll().iterator());
 
         LOG.info("findAllUsers users size {}", users.size());
 
         return users;
     }
 
-    public User createUser(CreateUserDto wantedUser) throws InvalidUserCreationException {
+    public AppUser createUser(SimpleUserDto wantedUser) throws InvalidUserCreationException {
 
         checkUserCreationValidity(wantedUser);
 
-        String hashedPassword = PasswordEncoder.encode(wantedUser.getUnHashedPassword());
-
-        User newUser = new User(wantedUser.getName(), hashedPassword, UserType.USER);
+        AppUser newUser = new AppUser(wantedUser.getName(), UserType.USER);
 
         LOG.info("createUser user {}", newUser.getResourceId());
 
@@ -86,20 +83,20 @@ public class UserService {
         return newUser;
     }
 
-    private void checkUserCreationValidity(CreateUserDto wantedUser) throws InvalidUserCreationException {
+    private void checkUserCreationValidity(SimpleUserDto wantedUser) throws InvalidUserCreationException {
 
-        if (StringUtils.isNullOrEmpty(wantedUser.getName()) || StringUtils.isNullOrEmpty(wantedUser.getUnHashedPassword())) {
-            throw new InvalidUserCreationException("User request is invalid");
+        if (StringUtils.isNullOrEmpty(wantedUser.getName())) {
+            throw new InvalidUserCreationException("AppUser request is invalid");
         }
 
-        User oldUser = userRepository.findByName(wantedUser.getName());
+        AppUser oldUser = userRepository.findByName(wantedUser.getName());
 
         if (oldUser != null) {
-            throw new InvalidUserCreationException("User with this name already exists");
+            throw new InvalidUserCreationException("AppUser with this name already exists");
         }
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser(AppUser user) {
 
         LOG.info("deleteUser user {}", user.getResourceId());
 
@@ -108,12 +105,11 @@ public class UserService {
         applicationEventPublisher.publishEvent(new UserDeleteEvent(this, user));
     }
 
-    public User updateUser(User user, UpdateUserDto updateUserDto) {
+    public AppUser updateUser(AppUser user, SimpleUserDto updateUserDto) {
 
         LOG.info("updateUser user {}", user.getResourceId());
 
         user.updateName(updateUserDto.getName());
-        user.updateUnhashedPassword(updateUserDto.getPassword());
 
         return userRepository.save(user);
     }

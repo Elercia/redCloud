@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.business.entity.drive;
 
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -27,7 +27,7 @@ public class DriveFolder {
     private Date creationDate;
 
     @ManyToOne
-    private User user;
+    private AppUser user;
 
     @ManyToOne
     private DriveFolder parentDriveFolder;
@@ -42,7 +42,7 @@ public class DriveFolder {
 
     }
 
-    public DriveFolder(String name, User user, DriveFolder parentDriveFolder) {
+    public DriveFolder(String name, AppUser user, DriveFolder parentDriveFolder) {
         this.name = name;
         this.resourceId = UUID.randomUUID();
         this.creationDate = new Date();
@@ -68,11 +68,11 @@ public class DriveFolder {
         return creationDate;
     }
 
-    public User getUser() {
+    public AppUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(AppUser user) {
         this.user = user;
     }
 

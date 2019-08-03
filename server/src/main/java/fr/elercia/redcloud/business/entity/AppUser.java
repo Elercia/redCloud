@@ -1,7 +1,6 @@
 package fr.elercia.redcloud.business.entity;
 
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
-import fr.elercia.redcloud.business.service.PasswordEncoder;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class User {
+public class AppUser {
 
     @Id
     @GeneratedValue
@@ -25,9 +24,6 @@ public class User {
     private UUID resourceId;
 
     @Column
-    private String hashedPassword;
-
-    @Column
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
@@ -37,13 +33,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<DriveFolder> driveFolders = new ArrayList<>();
 
-    public User() {
+    public AppUser() {
 
     }
 
-    public User(String name, String hashedPassword, UserType userType) {
+    public AppUser(String name, UserType userType) {
         this.name = name;
-        this.hashedPassword = hashedPassword;
         this.userType = userType;
         this.creationDate = new Date();
         this.resourceId = UUID.randomUUID();
@@ -70,11 +65,6 @@ public class User {
         return resourceId;
     }
 
-
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
     public DriveFolder getRootFolder() {
         for (DriveFolder d : driveFolders) {
             if (d.getParentDriveFolder() == null) {
@@ -91,11 +81,6 @@ public class User {
     public void updateUserType(UserType userType) {
         if (userType != null)
             this.userType = userType;
-    }
-
-    public void updateUnhashedPassword(String notHashedPassword) {
-        if (notHashedPassword != null)
-            this.hashedPassword = PasswordEncoder.encode(notHashedPassword);
     }
 
     public void updateName(String name) {
@@ -116,11 +101,11 @@ public class User {
     @Override
     public boolean equals(Object obj) {
 
-        if (!(obj instanceof User)) {
+        if (!(obj instanceof AppUser)) {
             return false;
         }
 
-        User other = (User) obj;
+        AppUser other = (AppUser) obj;
 
         return this.resourceId.equals(other.resourceId);
     }

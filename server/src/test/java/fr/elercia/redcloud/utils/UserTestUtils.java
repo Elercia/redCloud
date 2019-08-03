@@ -1,6 +1,6 @@
 package fr.elercia.redcloud.utils;
 
-import fr.elercia.redcloud.business.entity.User;
+import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
 import org.mockito.Mockito;
@@ -14,26 +14,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserTestUtils {
 
-    public static void checkEquals(User expected, User actual) {
+    public static void checkEquals(AppUser expected, AppUser actual) {
 
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getResourceId(), actual.getResourceId());
-        assertEquals(expected.getHashedPassword(), actual.getHashedPassword());
         assertEquals(expected.getUserType(), actual.getUserType());
         assertEquals(expected.getCreationDate(), actual.getCreationDate());
         assertEquals(expected.getDriveFolders().size(), actual.getDriveFolders().size());
     }
 
-    public static User mockUser() {
-        return mockUser("name2", UUID.randomUUID(), "pass", UserType.USER, new Date(), new ArrayList<>());
+    public static AppUser mockUser() {
+        return mockUser("name2", UUID.randomUUID(), UserType.USER, new Date(), new ArrayList<>());
     }
 
-    public static User mockUser(String name, UUID resourceId, String password, UserType userType, Date creationDate, List<DriveFolder> folders) {
-        User user = Mockito.mock(User.class);
+    public static AppUser mockUser(String name, UUID resourceId, UserType userType, Date creationDate, List<DriveFolder> folders) {
+        AppUser user = Mockito.mock(AppUser.class);
 
         Mockito.when(user.getName()).thenReturn(name);
         Mockito.when(user.getResourceId()).thenReturn(resourceId);
-        Mockito.when(user.getHashedPassword()).thenReturn(password);
         Mockito.when(user.getUserType()).thenReturn(userType);
         Mockito.when(user.getCreationDate()).thenReturn(creationDate);
         Mockito.when(user.getDriveFolders()).thenReturn(folders);
