@@ -8,6 +8,7 @@ import fr.elercia.redcloud.exceptions.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 public class AbstractController {
 
@@ -26,6 +27,19 @@ public class AbstractController {
 
         try {
             return authenticationService.getUserConnected(accessToken);
+        } catch (InvalidTokenException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public UUID getConnectedUserUid() {
+
+        String accessToken = AuthorizationUtils.getAccessToken(request);
+
+        try {
+            return authenticationService.getConnectedUserUid(accessToken);
         } catch (InvalidTokenException e) {
             e.printStackTrace();
         }

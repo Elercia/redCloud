@@ -16,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -43,7 +45,7 @@ class AppUserServiceTest {
     void userEntity_lifeCycle() throws InvalidUserCreationException {
 
         SimpleUserDto wantedUser = new SimpleUserDto("name");
-        AppUser createdUser = userService.createUser(wantedUser);
+        AppUser createdUser = userService.createUser(UUID.randomUUID(), wantedUser);
 
         assertNotNull(createdUser);
 
@@ -64,7 +66,7 @@ class AppUserServiceTest {
 
         try {
             SimpleUserDto wantedUser = new SimpleUserDto(user.getName());
-            userService.createUser(wantedUser);
+            userService.createUser(UUID.randomUUID(), wantedUser);
             fail("Mathod create didn't throw exception");
         } catch (InvalidUserCreationException ignored) {
         } catch (Throwable t) {
@@ -79,7 +81,21 @@ class AppUserServiceTest {
         assertThrows(InvalidUserCreationException.class, () -> {
 
             SimpleUserDto wantedUser = new SimpleUserDto("");
-            userService.createUser(wantedUser);
+            userService.createUser(UUID.randomUUID(), wantedUser);
+        });
+    }
+
+    @Test
+    void userCreate_sameId_expectException() throws InvalidUserCreationException {
+
+        UUID uuid =UUID.randomUUID();
+        SimpleUserDto wantedUser = new SimpleUserDto("tessdksdnkt");
+        userService.createUser(uuid, wantedUser);
+
+        assertThrows(InvalidUserCreationException.class, () -> {
+
+            SimpleUserDto crashUser = new SimpleUserDto("tesddnsndkt");
+            userService.createUser(uuid, crashUser);
         });
     }
 

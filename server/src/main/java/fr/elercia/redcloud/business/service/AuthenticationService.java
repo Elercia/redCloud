@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.DynamicConfig;
 import fr.elercia.redcloud.exceptions.InvalidTokenException;
+import fr.elercia.redcloud.exceptions.UserNotCreatedException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,19 +40,13 @@ public class AuthenticationService {
 
     public AppUser getUserConnected(String jwtToken) throws InvalidTokenException {
 
-        DecodedJWT token = deserializeToken(jwtToken);
-
-        if (token == null) {
-            throw new InvalidTokenException();
-        }
-
-        UUID uuid = UUID.fromString(token.getSubject());
+        UUID uuid = getConnectedUserUid(jwtToken);
 
         try {
             AppUser user = userService.findByResourceId(uuid);
 
             if (user == null) {
-                throw new InvalidTokenException(); // TODO new AppUser ?
+                throw new UserNotCreatedException();
             }
 
             return user;
@@ -72,5 +67,16 @@ public class AuthenticationService {
         } catch (JWTVerificationException exception) {
             return null;
         }
+    }
+
+    public UUID getConnectedUserUid(String accessToken) throws InvalidTokenException {
+
+        DecodedJWT token = deserializeToken(accessToken);
+
+        if (token == null) {
+            throw new InvalidTokenException();
+        }
+
+        return UUID.fromString(token.getSubject());
     }
 }

@@ -10,6 +10,7 @@ import fr.elercia.redcloud.api.dto.entity.drive.CreateFolderDto;
 import fr.elercia.redcloud.api.dto.entity.drive.FileDto;
 import fr.elercia.redcloud.api.dto.entity.drive.FolderDto;
 import fr.elercia.redcloud.config.SecurityConstants;
+import fr.elercia.redcloud.utils.TokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -35,12 +36,16 @@ public class StressTestTask implements Callable<Boolean> {
 
     private int id;
     private String accountName;
+    private String issuer;
+    private String secret;
     private RestTemplate testRestTemplate;
     private List<UUID> availableFoldersUuid;
 
-    public StressTestTask(int id) {
+    public StressTestTask(int id, String issuer, String secret) {
         this.id = id;
         this.accountName = StressTest.USER_NAME_PREFIX + id;
+        this.issuer = issuer;
+        this.secret = secret;
         this.testRestTemplate = new RestTemplate();
         this.availableFoldersUuid = new ArrayList<>();
     }
@@ -49,11 +54,8 @@ public class StressTestTask implements Callable<Boolean> {
     public Boolean call() throws Exception {
 
         try {
-            // create account
-            createAccount();
-
             // login into this account
-            login();
+            createAccountAndSetAuthorizationHeader();
 
             // loop X times
             for (int i = 0; i < StressTest.NUMBER_OF_FILES_TO_UPLOAD; i++) {
@@ -70,8 +72,6 @@ public class StressTestTask implements Callable<Boolean> {
                 uploadFile(subFolderId);
             }
 
-
-            logout();
         } catch (Throwable t) {
             LOG.error("Task {} : error {}", id, t.getMessage());
             return false;
@@ -80,40 +80,27 @@ public class StressTestTask implements Callable<Boolean> {
         return true;
     }
 
+    private void createAccountAndSetAuthorizationHeader() {
 
-    private void createAccount() {
-
-        ResponseEntity<UserDto> response = testRestTemplate.postForEntity(StressTest.ROOT_URI + Route.USERS, new SimpleUserDto(accountName), UserDto.class);
-        LOG.debug("Task {} : Created user", id);
-
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException();
-        }
-
-        availableFoldersUuid.add(response.getBody().getRootFolder().getResourceId());
-    }
-
-    private void login() {
-
-        ResponseEntity<TokenDto> response = testRestTemplate.postForEntity(StressTest.ROOT_URI + Route.LOGIN, new LoginDto(accountName, "password"), TokenDto.class);
-
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException();
-        }
-
+        // setup a token
+        UUID uuid = UUID.randomUUID();
+        String accessToken = TokenUtils.buildToken(issuer, secret, uuid.toString());
         testRestTemplate.setInterceptors(Lists.newArrayList((ClientHttpRequestInterceptor) (request, body, execution) -> {
-            request.getHeaders().set(SecurityConstants.REQUEST_HEADER_NAME, SecurityConstants.TOKEN_TYPE + " " + response.getBody().getAccessToken());
+            request.getHeaders().set(SecurityConstants.REQUEST_HEADER_NAME, SecurityConstants.TOKEN_TYPE + " " + accessToken);
             return execution.execute(request, body);
         }));
 
-        LOG.debug("Task {} : Login", id);
-    }
+        // create a account
+        ResponseEntity<UserDto> response = testRestTemplate.postForEntity(StressTest.ROOT_URI + Route.USERS, new SimpleUserDto(accountName), UserDto.class);
 
-    private void logout() {
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException();
+        }
 
-        testRestTemplate.delete(StressTest.ROOT_URI + Route.LOGOUT);
+        // get the root directory account id
+        availableFoldersUuid.add(response.getBody().getRootFolder().getResourceId());
 
-        LOG.debug("Task {} : Logout", id);
+        LOG.debug("Task {} : createAccountAndSetAuthorizationHeader", id);
     }
 
     private void uploadFile(UUID subFolderId) {

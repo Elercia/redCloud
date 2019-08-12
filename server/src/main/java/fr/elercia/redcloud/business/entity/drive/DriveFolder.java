@@ -1,6 +1,7 @@
 package fr.elercia.redcloud.business.entity.drive;
 
 import fr.elercia.redcloud.business.entity.AppUser;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -32,10 +33,12 @@ public class DriveFolder {
     @ManyToOne
     private DriveFolder parentDriveFolder;
 
-    @OneToMany(mappedBy = "parentDriveFolder", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "parentDriveFolder", cascade = CascadeType.ALL)
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private List<DriveFolder> subFolders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private List<DriveFile> driveFiles = new ArrayList<>();
 
     public DriveFolder() {

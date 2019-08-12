@@ -68,11 +68,12 @@ public class UserService {
         return users;
     }
 
-    public AppUser createUser(SimpleUserDto wantedUser) throws InvalidUserCreationException {
+    public AppUser createUser(UUID userUid, SimpleUserDto wantedUser) throws InvalidUserCreationException {
 
-        checkUserCreationValidity(wantedUser);
+        checkUserCreationValidity(userUid, wantedUser);
 
         AppUser newUser = new AppUser(wantedUser.getName(), UserType.USER);
+        newUser.setResourceId(userUid);
 
         LOG.info("createUser user {}", newUser.getResourceId());
 
@@ -83,7 +84,7 @@ public class UserService {
         return newUser;
     }
 
-    private void checkUserCreationValidity(SimpleUserDto wantedUser) throws InvalidUserCreationException {
+    private void checkUserCreationValidity(UUID uuid, SimpleUserDto wantedUser) throws InvalidUserCreationException {
 
         if (StringUtils.isNullOrEmpty(wantedUser.getName())) {
             throw new InvalidUserCreationException("AppUser request is invalid");
@@ -93,6 +94,11 @@ public class UserService {
 
         if (oldUser != null) {
             throw new InvalidUserCreationException("AppUser with this name already exists");
+        }
+
+        oldUser = userRepository.findByResourceId(uuid);
+        if (oldUser != null) {
+            throw new InvalidUserCreationException("AppUser with this uid already exists");
         }
     }
 

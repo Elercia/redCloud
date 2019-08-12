@@ -37,7 +37,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         } else if (ex instanceof UnauthorizedRestCall || ex instanceof InvalidLoginException) {
             status = HttpStatus.FORBIDDEN;
             message = "Forbidden access";
-        } else {
+        } else if (ex instanceof UserNotCreatedException) {
+            status = HttpStatus.BAD_REQUEST;
+            message = "User not created";
+        }else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             message = "[" + ex.getClass().getSimpleName() + "] " + (ex.getMessage() != null ? ex.getMessage() : "");
         }

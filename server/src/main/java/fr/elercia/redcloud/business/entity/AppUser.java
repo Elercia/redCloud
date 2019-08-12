@@ -1,6 +1,7 @@
 package fr.elercia.redcloud.business.entity;
 
 import fr.elercia.redcloud.business.entity.drive.DriveFolder;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -30,7 +31,8 @@ public class AppUser {
     @Column
     private Date creationDate;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private List<DriveFolder> driveFolders = new ArrayList<>();
 
     public AppUser() {
@@ -113,5 +115,9 @@ public class AppUser {
     @Override
     public int hashCode() {
         return resourceId.hashCode();
+    }
+
+    public void setResourceId(UUID userUid) {
+        this.resourceId = userUid;
     }
 }

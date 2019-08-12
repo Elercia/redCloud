@@ -1,10 +1,13 @@
 package fr.elercia.redcloud.stresstest;
 
 import fr.elercia.redcloud.Application;
+import fr.elercia.redcloud.business.entity.DynamicConfig;
+import fr.elercia.redcloud.business.service.DynamicConfigService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
@@ -30,15 +33,20 @@ public class StressTest {
     private static final int NUMBER_OF_THREADS = 10;
     public static final int NUMBER_OF_FILES_TO_UPLOAD = 10;
 
+    @Autowired
+    DynamicConfigService config;
+
     @Test
     void stressTest() throws InterruptedException {
 
+        String secret = config.getString(DynamicConfig.DynamicConfigName.OAUTH_SECRET);
+        String issuer = config.getString(DynamicConfig.DynamicConfigName.OAUTH_ISSUER);
         ExecutorService executorService = Executors.newCachedThreadPool();
         List<Callable<Boolean>> callables = new ArrayList<>();
 
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-            callables.add(new StressTestTask(i));
+            callables.add(new StressTestTask(i, issuer, secret));
         }
 
         List<Future<Boolean>> futures = executorService.invokeAll(callables);

@@ -11,12 +11,15 @@ import fr.elercia.redcloud.business.entity.AppUser;
 import fr.elercia.redcloud.business.entity.UserType;
 import fr.elercia.redcloud.business.service.SecurityUtils;
 import fr.elercia.redcloud.business.service.UserService;
+import fr.elercia.redcloud.exceptions.InvalidUserCreationException;
 import fr.elercia.redcloud.exceptions.UserNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,7 +63,11 @@ public class UserController extends AbstractController {
     @GetMapping(Route.USER)
     public UserDto getUser(@PathVariable(QueryParam.USER_ID) UUID userId) throws UserNotFoundException {
 
-        LOG.info("getUser {}", userId);
+        if (userId.equals(UUID.fromString(""))) {
+            userId = getConnectedUserUid();
+        }
+
+        LOG.info("getUser {} - connected user id {} ", userId, getConnectedUserUid());
 
         return DtoMapper.entityToDto(userService.findByResourceId(userId));
     }
@@ -76,7 +83,7 @@ public class UserController extends AbstractController {
 
         SecurityUtils.checkUserRightOn(getConnectedUser(), user);
 
-       userService.deleteUser(user);
+        userService.deleteUser(user);
     }
 
     @ApiOperation(value = "Update user")
@@ -90,5 +97,17 @@ public class UserController extends AbstractController {
         SecurityUtils.checkUserRightOn(getConnectedUser(), user);
 
         return DtoMapper.entityToDto(userService.updateUser(user, updateUserDto));
+    }
+
+    @ApiOperation(value = "Create a from a connected user ")
+    @PostMapping(Route.USERS)
+    public ResponseEntity<UserDto> createUser(@RequestBody SimpleUserDto creationUserDto) throws InvalidUserCreationException {
+
+        UUID connectedUserUid = getConnectedUserUid();
+        LOG.info("deleteUser {}", connectedUserUid);
+
+        AppUser user = userService.createUser(connectedUserUid, creationUserDto);
+
+        return new ResponseEntity<>(DtoMapper.entityToDto(user), HttpStatus.CREATED);
     }
 }

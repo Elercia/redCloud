@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 @Disabled
 @SpringBootTest
@@ -37,10 +38,10 @@ public class PopulateDB {
         dynamicConfigRepository.saveAll(Arrays.asList(pathConfig, envConfig));
 
         SimpleUserDto createUserDto = new SimpleUserDto("testUser1");
-        userService.createUser(createUserDto);
+        userService.createUser(UUID.randomUUID(), createUserDto);
 
         SimpleUserDto createAdminUserDto = new SimpleUserDto("admin");
-        AppUser adminUser = userService.createUser(createAdminUserDto);
+        AppUser adminUser = userService.createUser(UUID.randomUUID(), createAdminUserDto);
 
         adminUser.setUserType(UserType.ADMIN);
         userRepository.save(adminUser);
