@@ -1,18 +1,24 @@
 <template>
   <div id="app">
-    <nav class="orange accent-3">
-      <div class="nav-wrapper">
-        <a href="#!" class="brand-logo"><i class="material-icons">cloud</i>RedCloud</a>
-        <ul class="right hide-on-med-and-down">
-          <li><router-link to="/">Accueil</router-link></li>
-          <li><router-link to="/about">A propos</router-link></li>
-        </ul>
-      </div>
-    </nav>
-
-    <router-view/>
+    <Header></Header>
+    <main>
+      <router-view/>
+    </main>
+    <Footer></Footer>
   </div>
 </template>
+
+<script>
+  import Footer from "./views/static/Footer";
+  import Header from "./views/static/Header";
+  export default {
+    components: {Footer, Header},
+    mounted() {
+        // eslint-disable-next-line no-undef
+        M.AutoInit();
+    }
+  }
+</script>
 
 <style lang="scss">
 </style>
