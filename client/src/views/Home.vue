@@ -1,14 +1,25 @@
 <template>
     <div class="">
         <div class="row">
-            <div class="col s2 grey lighten-1">
-                <h4>Fichiers</h4>
-                <ul class="collection">
-                    <li v-for="index in 10" :key="index"><h5>Test</h5></li>
+            <div class="col s2 orange accent-2 hide-on-small-only">
+                <h4>Dossier(s)</h4>
+                <ul class="collapsible expandable">
+                    <li v-for="index in 10" :key="index">
+                        <div class="collapsible-header"><i class="material-icons">insert_drive_file</i>First</div>
+                        <div class="collapsible-body">
+                            <ul class="collapsible expandable">
+                                <li v-for="index in 10" :key="index">
+                                    <div class="collapsible-header"><i class="material-icons">insert_drive_file</i>First
+                                    </div>
+                                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
 
-            <div class="col s10">
+            <div class="col s12 m10">
                 <!-- page content -->
                 <div class="row">
                     <nav class="col s12 orange accent-2">
@@ -35,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="fixed-action-btn">
+        <div class="fixed-action-btn hide-on-large-only">
             <a class="btn-floating btn-large red">
                 <i class="large material-icons">mode_edit</i>
             </a>
