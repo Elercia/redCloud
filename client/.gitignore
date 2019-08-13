@@ -1,6 +1,5 @@
 .DS_Store
 **/node_modules
-**/node_modules/materialize-css
 /dist
 
 # local env files
@@ -20,3 +19,5 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+package-lock.json
