@@ -35,4 +35,11 @@
 </script>
 
 <style lang="scss">
+
+    @import "../../node_modules/materialize-css/sass/components/color-variables";
+
+    $primary-color: color("orange", "lighten-2") !default;
+    $secondary-color: color("orange", "lighten-1") !default;
+    @import '../../node_modules/materialize-css/sass/materialize';
+
 </style>
